@@ -40,7 +40,7 @@ export default function Colofao() {
           <span className="hidden sm:inline">FIM · EDIÇÃO 01</span>
         </div>
 
-        <Doodle nome="estrela" cor="var(--tinta)" tamanho={34} className="flutua absolute right-[5%] top-14 hidden opacity-70 lg:block" />
+        <Doodle nome="estrela" cor="var(--tinta)" tamanho={34} className="flutua absolute right-[5%] top-14 hidden opacity-70 lg:block" data-pausa />
 
         <div className="grid grid-cols-12 items-end gap-y-8">
           <div className="col-span-12 lg:col-span-8">
@@ -96,7 +96,7 @@ export default function Colofao() {
                     target={s.href.startsWith('http') ? '_blank' : undefined}
                     rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                     data-cursor="abrir"
-                    className="zine-sub inline-block transition-transform duration-200 hover:-translate-y-1"
+                    className="alvo zine-sub inline-block transition-transform duration-200 hover:-translate-y-1"
                   >
                     {s.label} <span aria-hidden="true">↗</span>
                   </a>

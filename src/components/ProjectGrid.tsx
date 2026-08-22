@@ -3,7 +3,8 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { projects } from '@/data/projects';
-import { cadernoDe, folioDe, totalDeCadernos } from '@/data/arquivo';
+import { cadernoDe, folioDe } from '@/data/arquivo';
+import Folio from './Folio';
 import ProjectCard from './ProjectCard';
 import Marquee from './Marquee';
 import { ScrollReveal } from './ScrollReveal';
@@ -84,18 +85,7 @@ export default function ProjectGrid() {
       </div>
 
       <div className="envelope">
-        <div className="folio">
-          <span className="escala-cinza" aria-hidden="true">
-            <i style={{ opacity: 0.15 }} />
-            <i style={{ opacity: 0.35 }} />
-            <i style={{ opacity: 0.55 }} />
-            <i style={{ opacity: 0.75 }} />
-            <i style={{ opacity: 1 }} />
-          </span>
-          <span>
-            PÁG. {folio} / {totalDeCadernos}
-          </span>
-        </div>
+        <Folio id="projetos" />
       </div>
     </section>
   );

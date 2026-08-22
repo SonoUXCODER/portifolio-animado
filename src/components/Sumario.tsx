@@ -110,7 +110,7 @@ export default function Sumario() {
 
         <p className="corpo mt-7 max-w-[46ch] text-[clamp(0.9rem,1.2vw,1.02rem)]">
           Dá pra pular direto pra qualquer página. Mas o arquivo foi montado pra ser lido na ordem —
-          <TransitionLink href="/#quem-assina" className="ml-1 underline decoration-[var(--linha-forte)] underline-offset-4 hover:decoration-[var(--tinta)]" cursor="ver">
+          <TransitionLink href="/#quem-assina" className="alvo ml-1 underline decoration-[var(--linha-forte)] underline-offset-4 hover:decoration-[var(--tinta)]" cursor="ver">
             começa aqui
           </TransitionLink>
           .

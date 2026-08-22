@@ -73,7 +73,7 @@ export default function MobileMenu({ aberto, fechar }: { aberto: boolean; fechar
             <ul className="flex flex-wrap gap-x-4 gap-y-2">
               {estampas.map((e) => (
                 <li key={e.slug}>
-                  <TransitionLink href={`/#estampa-${e.slug}`} onClick={fechar} className="zine-sub">
+                  <TransitionLink href={`/#estampa-${e.slug}`} onClick={fechar} className="alvo zine-sub">
                     {e.titulo}
                   </TransitionLink>
                 </li>
@@ -95,7 +95,7 @@ export default function MobileMenu({ aberto, fechar }: { aberto: boolean; fechar
                   href={s.href}
                   target={s.href.startsWith('http') ? '_blank' : undefined}
                   rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="zine-sub underline decoration-[var(--linha-forte)] underline-offset-4"
+                  className="alvo zine-sub underline decoration-[var(--linha-forte)] underline-offset-4"
                 >
                   {s.label}
                 </a>

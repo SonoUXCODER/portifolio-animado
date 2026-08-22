@@ -28,6 +28,46 @@
 }
 
 @layer base {
+  /* =======================================================================
+     ESCALAS
+     Não mudam entre edições. Existem pra que nenhum valor de espaço, tempo
+     ou curva seja digitado solto dentro de componente — a auditoria achou
+     74 clamps distintos e 17 easings copiados antes disto existir.
+     ======================================================================= */
+  :root {
+    /* espaço: uma escala só, do rente ao respiro entre cadernos */
+    --e1: 4px;
+    --e2: 8px;
+    --e3: 12px;
+    --e4: 16px;
+    --e5: 24px;
+    --e6: 32px;
+    --e7: 48px;
+    --e8: clamp(40px, 6vw, 72px);
+    --e9: clamp(56px, 8vw, 104px);
+    --e10: clamp(72px, 11vw, 152px);
+
+    /* margem interna da folha — a "mancha" do impresso */
+    --mancha: clamp(18px, 5vw, 76px);
+
+    /* tempo e curva: a linguagem de movimento do site inteiro */
+    --dur-rapida: 160ms;
+    --dur-media: 340ms;
+    --dur-lenta: 620ms;
+    --dur-cena: 900ms;
+    /* saída rápida, chegada macia — o padrão de tudo que entra */
+    --ease-padrao: cubic-bezier(0.16, 1, 0.3, 1);
+    /* simétrica e firme: cortinas, máscaras, coisas que cobrem */
+    --ease-corte: cubic-bezier(0.76, 0, 0.24, 1);
+    /* quase linear, pra micro-resposta de hover */
+    --ease-micro: cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* impresso não tem canto arredondado. o token existe pra que a
+       exceção (input no iOS, foco) seja explícita e única */
+    --raio: 0px;
+    --raio-foco: 2px;
+  }
+
   /* ---------- edição papel (padrão) ---------- */
   :root {
     color-scheme: light;
@@ -39,8 +79,11 @@
     --papel: #ffffff;
     --papel-2: #f4f4f2;
     --tinta: #0a0a0a;
-    --tinta-2: #6e6e6e;
-    --tinta-3: #a6a6a6;
+    /* Contraste medido sobre --papel. O terciário já foi #a6a6a6 (2.8:1) e
+       reprovava em 86 elementos de uma vez, porque é a cor de todo rótulo
+       editorial de 9–11px. Agora: 6.9:1 e 5.0:1. */
+    --tinta-2: #5a5a5a;
+    --tinta-3: #6f6f6f;
 
     --linha: rgba(10, 10, 10, 0.13);
     --linha-forte: rgba(10, 10, 10, 0.32);
@@ -63,8 +106,9 @@
       --papel: #121212;
       --papel-2: #191919;
       --tinta: #f2f2f2;
-      --tinta-2: #939393;
-      --tinta-3: #5c5c5c;
+      /* mesma medida do lado claro: 7.8:1 e 5.8:1 sobre --papel */
+      --tinta-2: #a8a8a8;
+      --tinta-3: #8f8f8f;
 
       --linha: rgba(242, 242, 242, 0.15);
       --linha-forte: rgba(242, 242, 242, 0.34);
@@ -86,8 +130,9 @@
     --papel: #121212;
     --papel-2: #191919;
     --tinta: #f2f2f2;
-    --tinta-2: #939393;
-    --tinta-3: #5c5c5c;
+    /* mesma medida do lado claro: 7.8:1 e 5.8:1 sobre --papel */
+    --tinta-2: #a8a8a8;
+    --tinta-3: #8f8f8f;
 
     --linha: rgba(242, 242, 242, 0.15);
     --linha-forte: rgba(242, 242, 242, 0.34);
@@ -122,7 +167,7 @@
      transição — senão a primeira pintura pisca do claro pro escuro */
   html.tema-pronto body,
   html.tema-pronto .folha {
-    transition: background-color 0.35s ease, color 0.35s ease;
+    transition: background-color var(--dur-media) var(--ease-micro), color var(--dur-media) var(--ease-micro);
   }
 
   ::selection {
@@ -133,7 +178,7 @@
   :focus-visible {
     outline: 2px solid var(--tinta);
     outline-offset: 3px;
-    border-radius: 1px;
+    border-radius: var(--raio-foco);
   }
 
   img {
@@ -158,8 +203,9 @@
     --papel: var(--tinta-base);
     --papel-2: color-mix(in srgb, var(--papel-base) 8%, var(--tinta-base));
     --tinta: var(--papel-base);
-    --tinta-2: color-mix(in srgb, var(--papel-base) 64%, var(--tinta-base));
-    --tinta-3: color-mix(in srgb, var(--papel-base) 42%, var(--tinta-base));
+    /* medidos sobre a tinta cheia: 10:1 e 6.2:1 */
+    --tinta-2: color-mix(in srgb, var(--papel-base) 74%, var(--tinta-base));
+    --tinta-3: color-mix(in srgb, var(--papel-base) 56%, var(--tinta-base));
     --linha: color-mix(in srgb, var(--papel-base) 17%, transparent);
     --linha-forte: color-mix(in srgb, var(--papel-base) 38%, transparent);
   }
@@ -559,7 +605,24 @@
   .envelope {
     width: min(1360px, 100%);
     margin-inline: auto;
-    padding-inline: clamp(18px, 5vw, 76px);
+    padding-inline: var(--mancha);
+  }
+
+  /* WCAG 2.2 pede 24×24 de área clicável. Vários links do arquivo são
+     linhas de texto de 14–17px de altura: aumentar o padding empurraria a
+     diagramação, então a área cresce por pseudo-elemento e o layout fica
+     exatamente onde estava. */
+  .alvo {
+    position: relative;
+  }
+  .alvo::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    translate: 0 -50%;
+    height: max(100%, 26px);
   }
 
   .linha-fina {
@@ -693,6 +756,16 @@
 /* =========================================================================
    ANIMAÇÕES CURTAS (CSS resolve, sem JS)
    ========================================================================= */
+
+/* Toda animação infinita fica parada até a peça entrar na tela. O atributo
+   é escrito por <PausaForaDaTela/>, um IntersectionObserver único.
+   Sem isto, sete loops rodavam a página inteira o tempo todo. */
+[data-pausa][data-visivel='0'],
+[data-pausa][data-visivel='0'] *,
+[data-aba-oculta='1'] [data-pausa],
+[data-aba-oculta='1'] [data-pausa] * {
+  animation-play-state: paused !important;
+}
 
 @keyframes desliza {
   from {

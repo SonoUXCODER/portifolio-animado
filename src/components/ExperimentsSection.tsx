@@ -60,7 +60,7 @@ export default function ExperimentsSection() {
             transition={{ duration: 0.55, delay: (i % 4) * 0.05, ease: [0.16, 1, 0.3, 1] }}
             whileHover={reduzido ? undefined : { rotate: 0, scale: 1.015, zIndex: 5 }}
           >
-            <div className="relative min-h-0 w-full flex-1 overflow-hidden border border-[var(--linha-forte)]">
+            <div className="relative min-h-0 w-full flex-1 overflow-hidden border border-[var(--linha-forte)]" data-pausa>
               <Experimento kind={x.kind} />
 
               {/* etiqueta: some no hover pra não tapar o demo */}

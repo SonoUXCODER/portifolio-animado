@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { processo, type Etapa } from '@/data/process';
-import { cadernoDe, folioDe, totalDeCadernos } from '@/data/arquivo';
+import { cadernoDe, folioDe } from '@/data/arquivo';
+import Folio from './Folio';
 import { Doodle, Seta } from './Doodles';
 import { ScrollReveal } from './ScrollReveal';
 import { useDesktop } from '@/hooks/useMedia';
@@ -111,18 +112,7 @@ export default function ProcessSection() {
 
   const pe = (
     <div className="envelope">
-      <div className="folio">
-        <span className="escala-cinza" aria-hidden="true">
-          <i style={{ opacity: 0.15 }} />
-          <i style={{ opacity: 0.35 }} />
-          <i style={{ opacity: 0.55 }} />
-          <i style={{ opacity: 0.75 }} />
-          <i style={{ opacity: 1 }} />
-        </span>
-        <span>
-          PÁG. {folio} / {totalDeCadernos}
-        </span>
-      </div>
+      <Folio id="processo" />
     </div>
   );
 

@@ -62,7 +62,7 @@ export default function Navbar() {
           )}
         >
           {/* nome da publicação */}
-          <TransitionLink href="/" className="group flex items-baseline gap-2" cursor="ver">
+          <TransitionLink href="/" className="alvo group flex items-baseline gap-2" cursor="ver">
             <span
               className="zine-titulo text-[clamp(1rem,2vw,1.35rem)] leading-none"
               style={{ fontVariationSettings: "'wdth' 66" }}

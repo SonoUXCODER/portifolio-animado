@@ -122,7 +122,7 @@ export default function Capa() {
             </span>
           </div>
 
-          <a href="#sumario" className="group flex items-center gap-3" data-cursor="ver">
+          <a href="#sumario" className="alvo group flex items-center gap-3" data-cursor="ver">
             <span className="zine-sub">COMEÇAR A FOLHEAR</span>
             <motion.span
               aria-hidden="true"

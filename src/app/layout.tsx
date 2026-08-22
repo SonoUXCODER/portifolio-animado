@@ -9,6 +9,7 @@ import { ProvedorDeTransicao } from '@/components/PageTransition';
 import { ProvedorDeTema, scriptAntiPiscada } from '@/components/Tema';
 import { BarraDeProgresso } from '@/components/ScrollReveal';
 import { FiltrosSVG } from '@/components/Doodles';
+import PausaForaDaTela from '@/components/PausaForaDaTela';
 import './globals.css';
 
 /* -------------------------------------------------------------------------
@@ -158,6 +159,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* o grão fica por cima da folha inteira, sem capturar clique */}
         <div className="grao" aria-hidden="true" />
         <FiltrosSVG />
+        <PausaForaDaTela />
 
         <script
           type="application/ld+json"

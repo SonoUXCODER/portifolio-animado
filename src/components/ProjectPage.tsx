@@ -37,7 +37,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
         <div className="cabeco">
           <TransitionLink
             href="/#projetos"
-            className="inline-flex items-center gap-2 transition-transform duration-200 hover:-translate-x-1"
+            className="alvo inline-flex items-center gap-2 transition-transform duration-200 hover:-translate-x-1"
             cursor="ver"
           >
             <span aria-hidden="true">←</span> VOLTAR AO ARQUIVO

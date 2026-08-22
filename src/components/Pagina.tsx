@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { cadernoDe, folioDe, totalDeCadernos } from '@/data/arquivo';
+import { cadernoDe, folioDe } from '@/data/arquivo';
+import Folio from './Folio';
 import { cn } from '@/lib/utils';
 
 /* -------------------------------------------------------------------------
@@ -49,21 +50,7 @@ export default function Pagina({
 
         {children}
 
-        {!semFolio && (
-          <div className="folio">
-            <span className="escala-cinza" aria-hidden="true">
-              {/* cinco degraus de cinza, como a barra de controle de uma prova */}
-              <i style={{ opacity: 0.15 }} />
-              <i style={{ opacity: 0.35 }} />
-              <i style={{ opacity: 0.55 }} />
-              <i style={{ opacity: 0.75 }} />
-              <i style={{ opacity: 1 }} />
-            </span>
-            <span>
-              PÁG. {folio} / {totalDeCadernos}
-            </span>
-          </div>
-        )}
+        {!semFolio && <Folio id={id} />}
       </div>
     </section>
   );

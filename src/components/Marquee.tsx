@@ -27,8 +27,9 @@ export default function Marquee({
 
   return (
     <div
-      className={cn('marquee relative w-full overflow-hidden border-y-2 border-current select-none', className)}
+      className={cn('marquee relative w-full overflow-hidden border-y border-current select-none', className)}
       aria-hidden="true"
+      data-pausa
     >
       <div className="marquee-trilho" data-dir={reverso ? 'reverso' : 'normal'} style={{ ['--vel' as string]: `${velocidade}s` }}>
         {trilho.map((item, i) => (
