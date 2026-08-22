@@ -1,0 +1,28 @@
+{
+  "name": "sono-zine",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "deploy": "next build && gh-pages -d out --dotfiles -m \"deploy\""
+  },
+  "dependencies": {
+    "next": "15.5.23",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "framer-motion": "^12.23.12"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.14",
+    "tailwindcss": "^4.1.14",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "typescript": "^5.7.3",
+    "gh-pages": "^6.3.0"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true
+  }
+}

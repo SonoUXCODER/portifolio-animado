@@ -1,0 +1,524 @@
+@import 'tailwindcss';
+
+/* =========================================================================
+   NOITE DE INVERNO — sistema visual
+
+   Grafite profundo, superfície chumbo, branco suave e uma família fria de
+   azuis acinzentados. Nada satura: o único "colorido" do site é a diferença
+   de temperatura entre o cinza do fundo e o azul do destaque.
+
+   Hierarquia, do mais quieto ao mais alto:
+     --bg        fundo da página
+     --surface   cards, molduras, seções invertidas
+     --border    linha fria de baixo contraste
+     --text-2    texto secundário
+     --accent    destaque (números, rótulos, marcadores)
+     --text      texto principal
+     --ice       interação: hover, foco, seleção
+
+   Cuidado ao mexer: classe de componente vive dentro de `@layer components`.
+   CSS fora de layer passa na frente de qualquer utility do Tailwind e um
+   `text-[14px]` no JSX para de funcionar sem explicação.
+   ========================================================================= */
+
+@theme {
+  --color-bg: #0b0d10;
+  --color-surface: #14181d;
+  --color-surface-2: #1b2027;
+  --color-text: #e8ecf1;
+  --color-text-2: #93a1b0;
+  --color-accent: #8ca3bc;
+  --color-accent-2: #6e8299;
+  --color-ice: #afc6db;
+
+  --font-display: var(--fonte-display), 'Archivo', system-ui, sans-serif;
+  --font-mono: var(--fonte-mono), ui-monospace, 'IBM Plex Mono', monospace;
+  --font-hand: var(--fonte-hand), 'Caveat', cursive;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    --bg: #0b0d10;
+    --surface: #14181d;
+    --surface-2: #1b2027;
+
+    --text: #e8ecf1;
+    --text-2: #93a1b0;
+
+    --accent: #8ca3bc;
+    --accent-2: #6e8299;
+    --ice: #afc6db;
+
+    /* bordas em branco translúcido: funcionam igual sobre o fundo e sobre
+       a superfície, sem precisar de dois tokens por contexto */
+    --border: rgba(232, 236, 241, 0.1);
+    --border-forte: rgba(232, 236, 241, 0.26);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* a nav fixa não pode comer o título quando um link de âncora cai */
+    scroll-padding-top: 92px;
+    -webkit-text-size-adjust: 100%;
+    /* clip, e não hidden: hidden viraria contêiner de rolagem e mataria
+       todo position:sticky da página. segura o que entra de fora
+       (reveal lateral, título maior que a tela) sem criar barra */
+    overflow-x: clip;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-synthesis-weight: none;
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--ice);
+    color: var(--bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ice);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@layer components {
+  /* ---------- seção invertida: sobe um degrau de superfície ----------
+     No tema claro isto virava preto. Agora que a página inteira é escura,
+     a inversão é de elevação, não de polaridade: o bloco clareia o
+     suficiente pra marcar o ritmo sem quebrar a leitura. */
+  .invertido {
+    background: var(--surface);
+    color: var(--text);
+  }
+
+  /* =======================================================================
+     TIPOGRAFIA
+     O Archivo tem eixo de largura (wdth 62..125). Título gigante usa 74 pra
+     caber muita letra na linha; texto corrido fica em 100.
+     ======================================================================= */
+
+  .zine-titulo {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-variation-settings: 'wdth' 74;
+    line-height: 0.82;
+    letter-spacing: -0.022em;
+    text-transform: uppercase;
+    font-size: clamp(2.9rem, 13vw, 15rem);
+    /* nada de quebrar palavra no meio: numa palavra dessas o corte
+       aparece como erro, não como estilo */
+    overflow-wrap: normal;
+    hyphens: none;
+  }
+
+  .zine-titulo--medio {
+    font-size: clamp(2.2rem, 7.4vw, 6rem);
+    font-variation-settings: 'wdth' 82;
+    line-height: 0.88;
+  }
+
+  .zine-sub {
+    font-family: var(--font-mono);
+    font-size: clamp(0.62rem, 1.1vw, 0.75rem);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    letter-spacing: 0.08em;
+  }
+
+  .hand {
+    font-family: var(--font-hand);
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .corpo {
+    font-family: var(--font-display);
+    font-variation-settings: 'wdth' 100;
+    font-weight: 500;
+    line-height: 1.45;
+    max-width: 34ch;
+    color: var(--text-2);
+  }
+
+  /* contorno vazado, pra palavra gigante que fica atrás de tudo */
+  .vazado {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--text);
+    opacity: 0.14;
+  }
+
+  /* =======================================================================
+     ATMOSFERA
+     Duas camadas discretas: um grão de filme e uma luz fria vindo de cima.
+     No tema claro elas eram multiply (fibra de papel). No escuro, multiply
+     só empasta — então a luz entra somando e o grão fica quase invisível.
+     ======================================================================= */
+
+  .grao {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  /* luz de poste: um halo frio no topo e sombra fechando as beiradas */
+  .textura-papel {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background-image:
+      radial-gradient(ellipse 110% 70% at 50% -12%, rgba(140, 163, 188, 0.11), transparent 62%),
+      radial-gradient(ellipse 90% 60% at 100% 108%, rgba(110, 130, 153, 0.07), transparent 58%);
+  }
+
+  /* registro fora do lugar: as duas tintas saem da chapa no hover.
+     no escuro o blend é screen — multiply sumiria contra o fundo */
+  .desregistro {
+    position: relative;
+  }
+  .desregistro::before,
+  .desregistro::after {
+    content: attr(data-texto);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    mix-blend-mode: screen;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .desregistro::before {
+    color: var(--accent-2);
+  }
+  .desregistro::after {
+    color: var(--ice);
+  }
+  .group:hover .desregistro::before,
+  .group:focus-visible .desregistro::before {
+    opacity: 0.42;
+    transform: translate3d(-4px, 3px, 0);
+  }
+  .group:hover .desregistro::after,
+  .group:focus-visible .desregistro::after {
+    opacity: 0.42;
+    transform: translate3d(4px, -3px, 0);
+  }
+
+  /* borda de papel rasgado, usada nas quebras de seção */
+  .rasgo {
+    height: 14px;
+    width: 100%;
+    background: currentColor;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='14' preserveAspectRatio='none'%3E%3Cpath d='M0 14V6l8-2 7 4 9-5 6 3 10-4 8 5 7-3 9 4 8-5 7 3 10-2 6 4 9-4 8 3 7-4 9 5 8-3 7 2 9-4 6 4 10-3 7 4 8-5 7 3 9-2 6 4 8-4 7 3V14z' fill='%23000'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='14' preserveAspectRatio='none'%3E%3Cpath d='M0 14V6l8-2 7 4 9-5 6 3 10-4 8 5 7-3 9 4 8-5 7 3 10-2 6 4 9-4 8 3 7-4 9 5 8-3 7 2 9-4 6 4 10-3 7 4 8-5 7 3 9-2 6 4 8-4 7 3V14z' fill='%23000'/%3E%3C/svg%3E");
+    -webkit-mask-size: 240px 100%;
+    mask-size: 240px 100%;
+    -webkit-mask-repeat: repeat-x;
+    mask-repeat: repeat-x;
+  }
+
+  /* =======================================================================
+     ELEMENTOS DESENHADOS À MÃO
+     ======================================================================= */
+
+  /* sublinhado torto — não é underline, é um traço de caneta.
+     data: URI não lê variável CSS, então o hex do --accent vive aqui também */
+  .sublinha {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='12' preserveAspectRatio='none'%3E%3Cpath d='M2 8c34-5 62 2 96-2 30-3 58 3 100-1' fill='none' stroke='%238ca3bc' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 10px;
+    padding-bottom: 6px;
+  }
+
+  /* carimbo: caixinha torta, traço fino */
+  .carimbo {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 6px 12px 5px;
+    border: 1.5px solid currentColor;
+    border-radius: 3px;
+    transform: rotate(-4deg);
+    opacity: 0.85;
+  }
+
+  /* circulado à caneta */
+  .circulado {
+    position: relative;
+    display: inline-block;
+  }
+  .circulado::after {
+    content: '';
+    position: absolute;
+    /* horizontal curto de propósito: a caneta não pode sair da margem
+       do envelope quando o texto circulado é largo */
+    inset: -13% -2.5%;
+    border: 2px solid var(--accent);
+    border-radius: 48% 52% 46% 54% / 58% 44% 56% 42%;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  /* fita segurando as imagens — no escuro ela é luz, não sombra */
+  .fita {
+    position: absolute;
+    width: 104px;
+    height: 28px;
+    background: rgba(175, 198, 219, 0.12);
+    box-shadow: inset 0 0 0 1px rgba(232, 236, 241, 0.08);
+    pointer-events: none;
+    clip-path: polygon(3% 12%, 97% 0%, 100% 86%, 1% 100%);
+  }
+
+  /* =======================================================================
+     COMPONENTES
+     ======================================================================= */
+
+  .envelope {
+    width: min(1560px, 100%);
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 64px);
+  }
+
+  .linha-fina {
+    border: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  /* botão principal: branco suave sobre o grafite, com o deslocamento duro
+     que o site inteiro usa — só que a sombra agora é grafite, não cor */
+  .botao {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 15px 26px;
+    background: var(--text);
+    color: var(--bg);
+    border: 1.5px solid var(--text);
+    box-shadow: 5px 5px 0 var(--accent-2);
+    transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease,
+      border-color 0.14s ease;
+  }
+  .botao:hover,
+  .botao:focus-visible {
+    background: var(--ice);
+    border-color: var(--ice);
+    transform: translate3d(-3px, -3px, 0);
+    box-shadow: 9px 9px 0 var(--accent-2);
+  }
+  .botao:active {
+    transform: translate3d(2px, 2px, 0);
+    box-shadow: 2px 2px 0 var(--accent-2);
+  }
+
+  .botao--vazio {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--border-forte);
+    box-shadow: 5px 5px 0 var(--surface-2);
+  }
+  .botao--vazio:hover,
+  .botao--vazio:focus-visible {
+    background: transparent;
+    color: var(--ice);
+    border-color: var(--ice);
+    box-shadow: 9px 9px 0 var(--surface-2);
+  }
+
+  /* campo de formulário: linha de caderno, não caixinha de dashboard */
+  .campo {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1.5px solid var(--border-forte);
+    padding: 14px 2px 10px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    transition: border-color 0.18s ease;
+  }
+  .campo::placeholder {
+    color: var(--text-2);
+    opacity: 0.55;
+    font-weight: 500;
+  }
+  .campo:focus {
+    outline: none;
+    border-bottom-color: var(--ice);
+  }
+  .campo:focus-visible {
+    outline: none;
+  }
+
+  .rotulo {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+
+  /* trilho do marquee */
+  .marquee-trilho {
+    display: flex;
+    width: max-content;
+    animation: desliza var(--vel, 34s) linear infinite;
+  }
+  .marquee-trilho[data-dir='reverso'] {
+    animation-direction: reverse;
+  }
+  .marquee:hover .marquee-trilho {
+    animation-play-state: paused;
+  }
+
+  /* palco das ferramentas: a mesma lista, espalhada só no desktop.
+     as coordenadas chegam por --x/--y no style de cada <li> */
+  @media (min-width: 1024px) {
+    .palco-stack {
+      position: relative;
+      display: block;
+      height: 720px;
+    }
+    .palco-stack > li {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+    }
+  }
+
+  /* experimento do tipo elástico: o eixo de largura do Archivo abrindo */
+  .tipo-elastico span {
+    font-variation-settings: 'wdth' 62;
+    transition: font-variation-settings 0.55s cubic-bezier(0.16, 1, 0.3, 1), letter-spacing 0.55s;
+  }
+  .tipo-elastico:hover span {
+    font-variation-settings: 'wdth' 125;
+    letter-spacing: 0.03em;
+  }
+}
+
+/* =========================================================================
+   CURSOR
+   O cursor nativo some só onde existe ponteiro fino de verdade.
+   ========================================================================= */
+
+@media (hover: hover) and (pointer: fine) {
+  body.tem-cursor,
+  body.tem-cursor a,
+  body.tem-cursor button,
+  body.tem-cursor [role='button'] {
+    cursor: none;
+  }
+}
+
+/* =========================================================================
+   ANIMAÇÕES CURTAS (CSS resolve, sem JS)
+   ========================================================================= */
+
+@keyframes desliza {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes desliza-listra {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes piscada {
+  0%, 92%, 100% { opacity: 1; }
+  94%, 98% { opacity: 0.3; }
+}
+.pisca {
+  animation: piscada 5.5s infinite;
+}
+
+@keyframes flutua {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -9px, 0); }
+}
+.flutua {
+  animation: flutua var(--dur, 6s) ease-in-out infinite;
+}
+
+@keyframes gira {
+  to { transform: rotate(360deg); }
+}
+.gira {
+  animation: gira var(--dur, 22s) linear infinite;
+}
+
+/* =========================================================================
+   BARRA DE ROLAGEM
+   ========================================================================= */
+
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+::-webkit-scrollbar-thumb {
+  background: #2e3640;
+  border: 3px solid var(--surface);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-2);
+}
+
+/* =========================================================================
+   MOVIMENTO REDUZIDO
+   Some parallax, some rotação, some deslize. Fica só o fade curto.
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.12s !important;
+  }
+  .marquee-trilho {
+    animation: none !important;
+    transform: none !important;
+  }
+}

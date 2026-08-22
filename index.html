@@ -1,0 +1,2736 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- ==========================================================================
+     Trocou de domínio? Só substituir https://sonouxcoder.github.io/portifolio-oficial
+     em todo o arquivo (canonical, og:url, og:image, twitter:image e o JSON-LD).
+     ========================================================================== -->
+<title>sono | Full-Stack Developer und UX·UI</title>
+<meta name="description" content="Full-Stack Developer und UX/UI-Designer in der Schweiz. Ich baue schnelle, mehrsprachige Websites, Online-Shops und eigene SaaS-Produkte.">
+<meta name="author" content="sono">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#070707">
+<link rel="canonical" href="https://sonouxcoder.github.io/portifolio-oficial/">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sonouxcoder.github.io/portifolio-oficial/">
+<meta property="og:site_name" content="sonoUXcoder">
+<meta property="og:title" content="sono | Full-Stack Developer und UX·UI">
+<meta property="og:description" content="Full-Stack Developer und UX/UI-Designer in der Schweiz. Ich baue schnelle, mehrsprachige Websites, Online-Shops und eigene SaaS-Produkte.">
+<meta property="og:image" content="https://sonouxcoder.github.io/portifolio-oficial/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="sono, Full-Stack Developer und UX·UI Designer">
+<meta property="og:locale" content="de_CH">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:locale:alternate" content="pt_BR">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="sono | Full-Stack Developer und UX·UI">
+<meta name="twitter:description" content="Full-Stack Developer und UX/UI-Designer in der Schweiz. Ich baue schnelle, mehrsprachige Websites, Online-Shops und eigene SaaS-Produkte.">
+<meta name="twitter:image" content="https://sonouxcoder.github.io/portifolio-oficial/assets/og.png">
+
+<link rel="icon" href="assets/icon-32.png" sizes="32x32">
+<link rel="icon" href="assets/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="assets/foto-cracha.webp" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "sono",
+  "alternateName": "sonoUXcoder",
+  "url": "https://sonouxcoder.github.io/portifolio-oficial/",
+  "image": "https://sonouxcoder.github.io/portifolio-oficial/assets/avatar.webp",
+  "email": "mailto:alissonvpt1@gmail.com",
+  "jobTitle": "Full-Stack Developer und UX/UI Designer",
+  "description": "Full-Stack Developer und UX/UI-Designer in der Schweiz. Mehrsprachige Websites, Online-Shops und eigene SaaS-Produkte.",
+  "knowsAbout": ["TypeScript", "React", "Next.js", "Node.js", "PostgreSQL", "Stripe", "UX/UI Design", "Figma", "Accessibility"],
+  "knowsLanguage": ["de", "en", "pt"],
+  "sameAs": [
+    "https://github.com/SonoUXCODER",
+    "https://instagram.com/somnifobias"
+  ]
+}
+</script>
+
+<style>
+:root{
+  --bg:#070707;
+  --ink:#ececec;
+  --mut:#8f8f8f;
+  --line:rgba(255,255,255,.08);
+  --glass:rgba(255,255,255,.05);
+  --glass-b:rgba(255,255,255,.12);
+
+  /* Acento. Trocar estas quatro linhas muda a cor do site inteiro.
+     O roxo puxa do knifes.me; para voltar ao preto e branco de antes,
+     é só pôr #ececec no --accent e zerar as transparências. */
+  --accent:#7c5cff;
+  --accent-ink:#b9a5ff;             /* versão clara, para texto pequeno */
+  --accent-soft:rgba(124,92,255,.16);
+  --accent-glow:rgba(124,92,255,.34);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Archivo',sans-serif;
+  font-variation-settings:"wdth" 100;
+  overflow-x:hidden;
+}
+::selection{background:var(--accent);color:#fff}
+:focus-visible{outline:2px solid var(--accent-ink);outline-offset:3px;border-radius:6px}
+
+/* visível só para leitor de tela */
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;
+}
+
+/* pular direto para o conteúdo (teclado / leitor de tela) */
+.skip{
+  position:absolute;left:12px;top:-60px;z-index:1200;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;
+  background:#fff;color:#000;padding:11px 18px;border-radius:99px;text-decoration:none;
+  transition:top .2s;
+}
+.skip:focus{top:12px}
+
+/* ---------- backdrop ---------- */
+.grid-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,.055) 1px, transparent 1.4px),
+    linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:28px 28px, 56px 56px, 56px 56px;
+  mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,#000 38%,transparent 100%);
+}
+.noise{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.82' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+/* soft depth: top glow + edge vignette layered over the grid */
+.vignette{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:
+    radial-gradient(130% 90% at 50% -12%, rgba(124,92,255,.13), transparent 46%),
+    radial-gradient(100% 130% at 50% 118%, rgba(0,0,0,.62), transparent 56%),
+    radial-gradient(140% 100% at 50% 50%, transparent 62%, rgba(0,0,0,.45));
+}
+
+/* ---------- nav ---------- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:16px 30px;
+  background:linear-gradient(rgba(7,7,7,.72),transparent);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid transparent;
+  transition:border-color .4s, background .4s;
+}
+nav.scrolled{border-bottom-color:var(--line);background:rgba(7,7,7,.82)}
+.brand{display:flex;align-items:center;gap:10px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--mut);letter-spacing:.06em;text-decoration:none;white-space:nowrap}
+.brand img{width:30px;height:30px;border-radius:50%;border:1px solid var(--glass-b)}
+.brand b{color:#fff;font-weight:500}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-links{display:flex;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:12px}
+.nav-links a{
+  color:var(--mut);text-decoration:none;padding:8px 13px;border-radius:99px;
+  transition:.25s;letter-spacing:.08em;text-transform:uppercase;
+}
+.nav-links a:hover,.nav-links a:focus-visible{color:#fff;background:var(--accent-soft)}
+.nav-links a.active{color:#000;background:#fff}
+.lang-switch{
+  display:flex;gap:2px;padding:3px;border-radius:99px;
+  background:rgba(255,255,255,.07);border:1px solid var(--glass-b);
+}
+.lang-switch button{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;
+  border:0;cursor:pointer;background:transparent;color:var(--mut);
+  padding:6px 11px;border-radius:99px;transition:.25s;
+}
+.lang-switch button:hover{color:#fff}
+.lang-switch button[aria-pressed="true"]{background:#fff;color:#000}
+
+/* ---------- stacked sticky panels ---------- */
+.panel{
+  position:sticky;top:0;
+  min-height:100vh;min-height:100svh;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+  z-index:2;
+  overflow:hidden;
+}
+.panel + .panel{box-shadow:0 -40px 120px rgba(0,0,0,.9);border-top:1px solid var(--line)}
+
+/* ---------- loading intro ---------- */
+#loader{
+  position:fixed;inset:0;z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+  will-change:opacity,transform;
+  transition:opacity .7s cubic-bezier(.76,0,.24,1), transform .9s cubic-bezier(.76,0,.24,1);
+}
+#loader.done{opacity:0;transform:translateY(-3%) scale(1.05);pointer-events:none}
+#loader::before{ /* soft top glow, echoes the site's vignette */
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 80% at 50% 32%, rgba(150,150,165,.10), transparent 55%);
+}
+.hello-stage{
+  position:relative;z-index:2;
+  display:flex;align-items:center;justify-content:center;
+  min-height:1.5em;padding:0 24px;text-align:center;
+}
+.hello-word{
+  font-family:'Caveat',cursive;
+  font-size:clamp(58px,13vw,140px);line-height:1;
+  color:var(--ink);letter-spacing:.005em;
+  opacity:0;transform:translateY(24px);filter:blur(7px);
+  will-change:opacity,transform,filter;
+}
+/* scripts sem versão cursiva são renderizados numa fonte limpa em vez de tofu */
+.hello-word.plain{font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(46px,10vw,112px)}
+.hello-word.show{animation:helloIn .24s cubic-bezier(.22,1,.36,1) forwards}
+.hello-word.hide{animation:helloOut .16s cubic-bezier(.55,0,.85,.45) forwards}
+@keyframes helloIn{from{opacity:0;transform:translateY(24px);filter:blur(7px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes helloOut{from{opacity:1;transform:none;filter:blur(0)}to{opacity:0;transform:translateY(-22px);filter:blur(7px)}}
+.loader-line{
+  position:absolute;left:50%;bottom:13%;transform:translateX(-50%);
+  width:min(200px,44vw);height:2px;border-radius:99px;
+  background:rgba(255,255,255,.12);overflow:hidden;
+}
+.loader-line span{
+  display:block;height:100%;width:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--accent-soft),var(--accent));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.loader-skip{
+  position:absolute;left:50%;bottom:6%;transform:translateX(-50%);
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(255,255,255,.28);
+  background:transparent;border:0;cursor:pointer;padding:8px 14px;
+}
+.loader-skip:hover{color:rgba(255,255,255,.6)}
+
+/* ---------- hero ---------- */
+#hero{align-items:stretch}
+.hero-wrap{
+  position:relative;z-index:2;width:100%;max-width:1240px;margin:0 auto;
+  display:grid;grid-template-columns:1.12fr .88fr;gap:40px;
+  align-items:center;padding:100px 44px 60px;
+}
+.eyebrow{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut);
+  letter-spacing:.28em;text-transform:uppercase;margin-bottom:22px;
+  display:flex;align-items:center;gap:10px;
+}
+/* letreiro preso à rolagem: o texto desliza conforme a pessoa desce a página.
+   A máscara à direita faz o texto sumir sem cortar em seco. */
+.eyebrow-window{
+  position:relative;overflow:hidden;min-width:0;
+  max-width:min(370px,58vw);
+  -webkit-mask-image:linear-gradient(90deg,#000 78%,transparent);
+  mask-image:linear-gradient(90deg,#000 78%,transparent);
+}
+.eyebrow-track{
+  display:flex;width:max-content;white-space:nowrap;
+  transform:translate3d(var(--eb,0px),0,0);
+  will-change:transform;
+}
+.eyebrow-track > span{padding-right:2.4em}
+.hero-title{
+  font-size:clamp(46px,6.4vw,96px);
+  font-weight:900;font-variation-settings:"wdth" 72;
+  line-height:.94;letter-spacing:-.02em;text-transform:uppercase;
+}
+.hero-title em{
+  font-style:normal;color:transparent;
+  -webkit-text-stroke:1.5px var(--accent-ink);
+}
+/* texto corrido, não flex: como flex-container cada trecho virava um item e o
+   gap abria um espaço antes de cada vírgula */
+.roles{
+  margin-top:18px;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--mut);
+  letter-spacing:.06em;line-height:1.7;
+}
+.roles b{color:#fff;font-weight:500}
+.hero-p{margin-top:26px;max-width:52ch;color:var(--mut);font-size:15px;line-height:1.75;font-weight:400}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+.chip{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+  padding:8px 15px;border-radius:99px;color:#d5d5d5;
+  background:rgba(255,255,255,.06);border:1px solid var(--glass-b);
+  transition:.25s;
+}
+.chip:hover{background:#fff;color:#000;transform:translateY(-2px)}
+.hero-social{margin-top:34px;display:flex;gap:10px;flex-wrap:wrap}
+.hero-social a{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;
+  color:#cfcfcf;text-decoration:none;padding:9px 16px;border-radius:99px;
+  background:rgba(255,255,255,.06);border:1px solid var(--glass-b);transition:.25s;
+}
+.hero-social a:hover{background:#fff;color:#000;transform:translateY(-2px)}
+
+/* ---------- badge (signature) ---------- */
+.badge-zone{
+  display:flex;justify-content:center;align-items:flex-start;
+  perspective:1400px;height:100%;min-height:560px;
+}
+.badge-rig{
+  transform-origin:top center;will-change:transform;
+  margin-top:-120px; /* strap comes from beyond the top edge */
+}
+.lanyard{
+  width:46px;height:300px;margin:0 auto -4px;position:relative;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.10),rgba(255,255,255,0) 18%,rgba(0,0,0,.45) 55%,rgba(255,255,255,.08)),
+    repeating-linear-gradient(180deg,#1e1e1e 0 12px,#101010 12px 24px);
+  border-left:1px solid rgba(255,255,255,.16);
+  border-right:1px solid rgba(255,255,255,.10);
+  box-shadow:0 10px 30px rgba(0,0,0,.6);
+  transform-origin:top center;will-change:transform;
+}
+.lanyard::after{
+  content:"SONOUXCODER ★ SONOUXCODER ★ SONOUXCODER ★";
+  position:absolute;inset:0;writing-mode:vertical-rl;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;color:#6d6d6d;
+  letter-spacing:.24em;display:flex;align-items:center;justify-content:center;
+  text-shadow:0 1px 0 #000;
+}
+.ring{
+  width:20px;height:20px;margin:0 auto -8px;border-radius:50%;
+  border:3px solid;position:relative;z-index:4;
+  border-color:#555 #2a2a2a #1a1a1a #4a4a4a;
+  background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.25),transparent 60%);
+  box-shadow:0 2px 6px rgba(0,0,0,.7);
+}
+.clip{
+  width:30px;height:24px;margin:0 auto;
+  background:linear-gradient(110deg,#4d4d4d,#181818 45%,#3d3d3d 70%,#0e0e0e);
+  border:1px solid rgba(255,255,255,.28);border-radius:5px 5px 9px 9px;
+  position:relative;z-index:3;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 3px 8px rgba(0,0,0,.7);
+}
+.clip::after{content:"";position:absolute;left:50%;top:16px;width:12px;height:14px;transform:translateX(-50%);border:2px solid #555;border-top:none;border-radius:0 0 9px 9px}
+.badge-card{
+  width:min(300px,72vw);margin-top:8px;border-radius:20px;padding:16px 16px 20px;
+  background:linear-gradient(160deg,#181818,#0a0a0a);
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow:0 40px 90px rgba(0,0,0,.85), inset 0 1px 0 rgba(255,255,255,.1);
+  position:relative;transform-style:preserve-3d;will-change:transform;
+  cursor:grab;touch-action:pan-y;user-select:none;-webkit-user-select:none;
+}
+.badge-card.grabbing{cursor:grabbing}
+#hang{will-change:transform}
+.badge-card img{-webkit-user-drag:none;user-drag:none;pointer-events:none}
+.badge-card::before{ /* punched slot */
+  content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  width:48px;height:9px;border-radius:99px;background:#000;
+  box-shadow:inset 0 2px 3px rgba(0,0,0,.95),0 1px 0 rgba(255,255,255,.14);
+}
+.badge-card::after{ /* card glare */
+  content:"";position:absolute;inset:0;border-radius:20px;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.10) 45%,transparent 60%);
+  background-size:220% 100%;background-position:var(--glare,80%) 0;
+}
+.photo-wrap{
+  position:relative;margin-top:14px;border-radius:12px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  transform:translateZ(24px);
+  /* metallic mirror plate: the photo's white background dissolves into it (multiply) */
+  background:
+    /* specular hotspot that follows the cursor (soft, never blinding) */
+    radial-gradient(110% 80% at var(--px,50%) var(--py,28%),
+      rgba(255,255,255,var(--spec,.30)),
+      rgba(205,208,214,.16) 30%,
+      rgba(120,124,132,0) 60%),
+    /* mirror bands sweeping with the tilt */
+    linear-gradient(calc(115deg + var(--hx,0deg)),
+      #83878d 0%,
+      #e3e6ea calc(22% + var(--hp,0%)),
+      #63676e calc(40% + var(--hp,0%)),
+      #d3d6db calc(58% + var(--hp,0%)),
+      #8b8f96 calc(76% + var(--hp,0%)),
+      #c4c7cd 100%),
+    /* brushed-steel grain */
+    repeating-linear-gradient(88deg,
+      rgba(255,255,255,.05) 0 1px,
+      rgba(0,0,0,.05) 1px 3px);
+  transition:box-shadow .35s;
+}
+.photo-wrap:hover{box-shadow:0 0 40px rgba(255,255,255,.10), inset 0 0 30px rgba(255,255,255,.06)}
+.badge-photo{
+  /* height:auto é obrigatório: os atributos width/height do <img> entram como
+     hint de apresentação e fixariam a altura natural, e aí o aspect-ratio
+     abaixo seria ignorado (ele só vale quando a outra medida é auto). */
+  width:100%;height:auto;aspect-ratio:3/4;object-fit:cover;object-position:top;display:block;
+  position:relative;
+  filter:grayscale(1) contrast(1.14);
+  mix-blend-mode:multiply; /* white background becomes the metal behind it */
+}
+.holo{ /* mirror sweep in soft-light, so it shades the metal without whiting out the subject */
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(calc(100deg + var(--hx,0deg)),
+      transparent 38%,
+      rgba(255,255,255,var(--sweep,.16)) calc(46% + var(--hp,0%)),
+      rgba(255,255,255,calc(var(--sweep,.16)*.4)) calc(49% + var(--hp,0%)),
+      transparent 58%);
+  mix-blend-mode:soft-light;
+  transition:opacity .3s;
+}
+.holo2{ /* cold chrome iridescence, kept faint */
+  position:absolute;inset:0;pointer-events:none;opacity:var(--irid,.07);
+  background:conic-gradient(from calc(var(--hx,0deg)*4) at var(--px,50%) var(--py,35%),
+    #aebfff,#f2f2f2,#ffd3dd,#d5ffe4,#aebfff);
+  mix-blend-mode:color-dodge;
+  filter:saturate(.55);
+  transition:opacity .35s;
+}
+.holo3{ /* mirror edge reflection: faint inverted glint near the borders */
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(0deg, rgba(255,255,255,.10), transparent 14%),
+    linear-gradient(180deg, rgba(255,255,255,.08), transparent 11%);
+  mix-blend-mode:screen;opacity:.6;
+}
+.badge-meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:14px;transform:translateZ(16px)}
+.badge-meta .name{font-weight:800;font-size:16px;letter-spacing:-.01em;text-transform:uppercase}
+.badge-meta .role{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--mut);letter-spacing:.14em;margin-top:4px}
+.badge-bar{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#555;letter-spacing:.1em;text-align:right}
+.barcode{display:flex;gap:2px;height:22px;align-items:flex-end;margin-bottom:4px;justify-content:flex-end}
+.barcode i{width:2px;background:#777}
+.barcode i:nth-child(3n){height:100%}.barcode i:nth-child(3n+1){height:70%}.barcode i:nth-child(3n+2){height:85%;width:3px}
+
+/* ---------- showcase ---------- */
+/* Esta seção cresce a cada projeto novo. Como painel preso (sticky + overflow
+   hidden) tudo que passasse da altura da tela ficaria inalcançável, então ela
+   rola normalmente e o resto dos painéis mantém o empilhamento. */
+#work{position:relative;min-height:0;flex-direction:column;padding:110px 24px}
+.sec-head{text-align:center;position:relative;z-index:2}
+.sec-head h2{font-size:clamp(34px,4.6vw,58px);font-weight:800;font-variation-settings:"wdth" 78;letter-spacing:-.02em}
+.sec-head p{color:var(--mut);font-size:14px;margin-top:12px;font-family:'IBM Plex Mono',monospace}
+.tabs{
+  display:inline-flex;gap:4px;margin:34px auto 0;padding:5px;border-radius:99px;
+  background:var(--glass);border:1px solid var(--glass-b);
+  position:relative;z-index:2;
+}
+.tab{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;
+  padding:10px 22px;border-radius:99px;border:0;cursor:pointer;
+  background:transparent;color:var(--mut);transition:.25s;
+}
+.tab:hover{color:#fff}
+.tab[aria-selected="true"]{background:#fff;color:#000}
+.pane{display:none;width:100%;max-width:1340px;margin:44px auto 0;position:relative;z-index:2}
+.pane.show{display:grid;animation:fadeUp .5s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.tech-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.tile{
+  aspect-ratio:1/.9;border-radius:18px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;
+  background:var(--glass);border:1px solid var(--line);
+  transition:.3s;cursor:default;
+}
+.tile:hover{transform:translateY(-5px);background:rgba(255,255,255,.07)}
+.tile .glyph{
+  font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:20px;
+  width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+  color:var(--c,#e5e5e5);
+  background:color-mix(in srgb, var(--c,#888) 12%, #101010);
+  border:1px solid color-mix(in srgb, var(--c,#888) 35%, transparent);
+  text-shadow:0 0 14px color-mix(in srgb, var(--c,#888) 55%, transparent);
+  transition:.3s;
+}
+.tile:hover{border-color:color-mix(in srgb, var(--c,#fff) 45%, transparent)}
+.tile:hover .glyph{
+  background:color-mix(in srgb, var(--c,#888) 22%, #101010);
+  box-shadow:0 0 22px color-mix(in srgb, var(--c,#888) 30%, transparent);
+}
+.tile .label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--mut);letter-spacing:.08em}
+
+/* ---------- project cards ---------- */
+.proj-grid{grid-template-columns:repeat(auto-fit,minmax(298px,1fr));gap:18px}
+.proj{
+  border-radius:20px;overflow:hidden;
+  background:rgba(255,255,255,.045);border:1px solid var(--line);
+  display:flex;flex-direction:column;
+  will-change:transform;
+  transition:border-color .35s, box-shadow .35s, transform .25s cubic-bezier(.22,1,.36,1);
+}
+.proj:hover,.proj:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 34px 80px rgba(0,0,0,.65), 0 0 0 1px var(--accent-soft);
+}
+/* a moldura recorta tudo: capa, scroll longo e brilho */
+/* a capa é um botão: abre a prévia embutida, sem tirar ninguém do portfólio */
+.proj-media{
+  display:block;position:relative;overflow:hidden;width:100%;
+  aspect-ratio:16/10;background:#0c0c0c;
+  border:0;border-bottom:1px solid var(--line);
+  padding:0;margin:0;font:inherit;color:inherit;text-align:left;
+  cursor:pointer;-webkit-appearance:none;appearance:none;
+}
+/* A placa é 8% mais alta que a moldura e ancorada no topo, então qualquer
+   deslocamento entre -8% e 0% continua cobrindo a área visível.
+   --par  vem do scroll (-2% a -6%), --parh vem do mouse (-1.5% a +1.5%) */
+.proj-plate{
+  position:absolute;left:0;top:0;width:100%;
+  transform:translate3d(0,calc(var(--par,-4%) + var(--parh,0%)),0) scale(1.08);
+  transform-origin:top center;
+  will-change:transform;
+  transition:transform .25s cubic-bezier(.22,1,.36,1);
+}
+.proj-cover{display:block;width:100%;height:auto;transition:opacity .45s ease}
+.proj-scroll{
+  position:absolute;left:0;top:0;width:100%;height:auto;display:block;
+  opacity:0;transform:translate3d(0,0,0);
+  transition:opacity .45s ease, transform .75s cubic-bezier(.4,0,.2,1);
+  will-change:transform,opacity;
+}
+/* no hover a capa some e a captura da página inteira rola por dentro da moldura.
+   Só entra em ação depois que a captura longa terminou de baixar (.ready),
+   senão o primeiro hover mostraria uma moldura vazia. */
+.proj.ready:hover .proj-cover,.proj.ready:focus-within .proj-cover{opacity:0}
+.proj.ready:hover .proj-scroll,.proj.ready:focus-within .proj-scroll{
+  opacity:1;
+  transform:translate3d(0,var(--scroll-end,-80%),0);
+  transition:opacity .45s ease, transform 7s linear .35s;
+}
+.proj-glare{
+  position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:linear-gradient(115deg,transparent 32%,rgba(255,255,255,.13) 47%,transparent 62%);
+  background-size:240% 100%;background-position:var(--glare,90%) 0;
+  opacity:0;transition:opacity .4s;
+}
+.proj:hover .proj-glare{opacity:1}
+.proj-body{padding:24px 26px 26px;display:flex;flex-direction:column;flex:1}
+.proj-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.proj .num{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--accent-ink);letter-spacing:.2em}
+.proj-flag{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
+  /* texto escuro sobre o roxo claro: em 9px o branco sobre --accent não tem contraste */
+  color:#0b0b0b;background:var(--accent-ink);padding:4px 10px;border-radius:99px;
+}
+.proj h3{font-size:21px;font-weight:800;margin:12px 0 8px;text-transform:uppercase;font-variation-settings:"wdth" 80}
+.proj h3 a{color:inherit;text-decoration:none}
+.proj h3 a:hover{text-decoration:underline;text-underline-offset:4px}
+.proj p{color:var(--mut);font-size:13px;line-height:1.7;flex:1}
+.proj .stack{margin-top:18px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#777;letter-spacing:.1em}
+
+/* ---------- final ---------- */
+#end{flex-direction:column;gap:0;text-align:center;padding:100px 24px 0}
+.avatar-cut{
+  width:110px;height:110px;border-radius:50%;position:relative;z-index:2;
+  border:1px solid var(--glass-b);
+  box-shadow:0 20px 60px rgba(0,0,0,.7), 0 0 0 8px rgba(255,255,255,.03);
+  transition:transform .4s;
+}
+.avatar-cut:hover{transform:rotate(-6deg) scale(1.06)}
+#end h2{
+  font-size:clamp(44px,8vw,120px);font-weight:900;text-transform:uppercase;
+  font-variation-settings:"wdth" 70;line-height:.92;letter-spacing:-.02em;
+  margin-top:34px;position:relative;z-index:2;
+}
+#end h2 em{font-style:normal;color:transparent;-webkit-text-stroke:1.5px var(--accent-ink)}
+#end .sub{color:var(--mut);font-family:'IBM Plex Mono',monospace;font-size:13px;margin-top:22px;position:relative;z-index:2}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:38px;position:relative;z-index:2}
+.btn{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  padding:15px 30px;border-radius:99px;text-decoration:none;transition:.25s;
+  border:0;cursor:pointer;
+}
+.btn.solid{background:#fff;color:#000}
+.btn.solid:hover{transform:translateY(-3px);box-shadow:0 14px 40px var(--accent-glow)}
+.btn.ghost{color:#fff;background:rgba(255,255,255,.07);border:1px solid var(--glass-b)}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
+.btn.copied{background:#fff;color:#000}
+footer{
+  width:100%;margin-top:90px;padding:26px 34px;position:relative;z-index:2;
+  border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;color:#555;letter-spacing:.1em;
+}
+footer a{color:#999;text-decoration:none}
+footer a:hover{color:#fff}
+
+/* ---------- 3D lab ---------- */
+#lab{flex-direction:column;padding:110px 24px}
+.lab-stage{
+  width:100%;max-width:940px;margin:40px auto 0;position:relative;z-index:2;
+  border-radius:24px;overflow:hidden;
+  background:radial-gradient(circle at 50% 28%, #17171a 0%, #09090a 78%);
+  border:1px solid var(--line);
+  box-shadow:0 40px 100px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.06);
+  cursor:grab;touch-action:pan-y;
+  height:520px;
+}
+.lab-stage.dragging{cursor:grabbing}
+.lab-stage canvas{display:block;width:100%;height:100%}
+.lab-hint{
+  position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(210,214,220,.35);
+  pointer-events:none;user-select:none;white-space:nowrap;
+}
+.lab-tag{
+  position:absolute;top:16px;left:16px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;
+  color:var(--mut);padding:7px 13px;border-radius:99px;
+  background:rgba(10,10,10,.6);border:1px solid var(--accent-soft);color:var(--accent-ink);
+  pointer-events:none;
+}
+@media(max-width:900px){
+  #lab{padding:84px 14px}
+  .lab-stage{height:400px;border-radius:18px}
+}
+
+/* ---------- manifesto: o texto acende caractere a caractere com a rolagem ----
+   A seção é alta e o conteúdo dentro dela é sticky: enquanto o texto fica
+   preso no meio da tela, a rolagem percorre o resto da altura, e essa
+   distância é o que aciona a revelação.
+   Não pode ganhar .panel: aquele overflow:hidden viraria um contêiner de
+   rolagem e o sticky de dentro deixaria de grudar. */
+/* ---------- cena: a palavra recortada no vídeo ----------
+   Três camadas empilhadas dentro do mesmo pin:
+     0. .cena-fundo   grade + palavras fantasma (é o que aparece pelo furo)
+     1. .cena-canvas  o vídeo com a palavra vazada
+     2. .cena-dica    o "role" lá embaixo
+   O canvas é o único que anima; o resto é CSS parado. */
+#cena{
+  position:relative;z-index:2;
+  background:var(--bg);
+  border-top:1px solid var(--line);
+  box-shadow:0 -40px 120px rgba(0,0,0,.9);
+  min-height:330vh;
+}
+.cena-pin{
+  position:sticky;top:0;
+  height:100vh;height:100svh;
+  overflow:hidden;
+  background:var(--bg);
+  isolation:isolate;
+  /* 0 no começo da cena, 1 quando o vídeo já saiu. O JS só escreve este
+     número; quem reage a ele é o CSS aqui embaixo. */
+  --luz:0;
+}
+/* o fundo acende e sobe devagar: por dentro das letras dá para ver esse
+   movimento, e quando o vídeo some ele já está aceso para receber a tela */
+.cena-fundo{
+  position:absolute;inset:0;z-index:0;overflow:hidden;
+  transform:translateY(calc(var(--luz) * -2vh)) scale(calc(1 + var(--luz) * .05));
+  will-change:transform;
+}
+/* A luz que aparece por dentro das letras. Larga e baixa, porque a palavra é
+   uma faixa deitada no meio da tela. Vai apagando conforme --luz sobe: quando
+   o vídeo já saiu, o furo é a tela inteira e este brilho no talo cegaria. */
+.cena-brilho{
+  position:absolute;left:50%;top:50%;
+  width:150%;height:82%;
+  transform:translate(-50%,-50%);
+  /* O miolo claro precisa ser LARGO: a palavra ocupa 82% da tela, então as
+     letras das pontas caem longe do centro e apagariam num brilho estreito. */
+  background:radial-gradient(ellipse 58% 52% at 50% 50%,
+    #fff 0%, #f2eeff 38%, var(--accent-ink) 60%, var(--accent-glow) 78%, transparent 94%);
+  opacity:calc(1 - var(--luz) * .8);
+}
+.cena-grade{
+  position:absolute;inset:-110px;
+  opacity:calc(.5 + var(--luz) * .5);
+  background:
+    linear-gradient(90deg,transparent 0 49.94%,rgba(255,255,255,.11) 50%,transparent 50.06%),
+    linear-gradient(0deg,transparent 0 49.94%,rgba(255,255,255,.06) 50%,transparent 50.06%);
+  background-size:110px 110px;
+  -webkit-mask-image:linear-gradient(transparent,#000 24%,#000 76%,transparent);
+          mask-image:linear-gradient(transparent,#000 24%,#000 76%,transparent);
+}
+/* o brilho roxo do resto do site, para o vídeo quente não ficar solto */
+.cena-fundo::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 46%,var(--accent-glow),transparent 58%);
+  opacity:.5;
+}
+.cena-fantasma{
+  position:absolute;left:50%;top:50%;
+  display:flex;justify-content:space-between;
+  font-weight:900;font-variation-settings:"wdth" 70;
+  font-size:clamp(58px,12vw,178px);line-height:1;
+  letter-spacing:-.05em;text-transform:uppercase;
+  color:rgba(255,255,255,calc(.06 + var(--luz) * .09));
+  white-space:nowrap;
+}
+.cena-fantasma--cima {transform:translate(-50%,-235%);width:min(1000px,96vw)}
+.cena-fantasma--meio {transform:translate(-50%,-50%);  width:min(1120px,104vw)}
+.cena-fantasma--baixo{transform:translate(-50%,135%);  width:min(1260px,116vw)}
+.cena-canvas{
+  position:absolute;inset:0;z-index:1;
+  width:100%;height:100%;
+  will-change:opacity;
+}
+/* o vídeo é só fonte de pixels: fica na página para o browser decodificar,
+   mas do tamanho de um ponto e invisível. display:none pararia a decodificação. */
+.cena-video{
+  position:absolute;left:0;top:0;z-index:0;
+  width:1px;height:1px;opacity:0;pointer-events:none;
+}
+.cena-dica{
+  position:absolute;left:50%;bottom:34px;z-index:2;
+  transform:translateX(-50%);
+  width:1px;height:52px;
+  background:linear-gradient(rgba(255,255,255,.35),transparent);
+  will-change:opacity;
+}
+.cena-dica span{
+  position:absolute;left:-1px;top:0;width:3px;height:16px;border-radius:2px;
+  background:var(--accent-ink);
+  animation:cenaDesce 2.1s cubic-bezier(.7,0,.3,1) infinite;
+}
+@keyframes cenaDesce{
+  0%{transform:translateY(-6px);opacity:0}
+  30%{opacity:1}
+  100%{transform:translateY(46px);opacity:0}
+}
+/* sem movimento: nada de vídeo nem de furo, a palavra vira só um título */
+@media (prefers-reduced-motion:reduce){
+  #cena{min-height:0}
+  .cena-pin{position:relative;height:auto;padding:24vh 24px}
+  .cena-canvas,.cena-video,.cena-dica{display:none}
+  #cenaPalavra{
+    position:static;width:auto;height:auto;margin:0;clip:auto;overflow:visible;
+    text-align:center;color:var(--ink);
+    font-weight:900;font-variation-settings:"wdth" 68;
+    font-size:clamp(64px,16vw,220px);line-height:.92;letter-spacing:-.05em;
+  }
+}
+@media(max-width:900px){
+  #cena{min-height:280vh}
+  /* No desktop as linhas passam de propósito da largura da tela: o corte nas
+     bordas faz parte do desenho. No celular não sobra margem para isso — as
+     pontas das palavras sumiam — então aqui as linhas cabem inteiras, e a
+     fonte encolhe junto para os dois pedaços não se encontrarem no meio.
+     O tamanho é medido pela palavra mais longa dos três idiomas (SPRACHIG). */
+  .cena-fantasma{font-size:clamp(28px,11.5vw,64px);letter-spacing:-.06em}
+  .cena-fantasma--cima {width:84vw;transform:translate(-50%,-260%)}
+  .cena-fantasma--meio {width:90vw}
+  .cena-fantasma--baixo{width:96vw;transform:translate(-50%,160%)}
+}
+
+/* ---------- baralho: as capas que se separam ----------
+   As medidas das cartas e os ângulos das laterais são os mesmos da cena que
+   serviu de referência; o que muda é que aqui não há biblioteca de animação.
+   Cada carta fica ancorada no centro do pin e recebe UM transform só,
+   montado no JS: translate + rotate + scale. Interpolar um transform é
+   barato e não dispara layout, então as quatro voam sem engasgo. */
+#deck{
+  position:relative;z-index:3;
+  background:var(--bg);
+  border-top:1px solid var(--line);
+  box-shadow:0 -40px 120px rgba(0,0,0,.9);
+  border-radius:26px 26px 0 0;
+  margin-top:-14vh;
+  min-height:330vh;
+}
+.deck-pin{
+  position:sticky;top:0;
+  height:100vh;height:100svh;
+  overflow:hidden;
+  background:#000;
+  isolation:isolate;
+}
+/* Fundo preto liso: o brilho roxo que havia aqui puxava a cena para o azul
+   e roubava o contraste das capas. */
+.deck-fundo{position:absolute;inset:0;z-index:0;overflow:hidden;background:#000}
+.deck-fantasma{
+  position:absolute;left:50%;top:50%;
+  display:flex;justify-content:space-between;
+  font-weight:900;font-variation-settings:"wdth" 70;
+  font-size:min(100px,10vh);line-height:1;
+  letter-spacing:-.055em;text-transform:uppercase;
+  color:rgba(255,255,255,.075);
+  white-space:nowrap;
+  opacity:0;transition:opacity .6s ease;
+}
+.deck-fantasma--cima {transform:translate(-50%,-225%);width:min(1000px,100vh)}
+.deck-fantasma--meio {transform:translate(-51%,-50%); width:min(1020px,102vh)}
+.deck-fantasma--baixo{transform:translate(-50%,140%); width:min(1222px,122.2vh)}
+.deck-pin.acesa .deck-fantasma{opacity:1}
+
+/* a mesa é só o referencial: as cartas se posicionam pelo centro dela */
+.deck-mesa{position:absolute;inset:0;z-index:4}
+.deck-carta{
+  position:absolute;left:50%;top:50%;
+  padding:0;border:0;background:#0c0c0c;
+  border-radius:16px;overflow:hidden;
+  cursor:pointer;color:inherit;font:inherit;
+  box-shadow:0 40px 90px rgba(0,0,0,.6);
+  transform-origin:50% 50%;
+  will-change:transform,opacity;
+  /* o JS escreve o transform; sem ele a carta já nasce centrada */
+  transform:translate(-50%,-50%);
+}
+.deck-carta img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center}
+.deck-carta-nome{
+  position:absolute;left:0;right:0;bottom:0;z-index:2;
+  padding:14px 14px 12px;text-align:left;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;
+  letter-spacing:.18em;text-transform:uppercase;color:#fff;
+  background:linear-gradient(transparent,rgba(0,0,0,.82));
+  opacity:0;transition:opacity .4s;
+}
+.deck-carta:hover .deck-carta-nome,.deck-carta:focus-visible .deck-carta-nome{opacity:1}
+.deck-carta-nome i{display:block;font-style:normal;color:var(--accent-ink);margin-bottom:5px}
+/* depois que o baralho abre, a numeração fica à mostra: é ela que diz a ordem */
+.deck-pin.chamada .deck-carta-nome{opacity:1}
+.deck-carta--front,.deck-carta--back{width:min(470px,47vh);height:min(600px,60vh)}
+.deck-carta--left,.deck-carta--right{width:min(345px,34.5vh);height:min(377px,37.7vh)}
+.deck-carta--front{z-index:4}
+.deck-carta--back {z-index:3}
+.deck-carta--left,.deck-carta--right{z-index:6}
+
+.deck-titulo{
+  position:absolute;left:50%;top:50%;z-index:20;
+  transform:translate(-50%,-50%);
+  margin:0;width:100%;text-align:center;
+  font-size:clamp(72px,10vw,160px);line-height:1;
+  font-weight:900;font-variation-settings:"wdth" 74;
+  letter-spacing:-.055em;text-transform:uppercase;color:#fff;
+  overflow:hidden;pointer-events:none;
+  /* Branco chapado sumia em cima das capas claras. Com difference a palavra
+     inverte o que estiver atrás: fica escura sobre capa clara, clara sobre
+     capa escura — sempre legível, sem precisar de sombra por baixo. */
+  mix-blend-mode:difference;
+}
+.deck-titulo span{display:inline-block;will-change:transform,opacity}
+
+/* No centro, não no rodapé: quando o baralho abre as quatro capas vão para
+   os cantos e o miolo fica livre — é ali que o botão tem que nascer. */
+.deck-cta{
+  position:absolute;left:50%;top:50%;z-index:21;
+  transform:translate(-50%,-50%) translateY(14px);
+  display:inline-flex;align-items:center;gap:12px;
+  padding:14px 22px;border:1px solid var(--line);border-radius:999px;
+  background:rgba(255,255,255,.04);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  font-family:'IBM Plex Mono',monospace;font-size:11px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--ink);
+  text-decoration:none;opacity:0;pointer-events:none;
+  transition:opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1),
+             border-color .3s, background .3s;
+}
+.deck-pin.chamada .deck-cta{opacity:1;transform:translate(-50%,-50%) translateY(0);pointer-events:auto}
+.deck-cta:hover{border-color:var(--accent);background:var(--accent-soft)}
+.deck-cta i{display:block;width:18px;height:1px;background:currentColor;transition:width .35s cubic-bezier(.22,1,.36,1)}
+.deck-cta:hover i{width:30px}
+
+@media (prefers-reduced-motion:reduce){
+  #deck{min-height:0;margin-top:0;border-radius:0}
+  .deck-pin{position:relative;height:auto;padding:12vh 24px;display:grid;place-items:center;gap:26px}
+  .deck-mesa{position:relative;inset:auto;display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+  .deck-carta{position:relative;left:auto;top:auto;transform:none!important;width:180px;height:230px}
+  .deck-titulo{position:relative;left:auto;top:auto;transform:none;font-size:clamp(40px,9vw,90px)}
+  .deck-cta{position:relative;left:auto;bottom:auto;transform:none;opacity:1;pointer-events:auto}
+  .deck-fantasma{display:none}
+}
+@media(max-width:900px){
+  #deck{min-height:290vh}
+  .deck-fantasma{font-size:min(58px,7.4vh)}
+  .deck-carta--front,.deck-carta--back{width:min(300px,62vw);height:min(400px,46vh)}
+  .deck-carta--left,.deck-carta--right{width:min(220px,46vw);height:min(250px,29vh)}
+  .deck-titulo{font-size:clamp(46px,13vw,90px)}
+}
+
+/* abertura: uma frase só, entre o hero e o portfólio */
+#intro{
+  position:relative;z-index:3;
+  background:var(--bg);
+  border-top:1px solid var(--line);
+  box-shadow:0 -40px 120px rgba(0,0,0,.9);
+  min-height:185vh;
+  /* sobe por cima do fim da cena com o canto arredondado: é o mesmo truque
+     de "cartão que desliza sobre a seção anterior". Só faz sentido porque
+     lá atrás sobrou a grade acesa para o canto recortar contra. */
+  border-radius:26px 26px 0 0;
+  margin-top:-16vh;
+}
+.intro-pin{
+  position:sticky;top:0;
+  min-height:100vh;min-height:100svh;
+  display:flex;align-items:center;
+  padding:100px 24px;
+}
+.reveal-hero{
+  width:100%;max-width:1120px;margin:0 auto;
+  font-size:clamp(27px,4.4vw,58px);
+  font-weight:900;font-variation-settings:"wdth" 78;
+  line-height:1.16;letter-spacing:-.02em;
+}
+@media (prefers-reduced-motion:reduce){
+  #intro{min-height:0;margin-top:0;border-radius:0}
+  .intro-pin{position:relative;min-height:0}
+}
+@media(max-width:900px){
+  #intro{min-height:165vh}
+  .intro-pin{padding:76px 18px}
+  .reveal-hero{font-size:clamp(24px,6.6vw,34px);line-height:1.24}
+}
+
+#manifesto{
+  position:relative;z-index:2;
+  background:var(--bg);
+  border-top:1px solid var(--line);
+  box-shadow:0 -40px 120px rgba(0,0,0,.9);
+  min-height:240vh;
+}
+.manifesto-pin{
+  position:sticky;top:0;
+  min-height:100vh;min-height:100svh;
+  display:flex;align-items:center;
+  padding:100px 24px;
+}
+.manifesto-inner{width:100%;max-width:1040px;margin:0 auto}
+.manifesto-tag{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut);
+  letter-spacing:.28em;text-transform:uppercase;margin-bottom:30px;
+  display:flex;align-items:center;gap:10px;
+}
+.reveal{color:var(--ink)}
+.reveal-grande{
+  font-size:clamp(23px,3.1vw,40px);
+  font-weight:800;font-variation-settings:"wdth" 84;
+  line-height:1.28;letter-spacing:-.01em;
+}
+.manifesto-fatos{
+  list-style:none;margin:44px 0 0;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:26px;
+  border-top:1px solid var(--line);padding-top:30px;
+}
+.manifesto-fatos li{display:flex;flex-direction:column;gap:12px}
+.fato-n{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.2em;
+  color:var(--accent-ink);
+}
+.manifesto-fatos .reveal{font-size:clamp(13px,1.15vw,15px);line-height:1.65;font-weight:400}
+/* --p é quantos caracteres já acenderam; --i é o índice de cada um.
+   A divisão por 14 espalha a passagem, então a borda da revelação é um
+   degradê de uns 14 caracteres em vez de um corte seco. */
+.reveal span{
+  --lit:clamp(0, calc((var(--p,0) - var(--i,0)) / 14), 1);
+  opacity:calc(.14 + .86 * var(--lit));
+  will-change:opacity;
+}
+@media (prefers-reduced-motion:reduce){
+  #manifesto{min-height:0}
+  .manifesto-pin{position:relative;min-height:0}
+  .reveal span{opacity:1}
+}
+@media(max-width:900px){
+  #manifesto{min-height:210vh}
+  .manifesto-pin{padding:76px 18px}
+  .reveal-grande{font-size:clamp(19px,4.9vw,26px);line-height:1.36}
+  .manifesto-fatos{grid-template-columns:1fr;gap:18px;margin-top:30px;padding-top:22px}
+  .manifesto-fatos li{flex-direction:row;gap:12px;align-items:baseline}
+  .manifesto-fatos .reveal{font-size:13px;line-height:1.55}
+}
+
+/* ---------- cursor próprio, com lupa sobre os projetos ----------
+   O cursor do sistema só some quando o JS confirma que assumiu o controle
+   (html.cursor-proprio), senão um erro deixaria a pessoa sem cursor. */
+.cursor{
+  position:fixed;left:0;top:0;z-index:1200;pointer-events:none;
+  width:26px;height:26px;border-radius:50%;
+  display:grid;place-items:center;
+  transform:translate3d(var(--cx,-90px),var(--cy,-90px),0) translate(-50%,-50%);
+  opacity:0;
+  transition:width .34s cubic-bezier(.22,1,.36,1), height .34s cubic-bezier(.22,1,.36,1),
+             background .34s, border-color .34s, box-shadow .34s, opacity .25s,
+             -webkit-backdrop-filter .34s, backdrop-filter .34s;
+  border:1px solid transparent;
+}
+.cursor.on{opacity:1}
+/* mira de cantos, o estado normal */
+.cursor-mira{
+  width:26px;height:26px;
+  stroke:var(--accent-ink);stroke-width:1.8;fill:none;stroke-linecap:square;
+  transition:opacity .2s, transform .3s cubic-bezier(.22,1,.36,1);
+}
+/* lupa, só sobre as capas */
+.cursor-lupa{
+  position:absolute;width:0;height:0;opacity:0;
+  stroke:#fff;stroke-width:1.7;fill:none;stroke-linecap:round;
+  transition:opacity .2s;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.5));
+}
+/* Lente de vidro: o backdrop-filter borra e satura o que está EMBAIXO do
+   cursor, então sobre a capa ele funciona como uma lente de verdade.
+   O ::after é o brilho especular no canto de cima. */
+.cursor.lupa{
+  width:78px;height:78px;
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.34);
+  -webkit-backdrop-filter:blur(7px) saturate(1.7) brightness(1.06);
+  backdrop-filter:blur(7px) saturate(1.7) brightness(1.06);
+  box-shadow:
+    0 16px 40px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -14px 22px rgba(255,255,255,.07);
+}
+.cursor.lupa::after{
+  content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:linear-gradient(145deg,rgba(255,255,255,.34),rgba(255,255,255,0) 42%);
+}
+.cursor.lupa .cursor-mira{opacity:0;transform:scale(.4)}
+.cursor.lupa .cursor-lupa{width:26px;height:26px;opacity:1}
+@media (pointer:fine){
+  html.cursor-proprio,
+  html.cursor-proprio body,
+  html.cursor-proprio a,
+  html.cursor-proprio button{cursor:none}
+  /* com a prévia aberta o ponteiro entra no iframe e o site pai deixa de
+     receber mousemove: o cursor falso congelaria na borda */
+  html.cursor-proprio body.viewer-aberto,
+  html.cursor-proprio body.viewer-aberto *{cursor:auto}
+}
+body.viewer-aberto .cursor{opacity:0}
+
+/* ---------- visualizador embutido dos projetos ----------
+   O site abre aqui dentro, num iframe, em vez de levar a pessoa embora.
+   O knifes.me responde frame-ancestors 'none', então para ele entra a
+   captura da página inteira, rolável. */
+.viewer{
+  position:fixed;inset:0;z-index:1100;
+  display:flex;flex-direction:column;gap:12px;
+  padding:14px 16px 18px;
+  background:rgba(4,4,4,.9);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  opacity:0;transition:opacity .26s ease;
+}
+.viewer.on{opacity:1}
+.viewer[hidden]{display:none}
+.viewer-bar{
+  display:flex;align-items:center;gap:14px;
+  width:min(1180px,100%);margin:0 auto;flex:0 0 auto;
+}
+.viewer-title{
+  font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;
+  text-transform:uppercase;color:#e8e8e8;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.viewer-note{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;
+  color:var(--mut);border:1px solid var(--glass-b);border-radius:99px;
+  padding:5px 11px;white-space:nowrap;
+}
+.viewer-note[hidden]{display:none}
+.viewer-close{
+  margin-left:auto;flex:0 0 auto;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;cursor:pointer;
+  color:#000;background:#fff;border:0;border-radius:99px;padding:10px 18px;
+  transition:transform .2s, box-shadow .2s;
+}
+.viewer-close:hover{transform:translateY(-2px);box-shadow:0 10px 30px var(--accent-glow)}
+.viewer-stage{
+  flex:1 1 auto;min-height:0;position:relative;
+  width:min(1180px,100%);margin:0 auto;
+  background:#0d0d0d;border:1px solid var(--glass-b);
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 40px 110px rgba(0,0,0,.75);
+}
+.viewer-frame{width:100%;height:100%;border:0;display:block;background:#fff}
+.viewer-frame[hidden]{display:none}
+.viewer-shot{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:#fff}
+.viewer-shot[hidden]{display:none}
+.viewer-shot img{display:block;width:100%;height:auto}
+body.viewer-aberto{overflow:hidden}
+@media(max-width:900px){
+  .viewer{padding:10px 10px 12px;gap:10px}
+  .viewer-stage{border-radius:12px}
+  .viewer-title{font-size:11px}
+  .viewer-note{display:none}      /* barra estreita: o aviso vira ruído */
+  .viewer-close{padding:9px 14px}
+}
+
+/* scroll reveal */
+.rv{opacity:0;transform:translateY(34px);transition:opacity .8s,transform .8s}
+.rv.in{opacity:1;transform:none}
+
+/* touch devices have no hover: a single GPU-composited sweep keeps the mirror alive */
+@media (hover:none){
+  .holo{
+    inset:auto 0;top:0;bottom:0;left:-30%;width:160%;
+    animation:sweepX 6.5s ease-in-out infinite alternate;
+    will-change:transform;
+  }
+  @keyframes sweepX{from{transform:translateX(-11%)}to{transform:translateX(11%)}}
+  .chip:hover,.tile:hover{transform:none}
+  .proj-glare{display:none}
+}
+
+/* Telas baixas (1366x768, janela reduzida, navegador com muitas barras):
+   um .panel é sticky E tem overflow:hidden, então tudo que não couber na
+   altura da tela fica inalcançável, não há como rolar até lá. Abaixo do
+   limite os painéis voltam a rolar normalmente, igual ao que já acontece
+   no celular. */
+@media (max-height:880px) and (min-width:901px){
+  .panel{position:relative;min-height:0}
+  .panel + .panel{box-shadow:0 -20px 56px rgba(0,0,0,.8)}
+  #hero .hero-wrap{padding:88px 44px 52px}
+  #work{padding:76px 24px}
+  #lab{padding:76px 24px}
+  #end{padding:76px 24px 0}
+  .lab-stage{height:min(460px,58vh)}
+  .badge-zone{min-height:0}
+  .pane{margin-top:32px}
+}
+
+/* mobile: performance + scrolling fixes */
+@media(max-width:900px){
+  nav{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(7,7,7,.92)}
+  .noise{display:none}
+  /* sticky full-height panels CLIP anything taller than the screen on iOS.
+     Every section flows normally on mobile. */
+  .panel{position:relative;min-height:0;padding-top:8px;padding-bottom:8px}
+  .panel + .panel{box-shadow:0 -16px 44px rgba(0,0,0,.75)}
+  .badge-card{box-shadow:0 22px 50px rgba(0,0,0,.75), inset 0 1px 0 rgba(255,255,255,.1)}
+  .lab-stage{box-shadow:0 22px 50px rgba(0,0,0,.6)}
+}
+
+/* ---------- tablet ---------- */
+@media(max-width:1024px){
+  .hero-wrap{gap:24px;padding:100px 34px 60px}
+  .hero-title{font-size:clamp(44px,7.4vw,80px)}
+}
+
+/* ---------- mobile ---------- */
+@media(max-width:900px){
+  .hero-wrap{grid-template-columns:1fr;padding:88px 22px 56px;gap:6px}
+  .badge-zone{order:-1;min-height:0;height:auto;padding-bottom:26px}
+  .badge-rig{margin-top:-118px}
+  .lanyard{height:172px;width:38px}
+  .lanyard::after{font-size:8px;letter-spacing:.18em}
+  .badge-card{width:min(252px,74vw);padding:12px 12px 15px}
+  .badge-meta .name{font-size:14px}
+  .badge-meta .role{font-size:9px}
+  .barcode{height:17px}
+  .hero-title{font-size:clamp(42px,11.5vw,64px)}
+  .hero-p{font-size:14px;line-height:1.7}
+  .roles{font-size:12px}
+  .eyebrow{margin-bottom:16px;font-size:11px}
+  .chips{margin-top:22px}
+  .hero-social{margin-top:26px}
+  #work{padding:84px 16px}
+  .pane{margin-top:32px}
+  .tech-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px}
+  .tile{border-radius:14px;gap:9px}
+  .tile .glyph{width:44px;height:44px;font-size:17px;border-radius:11px}
+  .tile .label{font-size:10px}
+  .proj-grid{grid-template-columns:1fr;gap:14px}
+  .proj-body{padding:20px 22px 22px}
+  .proj h3{font-size:19px}
+  #end{padding:84px 18px 0}
+  .avatar-cut{width:88px;height:88px}
+  #end .sub{font-size:12px}
+  .cta-row{margin-top:30px;width:100%}
+  .btn{padding:14px 22px;flex:1 1 auto;text-align:center;min-width:130px}
+  footer{flex-direction:column;align-items:center;text-align:center;gap:8px;padding:22px 18px;margin-top:64px}
+}
+
+/* ---------- small phones ---------- */
+@media(max-width:640px){
+  nav{padding:10px 12px}
+  .brand{font-size:12px;gap:7px}
+  .brand span{display:none}       /* hides ".dev" */
+  .brand img{width:26px;height:26px}
+  .nav-links{gap:0}
+  .nav-links a{padding:7px 8px;font-size:10px;letter-spacing:.05em}
+  .lang-switch button{padding:5px 8px;font-size:10px}
+  .tabs{max-width:calc(100vw - 32px);overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:9px 15px;font-size:11px;white-space:nowrap;flex:0 0 auto}
+  .sec-head h2{font-size:clamp(28px,8vw,38px)}
+  .sec-head p{font-size:12px}
+  #end h2{font-size:clamp(38px,11vw,58px)}
+}
+@media(max-width:480px){
+  nav{padding:10px 10px;gap:6px}
+  .brand{font-size:0;gap:0}               /* only the avatar survives */
+  .brand img{width:28px;height:28px}
+  .nav-links a{padding:7px 7px;font-size:10px;letter-spacing:.03em}
+  .lang-switch{padding:2px}
+  .lang-switch button{padding:5px 7px;font-size:10px}
+}
+@media(max-width:380px){
+  .nav-links a[data-i="nav_home"]{display:none} /* tightest screens: 2 links + lang */
+  .hero-title{font-size:clamp(36px,12vw,44px)}
+  .badge-card{width:78vw}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001s!important;transition-duration:.15s!important}
+  html{scroll-behavior:auto}
+  .proj-plate{transform:none}
+  .proj:hover .proj-scroll,.proj:focus-within .proj-scroll{transform:none;opacity:0}
+  .proj:hover .proj-cover,.proj:focus-within .proj-cover{opacity:1}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#hero" data-i="skip">Zum Inhalt springen</a>
+
+<div class="grid-bg"></div>
+<div class="noise"></div>
+<div class="vignette"></div>
+
+<nav id="nav">
+  <a class="brand" href="#hero"><img src="assets/avatar.webp" width="30" height="30" alt="" aria-hidden="true"><b>sonoUXcoder</b><span>.dev</span></a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#hero" class="active" data-i="nav_home">Start</a>
+      <a href="portfolio.html" data-i="nav_work">Portfolio</a>
+      <a href="#end" data-i="nav_contact">Kontakt</a>
+    </div>
+    <div class="lang-switch" role="group" aria-label="Sprache / Language / Idioma">
+      <button type="button" data-lang="de" aria-pressed="true" lang="de">DE</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+      <button type="button" data-lang="pt" aria-pressed="false" lang="pt">PT</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= LOADER ================= -->
+<div id="loader" role="status" aria-live="polite">
+  <div class="hello-stage"><span class="hello-word"></span></div>
+  <div class="loader-line"><span></span></div>
+  <button class="loader-skip" type="button" id="loaderSkip" data-i="loader_skip">überspringen</button>
+</div>
+
+<!-- ================= HERO ================= -->
+<section class="panel" id="hero">
+  <div class="hero-wrap">
+    <div>
+      <div class="eyebrow">
+        <span class="eyebrow-window"><span class="eyebrow-track"><span data-i="eyebrow">Verfügbar für Projekte</span></span></span>
+      </div>
+      <h1 class="hero-title">Full-Stack<br>Developer<br><em>&amp; UX·UI</em></h1>
+      <div class="roles"><b>Software Engineer</b>, Front-end, Back-end, <b>UX·UI</b></div>
+      <p class="hero-p" data-i="hero_p">
+        Ich baue Websites und Web-Apps von Anfang bis Ende. Design in Figma,
+        Frontend mit React und Next.js, Backend mit Node und PostgreSQL.
+        Mehrsprachig, schnell und sauber gebaut.
+      </p>
+      <div class="chips">
+        <span class="chip">TypeScript</span>
+        <span class="chip">React.js</span>
+        <span class="chip">Next.js</span>
+        <span class="chip">Node.js</span>
+        <span class="chip">Figma</span>
+        <span class="chip">Tailwind</span>
+      </div>
+      <div class="hero-social">
+        <a href="https://github.com/SonoUXCODER" target="_blank" rel="noopener">↗ GitHub</a>
+        <a href="https://instagram.com/somnifobias" target="_blank" rel="noopener">↗ @somnifobias</a>
+        <a href="mailto:alissonvpt1@gmail.com">↗ E-mail</a>
+      </div>
+    </div>
+
+    <div class="badge-zone">
+      <div class="badge-rig" id="rig">
+        <div class="lanyard"></div>
+        <div id="hang">
+        <div class="ring"></div>
+        <div class="clip"></div>
+        <div class="badge-card" id="card">
+          <div class="photo-wrap">
+            <img class="badge-photo" src="assets/foto-cracha.webp" width="620" height="827" alt="sono" fetchpriority="high">
+            <div class="holo"></div>
+            <div class="holo2"></div>
+            <div class="holo3"></div>
+          </div>
+          <div class="badge-meta">
+            <div>
+              <div class="name">sono</div>
+              <div class="role">FULL-STACK UX·UI</div>
+            </div>
+            <div class="badge-bar">
+              <div class="barcode" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              ID·SONOUXCODER
+            </div>
+          </div>
+        </div>
+        </div><!-- /hang -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CENA: a palavra recortada no vídeo ============
+     Uma seção alta com o miolo presinho no topo; a altura que sobra é o
+     curso da animação. O canvas cobre a tela com o vídeo e depois desenha
+     a palavra em destination-out: dentro das letras não fica tinta nenhuma,
+     então o furo mostra o que está ATRÁS no HTML (a grade e as palavras
+     fantasma). Rolando, o furo cresce até engolir a tela — a gente atravessa
+     a letra e cai na frase da abertura.
+     Sem .panel de propósito: o overflow:hidden dele viraria contêiner de
+     rolagem e o sticky de dentro deixaria de grudar. -->
+<section id="cena">
+  <div class="cena-pin">
+    <div class="cena-fundo" aria-hidden="true">
+      <!-- a palavra é um buraco no vídeo, então quem acende as letras por
+           dentro é esta camada. Sem ela o furo mostraria só o preto do site
+           e a palavra sumiria contra o clipe. -->
+      <div class="cena-brilho"></div>
+      <div class="cena-grade"></div>
+      <!-- cada linha é uma palavra partida em dois pedaços que se afastam
+           para as bordas: assim elas não empilham atrás do furo, que fica
+           bem no meio, e sobra o miolo da tela para o vídeo aparecer -->
+      <div class="cena-fantasma cena-fantasma--cima"><span data-i="cena_f1a">SCH</span><span data-i="cena_f1b">NELL</span></div>
+      <div class="cena-fantasma cena-fantasma--meio"><span data-i="cena_f2a">VON</span><span data-i="cena_f2b">HAND</span></div>
+      <div class="cena-fantasma cena-fantasma--baixo"><span data-i="cena_f3a">MEHR</span><span data-i="cena_f3b">SPRACHIG</span></div>
+    </div>
+    <canvas class="cena-canvas" id="cenaCanvas" aria-hidden="true"></canvas>
+    <!-- O vídeo nunca aparece: ele é só a fonte de pixels do canvas.
+         Fica 1px e invisível porque display:none faria o browser parar de
+         decodificar os quadros. O src entra por JS, só quando a seção chega perto. -->
+    <video class="cena-video" id="cenaVideo" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+    <!-- a palavra existe de verdade para leitor de tela e para o setLang -->
+    <p class="sr-only" id="cenaPalavra" data-i="cena_palavra">PREMIUM</p>
+    <div class="cena-dica" aria-hidden="true"><span></span></div>
+  </div>
+</section>
+
+<!-- ============ ABERTURA (a frase acende antes do portfólio) ============ -->
+<section id="intro" data-revelar>
+  <div class="intro-pin">
+    <p class="reveal reveal-hero" data-i="hero_lead">Ich baue Seiten, die schnell laden, premium aussehen und aus Besuchern Kunden machen.</p>
+  </div>
+</section>
+
+<!-- ============ BARALHO: as capas empilhadas que se separam ============
+     Quatro capas nascem uma em cima da outra no meio da tela, com a palavra
+     PORTFOLIO por cima e três pares de palavras gigantes ao fundo. Rolando,
+     a palavra sai, o baralho se abre e cada capa voa para o seu canto — só
+     então aparece o botão que leva à lista de projetos.
+     A --back começa escondida atrás da --front de propósito: quando o
+     baralho abre, sai uma carta que ninguém sabia que estava ali. -->
+<section id="deck">
+  <div class="deck-pin">
+    <div class="deck-fundo" aria-hidden="true">
+      <div class="deck-fantasma deck-fantasma--cima"><span data-i="deck_f1a">HAND</span><span data-i="deck_f1b">ARBEIT</span></div>
+      <div class="deck-fantasma deck-fantasma--meio"><span data-i="deck_f2a">MEHR</span><span data-i="deck_f2b">SPRACHIG</span></div>
+      <div class="deck-fantasma deck-fantasma--baixo"><span data-i="deck_f3a">ERFAH</span><span data-i="deck_f3b">RUNG</span></div>
+    </div>
+
+    <div class="deck-mesa" id="deckMesa">
+      <button class="deck-carta deck-carta--back"  type="button" data-projeto="3"><img src="assets/projetos/fg-cover.webp"     alt="" loading="lazy" decoding="async"><span class="deck-carta-nome"><i>/04</i>Truffle N.B.</span></button>
+      <button class="deck-carta deck-carta--left"  type="button" data-projeto="1"><img src="assets/projetos/sandra-cover.webp" alt="" loading="lazy" decoding="async"><span class="deck-carta-nome"><i>/02</i>Sandra Hair Salon</span></button>
+      <button class="deck-carta deck-carta--right" type="button" data-projeto="2"><img src="assets/projetos/knifes-cover.webp" alt="" loading="lazy" decoding="async"><span class="deck-carta-nome"><i>/03</i>knifes.me</span></button>
+      <button class="deck-carta deck-carta--front" type="button" data-projeto="0"><img src="assets/projetos/thayse-cover.webp" alt="" loading="lazy" decoding="async"><span class="deck-carta-nome"><i>/01</i>Dra. Thayse Marques</span></button>
+    </div>
+
+    <h2 class="deck-titulo" aria-hidden="true"><span>PORTFOLIO</span></h2>
+
+    <a class="deck-cta" href="portfolio.html"><span data-i="deck_cta">Portfolio ansehen</span><i></i></a>
+  </div>
+</section>
+
+<!-- ================= MANIFESTO (texto que revela com a rolagem) ================= -->
+<section id="manifesto" data-revelar>
+  <div class="manifesto-pin">
+    <div class="manifesto-inner">
+      <div class="manifesto-tag" data-i="manifesto_tag">Manifest</div>
+      <p class="reveal reveal-grande" data-i="manifesto">Jedes Projekt auf dieser Seite ist online und von Hand gebaut. Ich fange beim Inhalt an, nicht beim Layout, und höre erst auf, wenn die Seite auf dem Handy genauso schnell ist wie auf dem Rechner.</p>
+      <ol class="manifesto-fatos">
+        <li><span class="fato-n">01</span><p class="reveal" data-i="fato1">Jedes Projekt hier ist von Hand geschrieben, ohne Baukasten und ohne fertiges Theme.</p></li>
+        <li><span class="fato-n">02</span><p class="reveal" data-i="fato2">Mehrsprachig ab der ersten Zeile, nicht als Übersetzung obendrauf.</p></li>
+        <li><span class="fato-n">03</span><p class="reveal" data-i="fato3">Vom Entwurf bis zur Domain online, mit Zahlung und Konten, wenn das Projekt es braucht.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3D LAB ================= -->
+<section class="panel" id="lab">
+  <div class="sec-head rv">
+    <h2 data-i="lab_h">3D Playground</h2>
+    <p data-i="lab_p">ein Arbeitsplatz in WebGL, live gerendert. Ziehen zum Drehen.</p>
+  </div>
+  <div class="lab-stage rv" id="labStage">
+    <span class="lab-tag">THREE.JS / WEBGL</span>
+    <span class="lab-hint" data-i="lab_hint">zum Drehen ziehen</span>
+  </div>
+</section>
+
+<!-- ================= END ================= -->
+<section class="panel" id="end">
+  <img class="avatar-cut rv" src="assets/avatar.webp" width="110" height="110" alt="Avatar ilustrado do sono" loading="lazy" decoding="async">
+  <h2 class="rv" id="endH2">Lass uns etwas<br><em>gemeinsam bauen</em></h2>
+  <p class="sub rv" data-i="end_sub">full-stack developer und ux·ui designer</p>
+  <div class="cta-row rv">
+    <a class="btn solid" href="mailto:alissonvpt1@gmail.com" data-i="btn_mail">E-Mail senden</a>
+    <button class="btn ghost" type="button" id="copyMail" data-i="btn_copy">E-Mail kopieren</button>
+    <a class="btn ghost" id="waBtn" href="#" target="_blank" rel="noopener" hidden>WhatsApp</a>
+    <a class="btn ghost" href="https://instagram.com/somnifobias" target="_blank" rel="noopener">Instagram</a>
+    <a class="btn ghost" href="https://github.com/SonoUXCODER" target="_blank" rel="noopener">GitHub</a>
+  </div>
+  <footer>
+    <span>© 2026 SONO</span>
+    <span>SONOUXCODER</span>
+    <a href="https://instagram.com/somnifobias" target="_blank" rel="noopener">@SOMNIFOBIAS</a>
+    <a href="mailto:alissonvpt1@gmail.com">ALISSONVPT1@GMAIL.COM</a>
+  </footer>
+</section>
+
+<div class="cursor" id="cursor" aria-hidden="true">
+  <svg class="cursor-mira" viewBox="0 0 24 24">
+    <path d="M2.5 8V2.5H8"></path><path d="M16 2.5h5.5V8"></path>
+    <path d="M21.5 16v5.5H16"></path><path d="M8 21.5H2.5V16"></path>
+  </svg>
+  <svg class="cursor-lupa" viewBox="0 0 24 24">
+    <circle cx="10.5" cy="10.5" r="6.6"></circle><path d="M15.4 15.4 20.6 20.6"></path>
+  </svg>
+</div>
+
+<!-- ============ visualizador embutido dos projetos ============ -->
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-labelledby="viewerTitle">
+  <div class="viewer-bar">
+    <span class="viewer-title" id="viewerTitle"></span>
+    <span class="viewer-note" id="viewerNote" hidden></span>
+    <button class="viewer-close" type="button" id="viewerClose"></button>
+  </div>
+  <div class="viewer-stage" id="viewerStage">
+    <iframe class="viewer-frame" id="viewerFrame" title=""
+            sandbox="allow-scripts allow-same-origin allow-forms"
+            referrerpolicy="no-referrer" hidden></iframe>
+    <div class="viewer-shot" id="viewerShot" hidden><img alt="" id="viewerShotImg"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+   Contato: preencha com o número no formato internacional, só dígitos.
+   Ex.: '41791234567'. Deixando vazio, o botão de WhatsApp não aparece.
+   ========================================================================= */
+const WHATSAPP = '';
+const EMAIL = 'alissonvpt1@gmail.com';
+
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const noHover = matchMedia('(hover:none)').matches;
+
+/* ============ i18n ============ */
+const I18N = {
+  de: {
+    skip:"Zum Inhalt springen",
+    nav_home:"Start", nav_work:"Portfolio", nav_contact:"Kontakt",
+    loader_skip:"überspringen",
+    eyebrow:"Verfügbar für Projekte",
+    hero_p:"Ich baue Websites und Web-Apps von Anfang bis Ende. Design in Figma, Frontend mit React und Next.js, Backend mit Node und PostgreSQL. Mehrsprachig, schnell und sauber gebaut.",
+    work_h:"Portfolio Showcase", work_p:"Projekte und Technologien",
+    tab_proj:"Projekte",
+    p1_h:"Dra. Thayse Marques Lima",
+    p1_p:"Website einer Anwaltskanzlei in Rio de Janeiro. Ein kurzes Formular nimmt den Fall auf und leitet ihn an das richtige Rechtsgebiet weiter. Dazu Terminbuchung online, WhatsApp und acht Rechtsgebiete mit eigenen Seiten.",
+    p2_h:"Sandra Hair Salon",
+    p2_p:"Landingpage für einen Coiffeur-Salon in Buchs SG. Sprachumschaltung, Preisliste in CHF, Terminanfrage und WhatsApp direkt aus der Seite heraus.",
+    p3_h:"knifes.me", p3_flag:"Eigenes Produkt",
+    p3_p:"Mein eigenes Produkt, ein Link-in-Bio-SaaS. Jede Person bekommt knifes.me/name und stellt Farbe, Musik, Hintergrund und Layout selbst ein. Mit Konten, Ranking und Abo-Abrechnung.",
+    p4_h:"Truffle N.B. Tricolore",
+    p4_p:"Online-Shop für frische Trüffel aus Italien, geliefert in die ganze Schweiz. Katalog, Warenkorb, Kundenkonto und Bezahlung über Stripe mit Karte oder TWINT.",
+    lab_h:"3D Playground", lab_p:"ein Arbeitsplatz in WebGL, live gerendert. Ziehen zum Drehen.", lab_hint:"zum Drehen ziehen",
+    end_h:'Lass uns etwas<br><em>gemeinsam bauen</em>',
+    end_sub:"full-stack developer und ux·ui designer",
+    btn_mail:"E-Mail senden", btn_copy:"E-Mail kopieren", btn_copied:"kopiert ✓",
+    card_open:"Vorschau öffnen", viewer_close:"schliessen", viewer_shot:"Ganzseiten-Aufnahme",
+    manifesto_tag:"Manifest",
+    manifesto:"Jedes Projekt auf dieser Seite ist online und von Hand gebaut. Ich fange beim Inhalt an, nicht beim Layout, und höre erst auf, wenn die Seite auf dem Handy genauso schnell ist wie auf dem Rechner.",
+    hero_lead:"Ich baue Seiten, die schnell laden, premium aussehen und aus Besuchern Kunden machen.",
+    cena_palavra:"PREMIUM",
+    deck_cta:"Portfolio ansehen", deck_f1a:"HAND", deck_f1b:"ARBEIT", deck_f2a:"MEHR", deck_f2b:"SPRACHIG", deck_f3a:"ERFAH", deck_f3b:"RUNG",
+    cena_f1a:"SCH", cena_f1b:"NELL", cena_f2a:"VON", cena_f2b:"HAND", cena_f3a:"MEHR", cena_f3b:"SPRACHIG",
+    fato1:"Jedes Projekt hier ist von Hand geschrieben, ohne Baukasten und ohne fertiges Theme.",
+    fato2:"Mehrsprachig ab der ersten Zeile, nicht als Übersetzung obendrauf.",
+    fato3:"Vom Entwurf bis zur Domain online, mit Zahlung und Konten, wenn das Projekt es braucht."
+  },
+  en: {
+    skip:"Skip to content",
+    nav_home:"Home", nav_work:"Portfolio", nav_contact:"Contact",
+    loader_skip:"skip",
+    eyebrow:"Available for work",
+    hero_p:"I build websites and web apps end to end. Design in Figma, front-end in React and Next.js, back-end in Node and PostgreSQL. Multilingual, fast, cleanly built.",
+    work_h:"Portfolio Showcase", work_p:"projects and technologies",
+    tab_proj:"Projects",
+    p1_h:"Dra. Thayse Marques Lima",
+    p1_p:"Website for a law firm in Rio de Janeiro. A short form takes the case in and routes it to the right practice area. Plus online booking, WhatsApp and eight practice areas with their own pages.",
+    p2_h:"Sandra Hair Salon",
+    p2_p:"Landing page for a hair salon in Buchs SG. Language switching, price list in CHF, appointment requests and WhatsApp straight from the page.",
+    p3_h:"knifes.me", p3_flag:"Own product",
+    p3_p:"My own product, a link-in-bio SaaS. Everyone gets knifes.me/name and sets the colour, music, background and layout themselves. With accounts, a ranking and subscription billing.",
+    p4_h:"Truffle N.B. Tricolore",
+    p4_p:"Online shop for fresh truffles from Italy, delivered across Switzerland. Catalogue, cart, customer account and payment through Stripe by card or TWINT.",
+    lab_h:"3D Playground", lab_p:"a WebGL workstation, rendered live. Drag to spin it.", lab_hint:"drag to rotate",
+    end_h:"Let's build<br><em>something together</em>",
+    end_sub:"full-stack developer and ux·ui designer",
+    btn_mail:"Send e-mail", btn_copy:"Copy e-mail", btn_copied:"copied ✓",
+    card_open:"Open preview", viewer_close:"close", viewer_shot:"full-page capture",
+    manifesto_tag:"Manifesto",
+    manifesto:"Every project on this page is live and built by hand. I start from the content, not the layout, and I am not done until the page is as fast on a phone as it is on a desktop.",
+    hero_lead:"I build sites that load fast, look premium, and turn visitors into clients.",
+    cena_palavra:"PREMIUM",
+    deck_cta:"See the portfolio", deck_f1a:"HAND", deck_f1b:"MADE", deck_f2a:"MULTI", deck_f2b:"LINGUAL", deck_f3a:"EXPERI", deck_f3b:"ENCE",
+    cena_f1a:"FAST", cena_f1b:"LOAD", cena_f2a:"HAND", cena_f2b:"MADE", cena_f3a:"MULTI", cena_f3b:"LINGUAL",
+    fato1:"Every project here is written by hand, with no site builder and no bought theme.",
+    fato2:"Multilingual from the first line, not a translation pasted on later.",
+    fato3:"From the first sketch to the domain going live, with payments and accounts when the project needs them."
+  },
+  pt: {
+    skip:"Pular para o conteúdo",
+    nav_home:"Início", nav_work:"Portfólio", nav_contact:"Contato",
+    loader_skip:"pular",
+    eyebrow:"Disponível para projetos",
+    hero_p:"Eu construo sites e aplicações web do começo ao fim. Design no Figma, front-end em React e Next.js, back-end em Node e PostgreSQL. Multilíngue, rápido e bem feito.",
+    work_h:"Portfolio Showcase", work_p:"projetos e tecnologias",
+    tab_proj:"Projetos",
+    p1_h:"Dra. Thayse Marques Lima",
+    p1_p:"Site de um escritório de advocacia no Rio de Janeiro. Um formulário curto recebe o caso e encaminha para a área certa. Junto disso, agendamento on-line, WhatsApp e oito áreas de atuação com páginas próprias.",
+    p2_h:"Sandra Hair Salon",
+    p2_p:"Landing page de um salão de cabeleireiro em Buchs SG, na Suíça. Troca de idioma, tabela de preços em CHF, pedido de horário e WhatsApp direto da página.",
+    p3_h:"knifes.me", p3_flag:"Produto próprio",
+    p3_p:"Meu próprio produto, um SaaS de link na bio. Cada pessoa ganha knifes.me/nome e escolhe cor, música, fundo e layout. Com contas, ranking e cobrança de assinatura.",
+    p4_h:"Truffle N.B. Tricolore",
+    p4_p:"Loja on-line de trufas frescas da Itália, entregues em toda a Suíça. Catálogo, carrinho, conta de cliente e pagamento pela Stripe com cartão ou TWINT.",
+    lab_h:"3D Playground", lab_p:"uma estação de trabalho em WebGL, renderizada ao vivo. Arraste para girar.", lab_hint:"arraste para girar",
+    end_h:"Vamos construir<br><em>algo juntos</em>",
+    end_sub:"full-stack developer e ux·ui designer",
+    btn_mail:"Enviar e-mail", btn_copy:"Copiar e-mail", btn_copied:"copiado ✓",
+    card_open:"Abrir prévia", viewer_close:"fechar", viewer_shot:"captura da página inteira",
+    manifesto_tag:"Manifesto",
+    manifesto:"Todo projeto desta página está no ar e foi feito à mão. Começo pelo conteúdo, não pelo layout, e só termino quando a página está tão rápida no celular quanto no computador.",
+    hero_lead:"Construo sites que carregam rápido, são premium e transformam visitantes em clientes.",
+    cena_palavra:"PREMIUM",
+    deck_cta:"Ver o portfólio", deck_f1a:"FEITO", deck_f1b:"À MÃO", deck_f2a:"MULTI", deck_f2b:"LÍNGUE", deck_f3a:"EXPERI", deck_f3b:"ÊNCIA",
+    cena_f1a:"RÁ", cena_f1b:"PIDO", cena_f2a:"NA", cena_f2b:"MÃO", cena_f3a:"MULTI", cena_f3b:"LÍNGUE",
+    fato1:"Cada projeto aqui foi escrito à mão, sem construtor e sem tema pronto.",
+    fato2:"Multilíngue desde a primeira linha, não como tradução colada depois.",
+    fato3:"Do rascunho ao domínio no ar, com pagamento e contas quando o projeto pede."
+  }
+};
+const langButtons = [...document.querySelectorAll('.lang-switch button')];
+let lang = 'de';
+// Preenchidos mais abaixo, quando o letreiro e o visualizador são montados.
+// Precisam ser declarados ACIMA de setLang: initLang chama setLang logo em
+// seguida, e um let declarado depois estaria em zona morta temporal.
+let remontaLetreiro = null, traduzVisualizador = null, remontaRevelacao = null, remontaCena = null;
+
+function setLang(l, persist = true){
+  lang = I18N[l] ? l : 'de';
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i]').forEach(el => {
+    const v = I18N[lang][el.dataset.i];
+    if (v !== undefined) el.textContent = v;
+  });
+  const h2Fim = document.getElementById('endH2');
+  if (h2Fim) h2Fim.innerHTML = I18N[lang].end_h;   // não existe em todas as páginas
+  langButtons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+  // o texto mudou de largura: o letreiro precisa ser medido e repetido de novo
+  if (remontaLetreiro) remontaLetreiro();
+  if (traduzVisualizador) traduzVisualizador();
+  if (remontaRevelacao) remontaRevelacao();   // setLang reescreveu o texto e apagou os spans
+  if (remontaCena) remontaCena();             // a palavra do canvas mudou de idioma
+  if (persist) { try { localStorage.setItem('sux-lang', lang); } catch {} }
+}
+langButtons.forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+
+// Idioma inicial: escolha salva > idioma do navegador > fuso horário > alemão.
+// O fuso entra porque muita gente no Brasil navega com o browser em inglês:
+// só a lista de idiomas mandaria essa pessoa para a versão errada.
+(function initLang(){
+  let saved = null;
+  try { saved = localStorage.getItem('sux-lang'); } catch {}
+  if (saved && I18N[saved]) return setLang(saved, false);
+
+  const tags = (navigator.languages || [navigator.language || '']).map(s => s.toLowerCase());
+  const fala = p => tags.some(t => t === p || t.startsWith(p + '-'));
+
+  let tz = '';
+  try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch {}
+  const noBrasil = /^America\/(Sao_Paulo|Bahia|Fortaleza|Recife|Belem|Maceio|Araguaina|Santarem|Manaus|Cuiaba|Campo_Grande|Porto_Velho|Rio_Branco|Boa_Vista|Eirunepe|Noronha)$/.test(tz);
+
+  if (fala('pt') || noBrasil) return setLang('pt', false);
+  if (fala('de')) return setLang('de', false);
+  if (fala('en')) return setLang('en', false);
+  setLang('de', false);
+})();
+
+/* ============ nav + parallax (um único handler de scroll com rAF) ============ */
+const nav = document.getElementById('nav');
+const links = [...document.querySelectorAll('.nav-links a')];
+// só os links de âncora viram seções observadas: um href de outra página
+// (portfolio.html) não é seletor válido e derrubaria o querySelector
+const secs = links.map(a => {
+  const h = a.getAttribute('href') || '';
+  return h.startsWith('#') ? document.querySelector(h) : null;
+});
+const plates = [...document.querySelectorAll('.proj-plate')];
+let scrollQueued = false, activeIdx = -1;
+// preenchido mais abaixo, quando o letreiro do eyebrow é montado
+let atualizaLetreiro = null, atualizaRevelacao = null, atualizaCena = null, atualizaBaralho = null;
+
+function onScroll(){
+  scrollQueued = false;
+  nav.classList.toggle('scrolled', scrollY > 40);
+
+  if (atualizaLetreiro) atualizaLetreiro(scrollY);
+  if (atualizaRevelacao) atualizaRevelacao();
+  if (atualizaCena) atualizaCena();
+  if (atualizaBaralho) atualizaBaralho();
+
+  let idx = 0;
+  secs.forEach((s,i) => { if (s && s.getBoundingClientRect().top <= innerHeight*0.5) idx = i; });
+  if (idx !== activeIdx){
+    activeIdx = idx;
+    links.forEach((a,i) => a.classList.toggle('active', i === idx));
+  }
+
+  // Parallax das capas: a imagem anda mais devagar que a moldura.
+  // No desktop os painéis são sticky, então enquanto a seção está presa no topo
+  // isto quase não varia. Quem dá a profundidade ali é o --parh do mouse.
+  // No celular (.panel volta a ser relative) o scroll faz todo o trabalho.
+  if (!reduced){
+    for (const p of plates){
+      const r = p.parentElement.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > innerHeight + 200) continue;
+      const t = Math.max(0, Math.min(1, (innerHeight - r.top) / (innerHeight + r.height)));
+      p.style.setProperty('--par', (-2 - 4 * t).toFixed(2) + '%');
+    }
+  }
+}
+addEventListener('scroll', () => {
+  if (!scrollQueued){ scrollQueued = true; requestAnimationFrame(onScroll); }
+}, {passive:true});
+addEventListener('resize', onScroll, {passive:true});
+onScroll();
+
+/* ============ reveal ============ */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.15});
+document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+/* ============ tabs (com teclado) ============ */
+const tabs = [...document.querySelectorAll('.tab')];
+function selectTab(tab){
+  tabs.forEach(t => {
+    const on = t === tab;
+    t.setAttribute('aria-selected', String(on));
+    t.tabIndex = on ? 0 : -1;
+    document.getElementById(t.dataset.pane).classList.toggle('show', on);
+  });
+  const pane = document.getElementById(tab.dataset.pane);
+  pane.querySelectorAll('.rv').forEach(el => el.classList.add('in'));
+  requestAnimationFrame(onScroll); // recalcula o parallax do painel que acabou de aparecer
+}
+tabs.forEach(t => {
+  t.addEventListener('click', () => selectTab(t));
+  t.addEventListener('keydown', e => {
+    const i = tabs.indexOf(t);
+    let n = null;
+    if (e.key === 'ArrowRight') n = tabs[(i + 1) % tabs.length];
+    else if (e.key === 'ArrowLeft') n = tabs[(i - 1 + tabs.length) % tabs.length];
+    else if (e.key === 'Home') n = tabs[0];
+    else if (e.key === 'End') n = tabs[tabs.length - 1];
+    if (n){ e.preventDefault(); selectTab(n); n.focus(); }
+  });
+});
+
+/* ============ letreiro do "disponível para projetos" ============
+   O texto é repetido até cobrir a janela e desliza junto com a rolagem.
+   A volta é dada no tamanho de uma repetição, então não há emenda visível. */
+const letreiro = (function(){
+  const janela = document.querySelector('.eyebrow-window');
+  const trilha = document.querySelector('.eyebrow-track');
+  if (!janela || !trilha) return { update(){} };
+  let largura = 0;
+
+  function remonta(){
+    const original = trilha.firstElementChild;
+    if (!original) return;
+    [...trilha.children].slice(1).forEach(n => n.remove());
+    largura = original.getBoundingClientRect().width;
+    if (!largura) return;
+    const copias = Math.ceil((janela.clientWidth + largura) / largura);
+    for (let i = 0; i < copias; i++){
+      const c = original.cloneNode(true);
+      c.removeAttribute('data-i');          // só o original recebe a tradução
+      c.setAttribute('aria-hidden', 'true'); // e o leitor de tela lê uma vez só
+      trilha.appendChild(c);
+    }
+  }
+
+  remontaLetreiro = remonta;
+  remonta();
+  // a largura muda quando a fonte real substitui a de sistema
+  if (document.fonts) document.fonts.ready.then(remonta);
+  addEventListener('resize', remonta, { passive: true });
+
+  return {
+    update(y){
+      if (reduced || !largura) return;
+      trilha.style.setProperty('--eb', (-(y * .14) % largura).toFixed(1) + 'px');
+    },
+  };
+})();
+atualizaLetreiro = letreiro.update;
+
+onScroll();   // pinta campo e letreiro já na posição atual, sem esperar o scroll
+
+/* ============ manifesto: texto que acende com a rolagem ============
+   Um span por caractere, e uma única variável CSS por quadro diz até onde a
+   revelação chegou. O CSS faz o resto, então não há escrita por caractere. */
+const revelacao = (function(){
+  // Cada seção marcada com data-revelar tem o próprio curso de rolagem.
+  // Dentro dela, os blocos .reveal contam como um texto só.
+  const grupos = [...document.querySelectorAll('[data-revelar]')]
+    .map(secao => ({ secao, alvos: [...secao.querySelectorAll('.reveal')], total: 0 }))
+    .filter(g => g.alvos.length);
+  if (!grupos.length) return { remonta(){}, update(){} };
+
+  function remontaGrupo(g){
+    g.total = 0;
+    for (const alvo of g.alvos){
+      // textContent serve nas duas situações: na primeira vez é o texto do
+      // HTML, e depois é a soma dos spans, que dá o mesmo texto de volta.
+      // Guardar uma cópia daria errado, porque setLang troca o idioma por cima.
+      const texto = alvo.textContent;
+      if (!texto.trim()) continue;
+
+      // cópia só para leitor de tela: os spans soltos fazem alguns leitores
+      // soletrarem a frase letra por letra
+      let leitura = alvo.nextElementSibling;
+      if (!leitura || !leitura.classList.contains('sr-only')){
+        leitura = document.createElement('span');
+        leitura.className = 'sr-only';
+        alvo.parentNode.insertBefore(leitura, alvo.nextSibling);
+      }
+      leitura.textContent = texto;
+      alvo.setAttribute('aria-hidden', 'true');
+
+      const letras = [...texto];
+      const bloco = document.createDocumentFragment();
+      letras.forEach((c, i) => {
+        const sp = document.createElement('span');
+        sp.textContent = c;
+        sp.style.setProperty('--i', i);
+        bloco.appendChild(sp);
+      });
+      alvo.textContent = '';
+      alvo.appendChild(bloco);
+      alvo.dataset.inicio = g.total;          // onde este bloco entra no fluxo
+      g.total += letras.length;
+    }
+  }
+
+  function remonta(){ grupos.forEach(remontaGrupo); }
+
+  function update(){
+    if (reduced) return;
+    for (const g of grupos){
+      if (!g.total) continue;
+      const r = g.secao.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) continue;   // fora da tela, nada a fazer
+      const curso = r.height - innerHeight;   // quanto dá para rolar com o texto preso
+      const p = curso <= 0 ? 1 : Math.min(1, Math.max(0, -r.top / curso));
+      // Passa um pouco do total para a última letra acender antes da seção sair.
+      const pos = p * (g.total + 40);
+      for (const alvo of g.alvos){
+        alvo.style.setProperty('--p', (pos - (+alvo.dataset.inicio || 0)).toFixed(1));
+      }
+    }
+  }
+
+  remontaRevelacao = remonta;
+  remonta();
+  return { remonta, update };
+})();
+atualizaRevelacao = revelacao.update;
+
+/* ============ cena: o vídeo com a palavra vazada ============
+   O canvas cobre a tela com o vídeo e em seguida APAGA a palavra de dentro
+   dele, com destination-out. No lugar das letras não sobra tinta nenhuma,
+   é buraco de verdade (alpha 0), então quem aparece por dentro delas é o
+   HTML que está atrás do canvas: a grade e as palavras fantasma.
+   Rolando, a palavra vai sendo esticada até o buraco engolir a tela, e o
+   canvas some junto — a rolagem é entregue para a abertura.
+   O vídeo nunca é pintado na página: ele é só a textura do canvas. */
+const cena = (function(){
+  const nada  = { update(){}, remonta(){} };
+  const secao = document.getElementById('cena');
+  const cv    = document.getElementById('cenaCanvas');
+  const video = document.getElementById('cenaVideo');
+  const alvo  = document.getElementById('cenaPalavra');
+  if (!secao || !cv || !video || !alvo || reduced) return nada;
+  const ctx = cv.getContext('2d');
+  if (!ctx) return nada;
+  const dica = secao.querySelector('.cena-dica');
+  const pin  = secao.querySelector('.cena-pin') || secao;
+
+  const FAMILIA = '"Archivo",system-ui,sans-serif';
+  const MEDIR   = 200;    // tamanho de referência, só para medir a palavra
+  const FATIA_X   = .82;    // fatia da largura da tela que a palavra ocupa parada
+  const TAM_MAX = 460;
+  const ESC_X0 = .62, ESC_X1 = 6.4;    // condensada como o resto do site, e o fim do voo
+  const ESC_Y_MIN = 1.06;              // achatamento mínimo na vertical
+  const FATIA_Y = .20;                   // fatia da ALTURA da tela que a palavra ocupa parada
+  const ESTICA = 14.6;                 // quantas vezes a altura cresce até o fim do voo
+  // Recorte da fonte, em fração do quadro. O clipe é 1920x1080 nativo, então
+  // no desktop ele entra praticamente 1:1 — nada de esticar. Aí a sobra é
+  // horizontal, e `foco` (que só manda na vertical) fica inerte; ele volta a
+  // valer se um dia o arquivo for mais alto que largo.
+  const CORTE = { x:0, largura:1, foco:.5 };
+
+  let palavra = '', tamanho = 0, larguraLocal = 0, alturaLocal = 0;
+  let escY0 = ESC_Y_MIN, escY1 = ESC_Y_MIN * ESTICA;
+  let medidoEm = -1, medidoAlt = -1, pedido = 0, laco = 0, ativo = false, pediuFonte = false;
+  const est = { abertura:0, escX:ESC_X0, escY:escY0, opacidade:1, zoom:1.1 };
+
+  const faixa = (p,a,b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+  const entra = t => t * t;                 // acelera no fim, como um power2.in
+  const entre = (a,b,t) => a + (b - a) * t;
+  const temQuadro = () => video.readyState >= 2 && video.videoWidth > 0;
+
+  /* ---- a palavra ---- */
+  function remonta(){
+    palavra = (alvo.textContent || 'PREMIUM').trim().toUpperCase();
+    medidoEm = -1;                          // força medir de novo no próximo quadro
+    pede();
+  }
+
+  function mede(larguraCSS, alturaCSS){
+    ctx.font = `900 ${MEDIR}px ${FAMILIA}`;
+    const porPx = ctx.measureText(palavra).width / MEDIR;   // largura por px de fonte
+    if (!porPx) return false;
+    // tamanho tal que, na escala inicial, a palavra ocupe FATIA_X da largura
+    tamanho = Math.min(TAM_MAX, (larguraCSS * FATIA_X) / (porPx * ESC_X0));
+    ctx.font = `900 ${tamanho}px ${FAMILIA}`;
+    const m = ctx.measureText(palavra);
+    larguraLocal = m.width;
+    alturaLocal = (m.actualBoundingBoxAscent + m.actualBoundingBoxDescent) || tamanho * .72;
+    // Numa tela estreita a palavra sai pequena (quem manda é a largura) e a
+    // faixa vazada viraria um risco fino. Então a escala vertical inicial não
+    // é fixa: ela é a que faz a faixa ocupar FATIA_Y da altura, e nunca achata
+    // menos do que o mínimo. No desktop isso cai no mínimo e nada muda.
+    escY0 = Math.max(ESC_Y_MIN, (alturaCSS * FATIA_Y) / alturaLocal);
+    escY1 = escY0 * ESTICA;
+    medidoEm = larguraCSS;
+    medidoAlt = alturaCSS;
+    return true;
+  }
+
+  /* ---- o furo: a palavra desenhada em destination-out ---- */
+  function fura(w,h){
+    if (est.abertura <= .002) return;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.translate(w * .5, h * .5);
+    ctx.scale(est.escX, est.escY);
+    // abertura: uma janela que cresce da esquerda para a direita, então a
+    // palavra não aparece de uma vez, ela é varrida para dentro da tela
+    ctx.beginPath();
+    ctx.rect(-larguraLocal * .5, -alturaLocal, larguraLocal * est.abertura, alturaLocal * 2);
+    ctx.clip();
+    ctx.font = `900 ${tamanho}px ${FAMILIA}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#000';                 // a cor não importa: só o alpha conta
+    ctx.fillText(palavra, 0, 0);
+    ctx.restore();
+  }
+
+  /* ---- o vídeo cobrindo a tela, sem deformar ----
+     Escolhe dentro do recorte a maior janela com a proporção da tela; o zoom
+     fecha essa janela em vez de esticar a imagem, então nada distorce. */
+  function cobre(w,h){
+    const fw = video.videoWidth, fh = video.videoHeight;
+    const rx = fw * CORTE.x, rw = fw * CORTE.largura, rh = fh;
+    const tela = w / h, recorte = rw / rh;
+    let jw = recorte > tela ? rh * tela : rw;
+    let jh = recorte > tela ? rh        : rw / tela;
+    jw /= est.zoom; jh /= est.zoom;
+    ctx.drawImage(video, rx + (rw - jw) * .5, (rh - jh) * CORTE.foco, jw, jh, 0, 0, w, h);
+  }
+
+  /* ---- enquanto o vídeo não chega (ou não vai chegar), um degradê quente
+         no tom médio dele, para o furo continuar tendo o que recortar ---- */
+  function degrade(w,h){
+    const g = ctx.createRadialGradient(w*.5, h*.38, 0, w*.5, h*.38, Math.max(w,h)*.8);
+    g.addColorStop(0,   '#4c525c');
+    g.addColorStop(.42, '#20232a');
+    g.addColorStop(1,   '#08090b');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,w,h);
+  }
+
+  function desenha(){
+    pedido = 0;
+    const w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+
+    const dpr = Math.min(2, devicePixelRatio || 1);
+    const pw = Math.round(w * dpr), ph = Math.round(h * dpr);
+    if (cv.width !== pw || cv.height !== ph){ cv.width = pw; cv.height = ph; medidoEm = -1; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    if ((medidoEm !== w || medidoAlt !== h) && !mede(w, h)) return;
+
+    ctx.save();
+    // um pouco de brilho e contraste: o clipe é escuro demais cru
+    try { ctx.filter = 'saturate(1.1) contrast(1.15) brightness(1.34)'; } catch {}
+    if (temQuadro()) cobre(w,h); else degrade(w,h);
+    ctx.restore();
+
+    // vinheta no tom do fundo do site, para a borda do vídeo não ter costura
+    const v = ctx.createRadialGradient(w*.5, h*.46, Math.min(w,h)*.42, w*.5, h*.5, Math.max(w,h)*.78);
+    v.addColorStop(0, 'rgba(7,7,7,0)');
+    v.addColorStop(1, 'rgba(7,7,7,.78)');
+    ctx.fillStyle = v;
+    ctx.fillRect(0,0,w,h);
+
+    // Uma faixa escura na altura exata da palavra. A tela do laptop é a parte
+    // mais clara do clipe e cai bem no meio: sem isto, as letras do meio quase
+    // encostam no brilho do vídeo e a palavra some ali. Só a faixa escurece,
+    // então o resto do quadro continua com a luz que tem.
+    const alt = Math.min(h * 1.4, alturaLocal * est.escY * 1.7);
+    const f = ctx.createLinearGradient(0, h*.5 - alt*.5, 0, h*.5 + alt*.5);
+    f.addColorStop(0,  'rgba(6,6,8,0)');
+    f.addColorStop(.5, 'rgba(6,6,8,.3)');
+    f.addColorStop(1,  'rgba(6,6,8,0)');
+    ctx.fillStyle = f;
+    ctx.fillRect(0, h*.5 - alt*.5, w, alt);
+
+    fura(w,h);
+  }
+
+  const pede = () => { if (!pedido) pedido = requestAnimationFrame(desenha); };
+
+  // Com o vídeo rodando é preciso repintar todo quadro, não só ao rolar.
+  // Fora da tela o laço para e o vídeo pausa: nada de decodificar à toa.
+  function rodaLaco(){
+    if (!ativo){ laco = 0; return; }
+    desenha();
+    laco = requestAnimationFrame(rodaLaco);
+  }
+  function liga(){
+    ativo = true;
+    carregaVideo();
+    video.play().catch(() => {});
+    if (!laco) laco = requestAnimationFrame(rodaLaco);
+  }
+  function desliga(){
+    ativo = false;
+    if (laco){ cancelAnimationFrame(laco); laco = 0; }
+    video.pause();
+  }
+
+  /* ---- o vídeo só entra quando a seção está chegando ----
+     São 10 MB: baixar isso no primeiro paint atrasaria o site inteiro, e
+     em dados móveis nem vale a pena — o degradê cobre o caso. */
+  function carregaVideo(){
+    if (pediuFonte) return;
+    pediuFonte = true;
+    const rede = navigator.connection || {};
+    const magra = rede.saveData === true || /(^|-)2g$/.test(rede.effectiveType || '');
+    if (magra) return;
+    video.src = 'assets/codigo.mp4';
+    video.load();
+  }
+
+  video.addEventListener('loadeddata', () => { video.play().catch(() => {}); pede(); });
+  new IntersectionObserver(es => {
+    if (es.some(e => e.isIntersecting)) carregaVideo();
+  }, { rootMargin: '150% 0px' }).observe(secao);
+
+  // a fonte variável chega depois do primeiro quadro: sem isto a palavra
+  // ficaria medida e desenhada na fonte de sistema
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(remonta);
+
+  function update(){
+    const r = secao.getBoundingClientRect();
+    const visivel = r.bottom > 0 && r.top < innerHeight;
+    if (visivel !== ativo){ visivel ? liga() : desliga(); }
+    if (!visivel) return;
+
+    const curso = r.height - innerHeight;
+    const p = curso <= 0 ? 0 : Math.min(1, Math.max(0, -r.top / curso));
+
+    est.abertura  = faixa(p, 0, .10);
+    const voo     = entra(faixa(p, .08, .66));
+    est.escX      = entre(ESC_X0, ESC_X1, voo);
+    est.escY      = entre(escY0, escY1, voo);
+    est.zoom      = entre(1.1, 1, faixa(p, 0, .6));
+    est.opacidade = 1 - faixa(p, .58, .80);
+
+    cv.style.opacity = est.opacidade.toFixed(3);
+    pin.style.setProperty('--luz', faixa(p, .30, .86).toFixed(3));
+    if (dica) dica.style.opacity = (1 - faixa(p, 0, .09)).toFixed(3);
+  }
+
+  remontaCena = remonta;
+  remonta();
+  return { update, remonta };
+})();
+atualizaCena = cena.update;
+cena.update();
+
+/* ============ baralho: as capas empilhadas que se separam ============
+   Cada carta tem duas poses: empilhada e espalhada. Uma pose é só quatro
+   números — deslocamento x e y a partir do centro do pin (em fração do pin,
+   para acompanhar a tela), giro e escala. Rolando, a gente interpola de uma
+   pose para a outra e escreve um transform só por carta.
+   Interpolar transform não dispara layout, então as quatro voam lisas mesmo
+   com sombra e cantos arredondados. */
+const baralho = (function(){
+  const nada  = { update(){} };
+  const secao = document.getElementById('deck');
+  if (!secao || reduced) return nada;
+  const pin   = secao.querySelector('.deck-pin');
+  const mesa  = document.getElementById('deckMesa');
+  const titulo= secao.querySelector('.deck-titulo span');
+  if (!pin || !mesa || !titulo) return nada;
+
+  // dx e dy em fração do pin, giro em graus, escala, opacidade
+  const POSES = {
+    // As quatro poses finais são quadrantes, e a ordem de leitura segue a
+    // numeração dos projetos: 01 em cima à esquerda, 02 em cima à direita,
+    // 03 embaixo à esquerda, 04 embaixo à direita. O miolo fica vazio de
+    // propósito — é onde o botão nasce.
+    front:{ de:{dx: 0,    dy: 0,    giro: 0,     esc:1,   op:1},   // 01
+            para:{dx:-.31, dy:-.19, giro:-3,     esc:.46, op:1} },
+    left: { de:{dx:-.34,  dy:-.03,  giro:-5.875, esc:1,   op:.5},  // 02
+            para:{dx: .31, dy:-.19, giro: 3,     esc:.68, op:1} },
+    right:{ de:{dx: .34,  dy:-.03,  giro: 5.875, esc:1,   op:.5},  // 03
+            para:{dx:-.31, dy: .21, giro:-4,     esc:.68, op:1} },
+    back: { de:{dx: 0,    dy: 0,    giro: 0,     esc:1,   op:1},   // 04
+            para:{dx: .31, dy: .21, giro: 3.5,   esc:.46, op:1} }
+  };
+  const cartas = [...mesa.querySelectorAll('.deck-carta')].map(el => ({
+    el, pose: POSES[[...el.classList].find(c => c.startsWith('deck-carta--')).slice(12)]
+  })).filter(c => c.pose);
+  if (!cartas.length) return nada;
+
+  const faixa = (p,a,b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+  const entre = (a,b,t) => a + (b - a) * t;
+  const suave = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;   // inOutCubic
+  let ultimoP = -1;
+
+  function pinta(p){
+    const cx = pin.clientWidth, cy = pin.clientHeight;
+
+    // entrada: as cartas nascem menores e as laterais chegam de fora
+    const entra = faixa(p, 0, .16);
+    // abertura do baralho: é aqui que elas se separam
+    const abre  = suave(faixa(p, .34, .82));
+
+    for (const { el, pose } of cartas){
+      const a = pose.de, b = pose.para;
+      const dx = entre(a.dx, b.dx, abre) * cx;
+      const dy = entre(a.dy, b.dy, abre) * cy;
+      const giro = entre(a.giro, b.giro, abre);
+      // na entrada as laterais ainda vêm deslizando de fora para dentro
+      const desliza = (1 - entra) * (a.dx < 0 ? -.10 : a.dx > 0 ? .10 : 0) * cx;
+      const esc = entre(a.esc, b.esc, abre) * entre(.8, 1, entra);
+      const op  = entre(0, entre(a.op, b.op, abre), entra);
+      el.style.transform =
+        `translate(-50%,-50%) translate(${(dx + desliza).toFixed(1)}px, ${dy.toFixed(1)}px)` +
+        ` rotate(${giro.toFixed(2)}deg) scale(${esc.toFixed(3)})`;
+      el.style.opacity = op.toFixed(3);
+    }
+
+    // o título entra subindo, fica, e sai antes do baralho abrir
+    const sobe = faixa(p, .02, .16), some = faixa(p, .30, .44);
+    titulo.style.transform = `translateY(${((1 - sobe) * 100).toFixed(1)}%)`;
+    titulo.style.opacity = (sobe * (1 - some)).toFixed(3);
+
+    pin.classList.toggle('acesa', p > .14 && p < .92);
+    pin.classList.toggle('chamada', p > .80);
+  }
+
+  function update(){
+    const r = secao.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > innerHeight) return;
+    const curso = r.height - innerHeight;
+    const p = curso <= 0 ? 0 : Math.min(1, Math.max(0, -r.top / curso));
+    if (Math.abs(p - ultimoP) < .0004) return;      // nada mudou o bastante
+    ultimoP = p;
+    // Sem rAF aqui de propósito: quem chama isto é o onScroll, que já roda
+    // dentro de um. Agendar de novo só adicionaria um quadro de atraso — e,
+    // pior, um sinalizador que trava para sempre se o quadro não vier.
+    pinta(p);
+  }
+
+  // A lista de projetos agora vive noutra página, então a carta leva para lá
+  // já pedindo a prévia daquele projeto — o #p1 é lido do outro lado.
+  mesa.addEventListener('click', e => {
+    const carta = e.target.closest('.deck-carta');
+    if (!carta) return;
+    location.href = 'portfolio.html#p' + (+carta.dataset.projeto + 1);
+  });
+
+  addEventListener('resize', () => { ultimoP = -1; update(); }, {passive:true});
+  pinta(0);
+  return { update };
+})();
+atualizaBaralho = baralho.update;
+baralho.update();
+
+/* ============ cursor próprio, com lupa sobre as capas ============ */
+(function(){
+  const el = document.getElementById('cursor');
+  // some só onde faz sentido: ponteiro de verdade e sem movimento reduzido
+  if (!el || reduced || !matchMedia('(pointer:fine)').matches) return;
+
+  // a classe entra só agora: se este script falhasse antes daqui, o cursor
+  // do sistema continuaria visível em vez de sumir para sempre
+  document.documentElement.classList.add('cursor-proprio');
+
+  let x = innerWidth / 2, y = innerHeight / 2, ax = x, ay = y, ligado = false;
+  addEventListener('mousemove', e => {
+    x = e.clientX; y = e.clientY;
+    if (!ligado){ ligado = true; el.classList.add('on'); }
+  }, { passive: true });
+  addEventListener('mouseout', e => { if (!e.relatedTarget) el.classList.remove('on'); });
+  addEventListener('mouseover', () => { if (ligado) el.classList.add('on'); });
+
+  (function anima(){
+    ax += (x - ax) * .3;
+    ay += (y - ay) * .3;
+    el.style.setProperty('--cx', ax.toFixed(1) + 'px');
+    el.style.setProperty('--cy', ay.toFixed(1) + 'px');
+    requestAnimationFrame(anima);
+  })();
+
+  document.querySelectorAll('.proj-media').forEach(m => {
+    m.addEventListener('pointerenter', () => el.classList.add('lupa'));
+    m.addEventListener('pointerleave', () => el.classList.remove('lupa'));
+  });
+})();
+
+/* ============ visualizador embutido ============
+   Clicar na capa abre o site dentro do portfólio. O sandbox não inclui
+   allow-top-navigation nem allow-popups, então nada dentro do iframe
+   consegue arrastar a pessoa para fora da página. */
+const visualizador = (function(){
+  const caixa  = document.getElementById('viewer');
+  const titulo = document.getElementById('viewerTitle');
+  const aviso  = document.getElementById('viewerNote');
+  const fechar = document.getElementById('viewerClose');
+  const quadro = document.getElementById('viewerFrame');
+  const chapa  = document.getElementById('viewerShot');
+  const chapaImg = document.getElementById('viewerShotImg');
+  if (!caixa) return { abrir(){}, traduzir(){} };
+
+  let aberto = false, devolveFoco = null;
+
+  function abrir(card){
+    const url  = card.dataset.url;
+    const modo = card.dataset.modo;
+    const nome = (card.querySelector('h3') || {}).textContent || '';
+    if (!url) return;
+
+    devolveFoco = card.querySelector('.proj-media');
+    titulo.textContent = nome;
+
+    if (modo === 'iframe'){
+      chapa.hidden = true; chapaImg.removeAttribute('src');
+      aviso.hidden = true;
+      quadro.hidden = false;
+      quadro.title = nome;
+      quadro.src = url;
+    } else {
+      // o site recusa ser embutido: mostra a captura da página inteira
+      quadro.hidden = true; quadro.removeAttribute('src');
+      const fonte = card.querySelector('.proj-scroll');
+      chapaImg.src = fonte ? (fonte.getAttribute('src') || fonte.dataset.src) : '';
+      chapaImg.alt = nome;
+      chapa.hidden = false; chapa.scrollTop = 0;
+      aviso.textContent = I18N[lang].viewer_shot;
+      aviso.hidden = false;
+    }
+
+    caixa.hidden = false;
+    document.body.classList.add('viewer-aberto');
+    requestAnimationFrame(() => caixa.classList.add('on'));
+    aberto = true;
+    fechar.focus();
+  }
+
+  function fecharTudo(){
+    if (!aberto) return;
+    aberto = false;
+    caixa.classList.remove('on');
+    const limpa = () => {
+      caixa.hidden = true;
+      quadro.removeAttribute('src');       // para de carregar e de tocar som
+      chapaImg.removeAttribute('src');
+      document.body.classList.remove('viewer-aberto');
+      if (devolveFoco) devolveFoco.focus();
+    };
+    caixa.addEventListener('transitionend', limpa, { once: true });
+    setTimeout(limpa, 400);                // rede de segurança
+  }
+
+  fechar.addEventListener('click', fecharTudo);
+  caixa.addEventListener('mousedown', e => { if (e.target === caixa) fecharTudo(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && aberto) fecharTudo(); });
+
+  return {
+    abrir,
+    traduzir(){
+      fechar.textContent = I18N[lang].viewer_close;
+      if (!aviso.hidden) aviso.textContent = I18N[lang].viewer_shot;
+      document.querySelectorAll('.proj').forEach(c => {
+        const b = c.querySelector('.proj-media');
+        const h = c.querySelector('h3');
+        if (b && h) b.setAttribute('aria-label', I18N[lang].card_open + ': ' + h.textContent);
+      });
+    },
+  };
+})();
+traduzVisualizador = visualizador.traduzir;
+visualizador.traduzir();
+
+/* ============ cards de projeto: tilt 3D, brilho e scroll da página ============ */
+document.querySelectorAll('.proj').forEach(card => {
+  const media  = card.querySelector('.proj-media');
+  const scroll = card.querySelector('.proj-scroll');
+  const glare  = card.querySelector('.proj-glare');
+
+  // a captura longa só é baixada na primeira interação, e nunca no celular
+  let armed = false;
+  const arm = () => {
+    if (armed || noHover || reduced || !scroll) return;
+    armed = true;
+    scroll.addEventListener('load', () => {
+      // quanto a imagem precisa subir para mostrar a página inteira dentro da moldura
+      const imgRatio = scroll.naturalHeight / scroll.naturalWidth;
+      const windowRatio = 0.625 / 1.06;             // 16:10 dividido pelo scale da placa
+      const pct = (imgRatio - windowRatio) / imgRatio * 100;
+      card.style.setProperty('--scroll-end', '-' + pct.toFixed(1) + '%');
+      card.classList.add('ready');                  // libera o efeito só agora
+    }, {once:true});
+    scroll.src = scroll.dataset.src;
+  };
+  card.addEventListener('pointerenter', arm);
+  card.addEventListener('focusin', arm);
+
+  // clique ou toque na capa abre a prévia embutida
+  if (media) media.addEventListener('click', () => visualizador.abrir(card));
+
+  if (reduced || noHover) return;
+
+  const MAX = 5;   // inclinação máxima, em graus
+  const plate = card.querySelector('.proj-plate');
+  card.addEventListener('pointermove', e => {
+    const r = card.getBoundingClientRect();
+    const dx = (e.clientX - r.left) / r.width  - .5;
+    const dy = (e.clientY - r.top)  / r.height - .5;
+    card.style.transform = `perspective(1000px) rotateY(${(dx*MAX*2).toFixed(2)}deg) rotateX(${(-dy*MAX*2).toFixed(2)}deg) translateY(-4px)`;
+    // a capa desliza no sentido contrário à inclinação: é isso que cria a profundidade
+    if (plate) plate.style.setProperty('--parh', (dy * 3).toFixed(2) + '%');
+    if (glare) glare.style.setProperty('--glare', (50 + dx*120) + '%');
+  }, {passive:true});
+  card.addEventListener('pointerleave', () => {
+    card.style.transform = '';
+    if (plate) plate.style.setProperty('--parh', '0%');
+  });
+});
+
+/* ============ contato ============ */
+if (WHATSAPP){
+  const wa = document.getElementById('waBtn');
+  wa.href = 'https://wa.me/' + WHATSAPP;
+  wa.hidden = false;
+}
+document.getElementById('copyMail').addEventListener('click', async e => {
+  const b = e.currentTarget;
+  try { await navigator.clipboard.writeText(EMAIL); }
+  catch {
+    const ta = document.createElement('textarea');
+    ta.value = EMAIL; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch {}
+    ta.remove();
+  }
+  b.textContent = I18N[lang].btn_copied;
+  b.classList.add('copied');
+  setTimeout(() => { b.textContent = I18N[lang].btn_copy; b.classList.remove('copied'); }, 2000);
+});
+
+/* ============ 3D watch lab (three.js carregado sob demanda) ============ */
+(function(){
+  const stage = document.getElementById('labStage');
+  if (!stage) return;
+
+  const THREE_SRC = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+  const THREE_SRI = 'sha384-CI3ELBVUz9XQO+97x6nwMDPosPR5XvsxW2ua7N1Xeygeh1IxtgqtCkGfQY9WWdHu';
+  let started = false, visible = false;
+
+  // O three vem da CDN com hash de integridade, como antes. Os complementos
+  // do FBX ficam hospedados aqui: são quatro arquivos pequenos, e local
+  // dispensa hash, funciona offline e não depende de mais um domínio no ar.
+  const EXTRAS = [
+    'assets/vendor/fflate.min.js',
+    'assets/vendor/NURBSUtils.js',
+    'assets/vendor/NURBSCurve.js',
+    'assets/vendor/FBXLoader.js'
+  ];
+
+  function script(src, sri){
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      if (sri){ s.integrity = sri; s.crossOrigin = 'anonymous'; }
+      s.onload = resolve;
+      s.onerror = () => reject(new Error(src));
+      document.head.appendChild(s);
+    });
+  }
+
+  async function loadThree(){
+    if (typeof THREE === 'undefined') await script(THREE_SRC, THREE_SRI);
+    if (typeof THREE.FBXLoader === 'undefined'){
+      // em série: o FBXLoader confere fflate e NURBS no momento em que é lido
+      for (const src of EXTRAS) await script(src);
+    }
+  }
+
+  function init(){
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(35, stage.clientWidth / stage.clientHeight, 0.1, 100);
+
+    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(stage.clientWidth, stage.clientHeight);
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    stage.appendChild(renderer.domElement);
+
+    function frameCamera(){
+      const aspect = stage.clientWidth / stage.clientHeight;
+      camera.aspect = aspect;
+      camera.position.set(0, 0.6, aspect < .9 ? 12.5 : 9); // step back on narrow screens
+      camera.updateProjectionMatrix();
+    }
+    frameCamera();
+
+    // ambiente para reflexos do aço
+    (function environment(){
+      const c = document.createElement('canvas');
+      c.width = 512; c.height = 256;
+      const g = c.getContext('2d');
+      const grad = g.createLinearGradient(0,0,0,256);
+      grad.addColorStop(0,'#e8ecf2'); grad.addColorStop(.45,'#5a616c');
+      grad.addColorStop(.55,'#22262c'); grad.addColorStop(1,'#08090b');
+      g.fillStyle = grad; g.fillRect(0,0,512,256);
+      g.fillStyle = 'rgba(255,255,255,0.95)';
+      g.fillRect(60,20,90,120); g.fillRect(360,30,70,100);
+      g.fillStyle = 'rgba(255,240,220,0.6)'; g.fillRect(220,40,40,140);
+      const tex = new THREE.CanvasTexture(c);
+      tex.mapping = THREE.EquirectangularReflectionMapping;
+      const pmrem = new THREE.PMREMGenerator(renderer);
+      scene.environment = pmrem.fromEquirectangular(tex).texture;
+      tex.dispose(); pmrem.dispose();
+    })();
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+    const key = new THREE.DirectionalLight(0xffffff, 0.9); key.position.set(4,6,6); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xbcd0ff, 0.3); fill.position.set(-5,2,3); scene.add(fill);
+
+    const steel = new THREE.MeshStandardMaterial({ color:0xdadee3, metalness:1.0, roughness:0.18 });
+    const steelBrushed = new THREE.MeshStandardMaterial({ color:0xc4c9cf, metalness:0.95, roughness:0.38 });
+    const steelDark = new THREE.MeshStandardMaterial({ color:0x9aa0a8, metalness:1.0, roughness:0.3 });
+
+    const watch = new THREE.Group();
+    scene.add(watch);
+    watch.rotation.x = -0.15;
+
+    /* A tela do monitor é desenhada aqui, não vem do arquivo: assim o nome
+       fica nítido em qualquer resolução e dá para mexer no texto sem abrir
+       um editor 3D. O material da tela no FBX se chama 螢幕 e é o único que
+       traz mapa, então dá para achá-lo pelos dois caminhos. */
+    function telaTextura(){
+      const c = document.createElement('canvas');
+      c.width = 1024; c.height = 640;                  // 1.6, a proporção da tela do modelo
+      const x = c.getContext('2d');
+
+      x.fillStyle = '#08080d';
+      x.fillRect(0, 0, c.width, c.height);
+
+      // barra de título, para a tela parecer um editor e não um cartaz
+      x.fillStyle = '#101019';
+      x.fillRect(0, 0, c.width, 54);
+      ['#ff5f57','#febc2e','#28c840'].forEach((cor, i) => {
+        x.fillStyle = cor; x.beginPath();
+        x.arc(28 + i * 26, 27, 7, 0, Math.PI * 2); x.fill();
+      });
+
+      // linhas de código de mentira, só como textura de fundo
+      x.font = '19px "IBM Plex Mono", ui-monospace, monospace';
+      const cores = ['#4b4b63','#6f5bd0','#3f7a68','#4b4b63','#8a6bd6'];
+      for (let i = 0; i < 13; i++){
+        x.fillStyle = cores[i % cores.length];
+        x.globalAlpha = .55;
+        x.fillText('· '.repeat(2 + (i % 3)) + '—'.repeat(6 + (i * 7) % 26), 34, 96 + i * 27);
+      }
+      x.globalAlpha = 1;
+
+      // o nome, que é o motivo de tudo isto
+      const cxm = c.width / 2, cym = c.height / 2 + 16;
+      x.textAlign = 'center';
+      x.shadowColor = 'rgba(124,92,255,.85)'; x.shadowBlur = 46;
+      x.fillStyle = '#ffffff';
+      x.font = '700 108px Archivo, system-ui, sans-serif';
+      x.fillText('sono', cxm, cym);
+      x.shadowBlur = 0;
+      x.fillStyle = '#b9a5ff';
+      x.font = '500 44px "IBM Plex Mono", ui-monospace, monospace';
+      x.fillText('c o d e r', cxm, cym + 62);
+
+      const t = new THREE.CanvasTexture(c);
+      t.encoding = THREE.sRGBEncoding;                 // UV do modelo é padrão: flipY fica no default
+      t.anisotropy = renderer.capabilities.getMaxAnisotropy();
+      return t;
+    }
+
+    /* O modelo vem em unidades de 3ds Max (uns 10 mil de largura), então o
+       encaixe é medido pela própria caixa envolvente em vez de por um número
+       fixo — troque o arquivo e ele continua enquadrado. */
+    function poeModelo(obj){
+      const caixa = new THREE.Box3().setFromObject(obj);
+      const tam = caixa.getSize(new THREE.Vector3());
+      const centro = caixa.getCenter(new THREE.Vector3());
+      const k = 4.9 / Math.max(tam.y, tam.x / 1.7);
+      obj.scale.setScalar(k);
+      obj.position.copy(centro).multiplyScalar(-k);
+
+      obj.traverse(o => {
+        if (!o.isMesh) return;
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach(m => {
+          if (!m) return;
+          if (m.map || /螢幕/.test(m.name || '')){
+            // a tela acende sozinha: sem emissive ela ficaria dependendo da luz
+            m.map = telaTextura();
+            m.emissiveMap = m.map;
+            m.emissive = new THREE.Color(0xffffff);
+            m.emissiveIntensity = 1;
+            m.roughness = .32; m.metalness = 0;
+          } else {
+            m.metalness = m.metalness > .5 ? .9 : .15;
+            m.roughness = .45;
+          }
+          m.needsUpdate = true;
+        });
+      });
+      watch.add(obj);
+      stage.classList.add('pronto');
+    }
+
+    new THREE.FBXLoader().load('assets/pc/computer.fbx', poeModelo, undefined, () => {
+      const dica = stage.querySelector('.lab-hint');
+      if (dica) dica.textContent = '3D indisponível';
+    });
+
+    // interação (restrita ao palco; pan-y deixa a página rolar no touch)
+    let dragging = false, px = 0, py = 0;
+    let targetRotY = 0, targetRotX = -0.15;
+    let idleTimer = 0;
+    stage.addEventListener('pointerdown', e => {
+      dragging = true; px = e.clientX; py = e.clientY;
+      stage.classList.add('dragging');
+      stage.setPointerCapture(e.pointerId);
+    });
+    stage.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      targetRotY += (e.clientX - px) * 0.008;
+      targetRotX = THREE.MathUtils.clamp(targetRotX + (e.clientY - py) * 0.006, -1.1, 1.1);
+      px = e.clientX; py = e.clientY;
+      idleTimer = 0;
+    });
+    const stop = () => { dragging = false; stage.classList.remove('dragging'); };
+    stage.addEventListener('pointerup', stop);
+    stage.addEventListener('pointercancel', stop);
+
+    const clock = new THREE.Clock();
+    function animate(){
+      if (!visible){ requestAnimationFrame(animate); return; } // pausa fora da tela
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.05);
+      idleTimer += dt;
+      if (!dragging && idleTimer > 2.5 && !reduced) targetRotY += dt * 0.25;
+
+      watch.rotation.y += (targetRotY - watch.rotation.y) * 6 * dt;
+      watch.rotation.x += (targetRotX - watch.rotation.x) * 6 * dt;
+      watch.position.y = reduced ? 0 : Math.sin(clock.elapsedTime * 0.9) * 0.08;
+
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    addEventListener('resize', () => {
+      renderer.setSize(stage.clientWidth, stage.clientHeight);
+      frameCamera();
+    });
+  }
+
+  // three.js (600 KB) só é baixado quando a seção entra na tela
+  new IntersectionObserver(es => es.forEach(e => {
+    visible = e.isIntersecting;
+    if (visible && !started){
+      started = true;
+      loadThree().then(init).catch(() => {
+        stage.querySelector('.lab-hint').textContent = 'WebGL indisponível';
+      });
+    }
+  }), {threshold:.05}).observe(stage);
+})();
+
+/* ============ badge physics ============ */
+const rig = document.getElementById('rig');
+const card = document.getElementById('card');
+const lanyardEl = document.querySelector('.lanyard');
+const photoWrap = document.querySelector('.photo-wrap');
+
+// O crachá só existe na home. A guarda deixa este bloco inerte nas outras
+// páginas, que carregam o mesmo script sem ter o hero.
+if (!reduced && rig && card && lanyardEl && photoWrap) {
+  let target = 0, angle = 0, vel = 0;           // strap swing (spring)
+  let cAng = 0, cVel = 0;                        // card lag swing (double pendulum)
+  let tX = 0, tY = 0, tiltX = 0, tiltY = 0;      // 3D tilt
+  let pxT = 50, pyT = 30, pxS = 50, pyS = 30;    // mirror hotspot (target/smoothed)
+  let y = 0, yVel = 0;                           // vertical spring (drag & launch)
+  let dragging = false, grabY = 0, pull = 0;
+
+  // the mouse only drives the LIGHT (mirror reflections); the badge itself
+  // moves exclusively when clicked, dragged or launched
+  addEventListener('mousemove', e => {
+    if (dragging) return;
+    const r = rig.getBoundingClientRect();
+    const dx = (e.clientX - (r.left + r.width/2)) / innerWidth;
+    card.style.setProperty('--glare', (50 + dx*130) + '%');
+    card.style.setProperty('--hx', (dx * 30) + 'deg');
+    card.style.setProperty('--hp', (dx * 55) + '%');
+    const pw = photoWrap.getBoundingClientRect();
+    pxT = Math.max(-40, Math.min(140, ((e.clientX - pw.left) / pw.width) * 100));
+    pyT = Math.max(-40, Math.min(140, ((e.clientY - pw.top) / pw.height) * 100));
+  }, {passive:true});
+
+  // mirror intensifies when hovering the photo itself
+  photoWrap.addEventListener('mouseenter', () => {
+    photoWrap.style.setProperty('--spec', '.48');
+    photoWrap.style.setProperty('--sweep', '.30');
+    photoWrap.style.setProperty('--irid', '.14');
+  });
+  photoWrap.addEventListener('mouseleave', () => {
+    photoWrap.style.setProperty('--spec', '.30');
+    photoWrap.style.setProperty('--sweep', '.16');
+    photoWrap.style.setProperty('--irid', '.07');
+  });
+
+  /* ----- drag the badge down, let go, watch it fly ----- */
+  const resist = d => 190 * (1 - 1/(1 + d/190)); // rubber-band resistance, caps ~190px
+  let lastDragX = 0;
+  card.addEventListener('pointerdown', e => {
+    dragging = true; pull = 0; grabY = e.clientY; lastDragX = e.clientX;
+    card.classList.add('grabbing');
+    card.setPointerCapture(e.pointerId);
+    if (e.pointerType === 'mouse') e.preventDefault();
+  });
+  card.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const d = e.clientY - grabY;
+    pull = d > 0 ? resist(d) : Math.max(-20, d * .25);
+    // sideways drag feeds the swing (works with touch too)
+    const mx = e.clientX - lastDragX; lastDragX = e.clientX;
+    target = Math.max(-20, Math.min(20, mx * 1.6 + target * .9));
+  });
+  const release = e => {
+    if (!dragging) return;
+    dragging = false;
+    card.classList.remove('grabbing');
+    const movedY = Math.abs(e.clientY - grabY);
+    if (pull > 30) {
+      // slingshot: the harder the pull, the bigger the launch
+      yVel = -(pull * 0.16 + 7);
+      vel += (Math.random() - .5) * 10;      // chaotic swing kick
+      cVel += (Math.random() - .5) * 14;
+    } else if (movedY < 8) {
+      // simple click/tap: give the badge a playful shove
+      const dir = Math.random() < .5 ? -1 : 1;
+      vel  += dir * (7 + Math.random() * 5);
+      cVel += dir * (9 + Math.random() * 6);
+      yVel = -6.5;
+    }
+    pull = 0;
+  };
+  card.addEventListener('pointerup', release);
+  card.addEventListener('pointercancel', release);
+
+  /* ----- mobile: tilt the phone, tilt the badge (gyroscope) ----- */
+  if (noHover && 'DeviceOrientationEvent' in window) {
+    let g0 = null, b0 = null;
+    addEventListener('deviceorientation', e => {
+      if (dragging || e.gamma == null) return;
+      if (g0 === null){ g0 = e.gamma; b0 = e.beta; }   // calibrate to how the phone is held
+      const dg = (e.gamma - g0), db = (e.beta - b0);
+      tX = Math.max(-9, Math.min(9, dg * .6));
+      tY = Math.max(-9, Math.min(9, -db * .45));
+      card.style.setProperty('--glare', (50 + dg*3.2) + '%');
+    }, {passive:true});
+  }
+
+  const hang = document.getElementById('hang');
+  let heroVisible = true;
+  new IntersectionObserver(es => es.forEach(en => heroVisible = en.isIntersecting), {threshold:0})
+    .observe(document.getElementById('hero'));
+  let lastPx = -1, lastPy = -1;
+  const t0 = performance.now();
+  (function loop(){
+    if (!heroVisible && !dragging){ requestAnimationFrame(loop); return; } // badge offscreen: do nothing
+    // Brisa: um alvo lento e contínuo para o crachá nunca ficar totalmente
+    // parado. Vai para a mesma mola do arrasto, então o cordão gira e o card
+    // atrasa atrás dele, como um pêndulo de verdade. Dois períodos que não
+    // fecham em conta redonda, senão o vaivém soa a metrônomo.
+    const t = (performance.now() - t0) / 1000;
+    const brisa = Math.sin(t * 0.55) * 1.15 + Math.sin(t * 0.23 + 1.3) * 0.6;
+
+    // swing spring: o arrasto e o clique somam a essa brisa e depois relaxam
+    vel = (vel + (target + brisa - angle) * 0.055) * 0.925;
+    angle += vel;
+    target *= 0.96; // any drag-induced lean relaxes back to center
+    cVel = (cVel + (angle - cAng) * 0.09) * 0.9;
+    cAng += cVel;
+    tiltX += (tX - tiltX) * 0.08;
+    tiltY += (tY - tiltY) * 0.08;
+
+    // vertical spring: while dragging it follows the hand; released, it snaps and bounces
+    if (dragging) {
+      y += (pull - y) * 0.35;
+    } else {
+      yVel += (0 - y) * 0.055;   // stiffness
+      yVel *= 0.90;              // damping -> a few visible bounces
+      y += yVel;
+    }
+    // photo mirror hotspot glides (liquid mirror feel); skip DOM writes when parked
+    pxS += (pxT - pxS) * 0.12;
+    pyS += (pyT - pyS) * 0.12;
+    if (Math.abs(pxS - lastPx) > .2 || Math.abs(pyS - lastPy) > .2){
+      lastPx = pxS; lastPy = pyS;
+      photoWrap.style.setProperty('--px', pxS.toFixed(1) + '%');
+      photoWrap.style.setProperty('--py', pyS.toFixed(1) + '%');
+    }
+
+    // Antes havia um teste aqui para pular as escritas quando tudo estava
+    // parado. Com a brisa o crachá nunca para, e o teste chegava a falhar na
+    // passagem do balanço pelo zero, o que dava um engasgo. Enquanto o hero
+    // está na tela, escreve sempre; fora dela o loop já sai lá em cima.
+    {
+      lanyardEl.style.transform = `scaleY(${(Math.max(.4, 1 + y / (lanyardEl.offsetHeight || 300))).toFixed(4)})`;
+      hang.style.transform = `translateY(${y.toFixed(1)}px)`;
+      rig.style.transform = `rotate(${angle.toFixed(2)}deg)`;
+      card.style.transform =
+        `rotate(${((cAng - angle) * 0.6 + Math.min(0, y) * 0.06).toFixed(2)}deg)` +
+        ` rotateY(${tiltX.toFixed(2)}deg) rotateX(${(tiltY - Math.min(0, yVel) * 1.1).toFixed(2)}deg)`;
+    }
+    requestAnimationFrame(loop);
+  })();
+}
+
+/* ============ loader: uma vez por sessão, pulável, saudações do mercado suíço ============ */
+(function(){
+  const loader = document.getElementById('loader');
+  if (!loader) return;
+  const word = loader.querySelector('.hello-word');
+  const bar  = loader.querySelector('.loader-line span');
+
+  let revealed = false;
+  const unlock = () => {
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  };
+  function reveal(){
+    if (revealed) return; revealed = true;
+    unlock();
+    loader.classList.add('done');
+    loader.addEventListener('transitionend', () => loader.remove(), {once:true});
+    setTimeout(() => loader.remove(), 1200);   // fallback if transitionend is missed
+  }
+
+  // já viu a intro nesta sessão? entra direto.
+  let seen = false;
+  try { seen = sessionStorage.getItem('sux-hello') === '1'; } catch {}
+  if (seen || reduced){
+    loader.remove();
+    return;
+  }
+  try { sessionStorage.setItem('sux-hello', '1'); } catch {}
+
+  // saudações escolhidas pelo mercado (CH/DE/FR/IT) + PT e EN; "Grüezi" fecha.
+  const greetings = [
+    {t:'Olá'},        // Português
+    {t:'Hello'},      // English
+    {t:'Bonjour'},    // Français
+    {t:'Ciao'},       // Italiano
+    {t:'Grüezi'}      // Schweizerdeutsch
+  ];
+
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+
+  // qualquer sinal de impaciência pula a intro na hora
+  ['pointerdown','keydown','wheel','touchstart'].forEach(ev =>
+    addEventListener(ev, reveal, {once:true, passive:true}));
+  document.getElementById('loaderSkip').addEventListener('click', reveal);
+
+  const IN = 170, HOLD = 40, OUT = 140;          // ritmo por palavra (ms)
+  const last = greetings.length - 1;
+
+  async function run(){
+    for (let i = 0; i < greetings.length; i++){
+      if (revealed) return;
+      const g = greetings[i];
+      word.textContent = g.t;
+      word.className = 'hello-word' + (g.p ? ' plain' : '');
+      void word.offsetWidth;                     // reinicia a animação de entrada
+      word.classList.add('show');
+      bar.style.transform = 'scaleX(' + ((i + 1) / greetings.length).toFixed(3) + ')';
+
+      if (i === last){ await wait(620); break; } // a última saudação segura um pouco mais
+      await wait(IN + HOLD);
+      word.classList.remove('show');
+      word.classList.add('hide');
+      await wait(OUT);
+    }
+    reveal();
+  }
+
+  // começa quando as fontes estiverem prontas, para a cursiva não trocar no meio
+  (document.fonts ? document.fonts.ready.then(run) : run());
+  setTimeout(reveal, 6000);                      // trava de segurança
+})();
+</script>
+</body>
+</html>
