@@ -4,54 +4,51 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { processo, type Etapa } from '@/data/process';
+import { cadernoDe, folioDe, totalDeCadernos } from '@/data/arquivo';
 import { Doodle, Seta } from './Doodles';
 import { ScrollReveal } from './ScrollReveal';
 import { useDesktop } from '@/hooks/useMedia';
 import { cn } from '@/lib/utils';
 
 /* -------------------------------------------------------------------------
-   "COMO EU FAÇO AS COISAS".
+   CADERNO 04 — COMO EU FAÇO. A dobradura.
 
-   No desktop a seção gruda na tela e as etapas passam de lado enquanto a
-   página rola — é a única parte do site que anda na horizontal, e ela ganha
-   isso porque processo é linha do tempo, não pilha.
+   No desktop este caderno abre de lado: a página gruda na tela e as etapas
+   passam na horizontal, como um encarte desdobrável. É a única parte do
+   arquivo que anda de lado, e ganha isso porque processo é linha do tempo,
+   não pilha.
 
-   No celular a mesma lista volta a descer, com a seta entre uma etapa e
-   outra. Mesmo conteúdo, mesmo componente de cartão.
+   No celular a dobradura não cabe, então a mesma lista volta a descer, com
+   a seta entre uma etapa e outra. Mesmo conteúdo, mesmo componente de ficha.
    ------------------------------------------------------------------------- */
 
-function Cartao({ etapa, i, total }: { etapa: Etapa; i: number; total: number }) {
+function Ficha({ etapa, total }: { etapa: Etapa; total: number }) {
   return (
     <article className="relative flex w-full flex-col">
-      <div className="mb-3 flex items-baseline gap-3">
-        <span className="zine-titulo text-[clamp(2.6rem,6vw,5rem)] leading-none" style={{ color: 'var(--accent)' }}>
-          {etapa.n}
-        </span>
-        <span className="mono text-[10px] tracking-[0.24em] opacity-45">
+      <div className="mb-3 flex items-baseline gap-3 border-b border-[var(--linha)] pb-2">
+        <span className="zine-titulo text-[clamp(2.2rem,5vw,4.2rem)] leading-none">{etapa.n}</span>
+        <span className="mono text-[10px] tracking-[0.22em]" style={{ color: 'var(--tinta-3)' }}>
           /{String(total).padStart(2, '0')}
         </span>
-        <Doodle nome={etapa.doodle} cor="var(--ice)" tamanho={30} className="ml-auto shrink-0" />
+        <Doodle nome={etapa.doodle} cor="var(--tinta)" tamanho={26} className="ml-auto shrink-0 opacity-70" />
       </div>
 
-      <h3 className="zine-titulo--medio mb-3">{etapa.titulo}</h3>
-      <p className="corpo text-[clamp(0.95rem,1.3vw,1.1rem)]">{etapa.texto}</p>
+      <h3 className="zine-titulo--medio mb-3 text-[clamp(1.5rem,3.4vw,2.6rem)]">{etapa.titulo}</h3>
+      <p className="corpo text-[clamp(0.9rem,1.2vw,1.05rem)]">{etapa.texto}</p>
 
       {etapa.shot && (
-        <div
-          className="relative mt-6 border-[1.5px] border-[var(--border-forte)] bg-[var(--surface-2)]"
-          style={{ boxShadow: '7px 7px 0 var(--bg)' }}
-        >
+        <figure className="relative m-0 mt-6 border border-[var(--linha-forte)] bg-[var(--papel-2)]">
           <span className="fita -left-3 -top-2 rotate-[-7deg]" />
           <Image
             src={etapa.shot.src}
             alt={etapa.shot.alt}
             width={etapa.shot.width}
             height={etapa.shot.height}
-            sizes="(max-width: 1024px) 88vw, 40vw"
+            sizes="(max-width: 1024px) 88vw, 38vw"
             loading="lazy"
             className="aspect-[16/10] w-full object-cover object-top"
           />
-        </div>
+        </figure>
       )}
     </article>
   );
@@ -63,6 +60,9 @@ export default function ProcessSection() {
   const alvo = useRef<HTMLDivElement>(null);
   const trilho = useRef<HTMLDivElement>(null);
   const [curso, setCurso] = useState(0);
+
+  const caderno = cadernoDe('processo');
+  const folio = folioDe('processo');
 
   /* o alvo só existe no ramo do desktop; passar a ref antes de ela ser
      montada faz o motion reclamar de ref não hidratada */
@@ -88,19 +88,40 @@ export default function ProcessSection() {
 
   const cabecalho = (
     <div className="envelope">
-      <ScrollReveal direcao="esquerda" className="mb-4 flex items-center gap-4">
-        <span className="zine-sub">03 — MÉTODO</span>
-        <span className="h-[2px] flex-1" style={{ background: 'var(--border)' }} />
-      </ScrollReveal>
+      <div className="cabeco">
+        <span>
+          {folio} — {caderno?.titulo}
+        </span>
+        <span className="hidden sm:inline" style={{ color: 'var(--tinta-3)' }}>
+          {caderno?.chamada}
+        </span>
+      </div>
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <h2 className="zine-titulo--medio">
+        <h2 id="processo-titulo" className="zine-titulo--medio">
           COMO EU FAÇO
           <br />
           AS COISAS
         </h2>
-        <p className="mono hidden items-center gap-3 text-[11px] tracking-[0.2em] opacity-55 lg:flex">
-          ROLA <span aria-hidden="true">→</span> AS ETAPAS ANDAM DE LADO
+        <p className="mono hidden items-center gap-3 text-[10px] tracking-[0.2em] lg:flex" style={{ color: 'var(--tinta-3)' }}>
+          ENCARTE DESDOBRÁVEL <span aria-hidden="true">→</span> ROLA PRA ABRIR
         </p>
+      </div>
+    </div>
+  );
+
+  const pe = (
+    <div className="envelope">
+      <div className="folio">
+        <span className="escala-cinza" aria-hidden="true">
+          <i style={{ opacity: 0.15 }} />
+          <i style={{ opacity: 0.35 }} />
+          <i style={{ opacity: 0.55 }} />
+          <i style={{ opacity: 0.75 }} />
+          <i style={{ opacity: 1 }} />
+        </span>
+        <span>
+          PÁG. {folio} / {totalDeCadernos}
+        </span>
       </div>
     </div>
   );
@@ -108,63 +129,67 @@ export default function ProcessSection() {
   /* ---------------- celular e tablet: lista que desce ---------------- */
   if (!desktop) {
     return (
-      <section id="processo" className="invertido relative py-[clamp(70px,10vw,140px)]">
-        <span aria-hidden="true" className="rasgo absolute inset-x-0 top-0 rotate-180" style={{ color: 'var(--bg)' }} />
-        <span aria-hidden="true" className="rasgo absolute inset-x-0 bottom-0" style={{ color: 'var(--bg)' }} />
+      <section id="processo" aria-labelledby="processo-titulo" className="pagina relative py-[clamp(44px,7vw,96px)]">
         {cabecalho}
-        <div className="envelope mt-12 flex flex-col gap-10">
+        <div className="envelope mt-10 flex flex-col gap-9">
           {processo.map((etapa, i) => (
             <div key={etapa.n}>
-              <ScrollReveal direcao={i % 2 ? 'direita' : 'esquerda'} giro={i % 2 ? 1.5 : -1.5}>
-                <Cartao etapa={etapa} i={i} total={processo.length} />
+              <ScrollReveal direcao={i % 2 ? 'direita' : 'esquerda'} giro={i % 2 ? 1.2 : -1.2}>
+                <Ficha etapa={etapa} total={processo.length} />
               </ScrollReveal>
               {i < processo.length - 1 && (
-                <div className="mt-8 flex justify-center" aria-hidden="true">
-                  <span className="text-3xl leading-none opacity-45">↓</span>
+                <div className="mt-7 flex justify-center" aria-hidden="true">
+                  <span className="text-2xl leading-none" style={{ color: 'var(--tinta-3)' }}>
+                    ↓
+                  </span>
                 </div>
               )}
             </div>
           ))}
         </div>
+        {pe}
       </section>
     );
   }
 
-  /* ---------------- desktop: seção presa, etapas de lado ---------------- */
+  /* ---------------- desktop: a dobradura ---------------- */
   return (
-    <section id="processo" className="invertido relative pb-[clamp(30px,4vw,60px)]">
-      <span aria-hidden="true" className="rasgo absolute inset-x-0 top-0 z-10 rotate-180" style={{ color: 'var(--bg)' }} />
-      <span aria-hidden="true" className="rasgo absolute inset-x-0 bottom-0 z-10" style={{ color: 'var(--bg)' }} />
-      <div className="pt-[clamp(70px,10vw,140px)]">{cabecalho}</div>
+    <section id="processo" aria-labelledby="processo-titulo" className="pagina relative pb-[clamp(24px,4vw,56px)]">
+      <div className="pt-[clamp(44px,7vw,96px)]">{cabecalho}</div>
 
       <div ref={alvo} style={{ height: `${processo.length * 62}vh` }}>
-        <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+        <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden">
           <motion.div
             ref={trilho}
-            className="flex items-start gap-[clamp(40px,5vw,90px)] px-[clamp(16px,4vw,64px)]"
+            className="flex items-start gap-[clamp(36px,5vw,84px)] px-[clamp(18px,5vw,76px)]"
             style={reduzido ? undefined : { x }}
           >
             {processo.map((etapa, i) => (
-              <div key={etapa.n} className="flex shrink-0 items-start gap-[clamp(40px,5vw,90px)]">
+              <div key={etapa.n} className="flex shrink-0 items-start gap-[clamp(36px,5vw,84px)]">
                 <div
-                  className={cn('w-[clamp(300px,34vw,470px)]', i % 2 ? 'mt-[6vh]' : '-mt-[3vh]')}
-                  style={{ transform: `rotate(${i % 2 ? 0.8 : -0.8}deg)` }}
+                  className={cn('w-[clamp(290px,32vw,440px)]', i % 2 ? 'mt-[6vh]' : '-mt-[3vh]')}
+                  style={{ transform: `rotate(${i % 2 ? 0.6 : -0.6}deg)` }}
                 >
-                  <Cartao etapa={etapa} i={i} total={processo.length} />
+                  <Ficha etapa={etapa} total={processo.length} />
                 </div>
                 {i < processo.length - 1 && (
-                  <Seta className="mt-24 shrink-0 opacity-45" cor="var(--text)" largura={110} />
+                  <Seta className="mt-24 shrink-0 opacity-35" cor="var(--tinta)" largura={100} />
                 )}
               </div>
             ))}
           </motion.div>
 
-          {/* trilhinho de progresso da horizontal */}
-          <div className="absolute bottom-10 left-[clamp(16px,4vw,64px)] right-[clamp(16px,4vw,64px)] h-[2px]" style={{ background: 'var(--border)' }}>
-            <motion.span className="block h-full origin-left" style={{ scaleX: suave, background: 'var(--accent)' }} />
+          {/* trilhinho de progresso da dobradura */}
+          <div
+            className="absolute bottom-9 left-[clamp(18px,5vw,76px)] right-[clamp(18px,5vw,76px)] h-px"
+            style={{ background: 'var(--linha)' }}
+          >
+            <motion.span className="block h-full origin-left" style={{ scaleX: suave, background: 'var(--tinta)' }} />
           </div>
         </div>
       </div>
+
+      {pe}
     </section>
   );
 }

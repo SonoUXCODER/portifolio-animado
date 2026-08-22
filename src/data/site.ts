@@ -15,6 +15,8 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonouxcoder.github.io/portifolio-animado',
   email: 'alissonvpt1@gmail.com',
   frase: 'feito à mão, mas com javascript.',
+  /* linha do colofão, no fim do arquivo */
+  colofao: 'Composto em Archivo e IBM Plex Mono. Escrito à mão em Next.js e TypeScript, impresso por um export estático.',
   social: [
     { label: 'GITHUB', href: 'https://github.com/SonoUXCODER' },
     { label: 'INSTAGRAM', href: 'https://instagram.com/somnifobias' },
@@ -24,10 +26,3 @@ export const site = {
   ],
 };
 
-export const nav = [
-  { label: 'PROJETOS', href: '/#projetos' },
-  { label: 'STACK', href: '/#stack' },
-  { label: 'PROCESSO', href: '/#processo' },
-  { label: 'TESTES', href: '/#experimentos' },
-  { label: 'CONTATO', href: '/#contato' },
-];

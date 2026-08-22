@@ -99,7 +99,7 @@ export function TextReveal({
     >
       {palavras.map((palavra, i) => (
         /* a máscara é o span de fora: a palavra sobe de dentro dele */
-        <span key={`${palavra}-${i}`} className="inline-block overflow-hidden align-bottom">
+        <span key={`${palavra}-${i}`} className="mascara-linha inline-block align-bottom">
           <motion.span
             className="inline-block"
             variants={{
@@ -232,7 +232,7 @@ export function BarraDeProgresso() {
     <motion.div
       aria-hidden="true"
       className="fixed left-0 top-0 z-[70] h-[3px] w-full origin-left"
-      style={{ scaleX: largura, background: 'var(--accent)' }}
+      style={{ scaleX: largura, background: 'var(--tinta)' }}
     />
   );
 }

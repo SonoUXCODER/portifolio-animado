@@ -1,20 +1,15 @@
 @import 'tailwindcss';
 
 /* =========================================================================
-   NOITE DE INVERNO — sistema visual
+   ARQUIVO IMPRESSO — sistema visual
 
-   Grafite profundo, superfície chumbo, branco suave e uma família fria de
-   azuis acinzentados. Nada satura: o único "colorido" do site é a diferença
-   de temperatura entre o cinza do fundo e o azul do destaque.
+   A página não é uma tela: é uma folha em cima de uma mesa. Tudo aqui serve
+   a essa ideia — a folha tem marca de corte, cabeço, fólio e sangria; a mesa
+   é o tom por baixo; e a única cor do objeto inteiro vem das estampas
+   (os prints dos projetos). O resto é tinta.
 
-   Hierarquia, do mais quieto ao mais alto:
-     --bg        fundo da página
-     --surface   cards, molduras, seções invertidas
-     --border    linha fria de baixo contraste
-     --text-2    texto secundário
-     --accent    destaque (números, rótulos, marcadores)
-     --text      texto principal
-     --ice       interação: hover, foco, seleção
+   Duas edições: a de papel (clara) e a noturna (escura, o negativo dela).
+   Trocar as duas listas de token muda o objeto inteiro.
 
    Cuidado ao mexer: classe de componente vive dentro de `@layer components`.
    CSS fora de layer passa na frente de qualquer utility do Tailwind e um
@@ -22,14 +17,10 @@
    ========================================================================= */
 
 @theme {
-  --color-bg: #0b0d10;
-  --color-surface: #14181d;
-  --color-surface-2: #1b2027;
-  --color-text: #e8ecf1;
-  --color-text-2: #93a1b0;
-  --color-accent: #8ca3bc;
-  --color-accent-2: #6e8299;
-  --color-ice: #afc6db;
+  --color-mesa: #e3e3e1;
+  --color-papel: #ffffff;
+  --color-tinta: #0a0a0a;
+  --color-tinta-2: #6e6e6e;
 
   --font-display: var(--fonte-display), 'Archivo', system-ui, sans-serif;
   --font-mono: var(--fonte-mono), ui-monospace, 'IBM Plex Mono', monospace;
@@ -37,56 +28,112 @@
 }
 
 @layer base {
+  /* ---------- edição papel (padrão) ---------- */
   :root {
+    color-scheme: light;
+
+    --tinta-base: #0a0a0a;
+    --papel-base: #ffffff;
+
+    --mesa: #e3e3e1;
+    --papel: #ffffff;
+    --papel-2: #f4f4f2;
+    --tinta: #0a0a0a;
+    --tinta-2: #6e6e6e;
+    --tinta-3: #a6a6a6;
+
+    --linha: rgba(10, 10, 10, 0.13);
+    --linha-forte: rgba(10, 10, 10, 0.32);
+
+    /* sombra da folha sobre a mesa */
+    --sombra-folha: 0 1px 2px rgba(10, 10, 10, 0.05), 0 18px 50px -20px rgba(10, 10, 10, 0.22);
+    --grao-opacidade: 0.055;
+    --halftone-opacidade: 0.1;
+  }
+
+  /* ---------- edição noturna ---------- */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-tema='claro']) {
+      color-scheme: dark;
+
+      --tinta-base: #f2f2f2;
+      --papel-base: #121212;
+
+      --mesa: #060606;
+      --papel: #121212;
+      --papel-2: #191919;
+      --tinta: #f2f2f2;
+      --tinta-2: #939393;
+      --tinta-3: #5c5c5c;
+
+      --linha: rgba(242, 242, 242, 0.15);
+      --linha-forte: rgba(242, 242, 242, 0.34);
+
+      --sombra-folha: 0 1px 2px rgba(0, 0, 0, 0.6), 0 20px 60px -20px rgba(0, 0, 0, 0.9);
+      --grao-opacidade: 0.05;
+      --halftone-opacidade: 0.14;
+    }
+  }
+
+  /* a escolha explícita ganha da preferência do sistema, nos dois sentidos */
+  :root[data-tema='escuro'] {
     color-scheme: dark;
 
-    --bg: #0b0d10;
-    --surface: #14181d;
-    --surface-2: #1b2027;
+    --tinta-base: #f2f2f2;
+    --papel-base: #121212;
 
-    --text: #e8ecf1;
-    --text-2: #93a1b0;
+    --mesa: #060606;
+    --papel: #121212;
+    --papel-2: #191919;
+    --tinta: #f2f2f2;
+    --tinta-2: #939393;
+    --tinta-3: #5c5c5c;
 
-    --accent: #8ca3bc;
-    --accent-2: #6e8299;
-    --ice: #afc6db;
+    --linha: rgba(242, 242, 242, 0.15);
+    --linha-forte: rgba(242, 242, 242, 0.34);
 
-    /* bordas em branco translúcido: funcionam igual sobre o fundo e sobre
-       a superfície, sem precisar de dois tokens por contexto */
-    --border: rgba(232, 236, 241, 0.1);
-    --border-forte: rgba(232, 236, 241, 0.26);
+    --sombra-folha: 0 1px 2px rgba(0, 0, 0, 0.6), 0 20px 60px -20px rgba(0, 0, 0, 0.9);
+    --grao-opacidade: 0.05;
+    --halftone-opacidade: 0.14;
   }
 
   html {
     scroll-behavior: smooth;
-    /* a nav fixa não pode comer o título quando um link de âncora cai */
-    scroll-padding-top: 92px;
+    /* a régua fixa no topo não pode comer o título quando uma âncora cai */
+    scroll-padding-top: 104px;
     -webkit-text-size-adjust: 100%;
     /* clip, e não hidden: hidden viraria contêiner de rolagem e mataria
-       todo position:sticky da página. segura o que entra de fora
-       (reveal lateral, título maior que a tela) sem criar barra */
+       todo position:sticky da página */
     overflow-x: clip;
+    background: var(--mesa);
   }
 
   body {
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
+    background: var(--mesa);
+    color: var(--tinta);
     font-family: var(--font-display);
     font-synthesis-weight: none;
     overflow-x: clip;
     -webkit-font-smoothing: antialiased;
   }
 
+  /* enquanto o tema não foi resolvido pelo script do <head>, nada de
+     transição — senão a primeira pintura pisca do claro pro escuro */
+  html.tema-pronto body,
+  html.tema-pronto .folha {
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+
   ::selection {
-    background: var(--ice);
-    color: var(--bg);
+    background: var(--tinta);
+    color: var(--papel);
   }
 
   :focus-visible {
-    outline: 2px solid var(--ice);
+    outline: 2px solid var(--tinta);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 1px;
   }
 
   img {
@@ -96,13 +143,164 @@
 }
 
 @layer components {
-  /* ---------- seção invertida: sobe um degrau de superfície ----------
-     No tema claro isto virava preto. Agora que a página inteira é escura,
-     a inversão é de elevação, não de polaridade: o bloco clareia o
-     suficiente pra marcar o ritmo sem quebrar a leitura. */
+  /* =======================================================================
+     PÁGINA EM TINTA CHEIA
+     O caderno impresso todo em preto no meio do arquivo. Os tokens são
+     trocados, não sobrescritos com literal: assim a inversão vale nas duas
+     edições sem duplicar paleta. `--tinta-base` e `--papel-base` nunca
+     mudam dentro daqui, o que evita referência circular.
+     ======================================================================= */
+
   .invertido {
-    background: var(--surface);
-    color: var(--text);
+    background: var(--tinta-base);
+    color: var(--papel-base);
+
+    --papel: var(--tinta-base);
+    --papel-2: color-mix(in srgb, var(--papel-base) 8%, var(--tinta-base));
+    --tinta: var(--papel-base);
+    --tinta-2: color-mix(in srgb, var(--papel-base) 64%, var(--tinta-base));
+    --tinta-3: color-mix(in srgb, var(--papel-base) 42%, var(--tinta-base));
+    --linha: color-mix(in srgb, var(--papel-base) 17%, transparent);
+    --linha-forte: color-mix(in srgb, var(--papel-base) 38%, transparent);
+  }
+  .invertido ::selection {
+    background: var(--papel-base);
+    color: var(--tinta-base);
+  }
+
+  /* =======================================================================
+     A FOLHA
+     O conteúdo inteiro mora numa folha centrada na mesa. As marcas de corte
+     ficam nos quatro cantos, como numa prova de gráfica.
+     ======================================================================= */
+
+  .folha {
+    position: relative;
+    width: min(1560px, 100% - 2 * var(--margem-mesa, 10px));
+    margin-inline: auto;
+    margin-block: var(--margem-mesa, 10px);
+    background: var(--papel);
+    box-shadow: var(--sombra-folha);
+    /* clip pra sangria: a imagem que passa da margem para no corte da folha,
+       igual a um impresso aparado. hidden aqui mataria o sticky do processo */
+    overflow-x: clip;
+  }
+
+  @media (min-width: 768px) {
+    .folha {
+      --margem-mesa: 22px;
+    }
+  }
+  @media (min-width: 1280px) {
+    .folha {
+      --margem-mesa: 34px;
+    }
+  }
+
+  /* marcas de corte nos cantos da folha */
+  .marca-corte {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    pointer-events: none;
+    opacity: 0.5;
+    color: var(--tinta-2);
+  }
+  .marca-corte::before,
+  .marca-corte::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+  }
+  .marca-corte::before {
+    width: 100%;
+    height: 1px;
+  }
+  .marca-corte::after {
+    width: 1px;
+    height: 100%;
+  }
+  .marca-corte[data-canto='ne'],
+  .marca-corte[data-canto='no'] {
+    top: 12px;
+  }
+  .marca-corte[data-canto='se'],
+  .marca-corte[data-canto='so'] {
+    bottom: 12px;
+  }
+  .marca-corte[data-canto='no'],
+  .marca-corte[data-canto='so'] {
+    left: 12px;
+  }
+  .marca-corte[data-canto='ne'],
+  .marca-corte[data-canto='se'] {
+    right: 12px;
+  }
+  .marca-corte[data-canto='no']::before,
+  .marca-corte[data-canto='ne']::before {
+    top: 0;
+  }
+  .marca-corte[data-canto='so']::before,
+  .marca-corte[data-canto='se']::before {
+    bottom: 0;
+  }
+  .marca-corte[data-canto='no']::after,
+  .marca-corte[data-canto='so']::after {
+    left: 0;
+  }
+  .marca-corte[data-canto='ne']::after,
+  .marca-corte[data-canto='se']::after {
+    right: 0;
+  }
+
+  /* barra de controle de impressão: os degraus de cinza da prova */
+  .escala-cinza {
+    display: flex;
+    height: 7px;
+    width: 88px;
+  }
+  .escala-cinza > i {
+    flex: 1;
+    background: currentColor;
+  }
+
+  /* =======================================================================
+     PÁGINA — cada seção é uma página do arquivo, com cabeço e fólio
+     ======================================================================= */
+
+  .pagina {
+    position: relative;
+  }
+
+  /* cabeço: a linha fina de identificação no topo de cada página */
+  .cabeco {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid var(--linha);
+    padding-bottom: 9px;
+    margin-bottom: clamp(24px, 4vw, 48px);
+    font-family: var(--font-mono);
+    font-size: clamp(0.58rem, 1vw, 0.7rem);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--tinta-2);
+  }
+
+  /* fólio: o número da página, no rodapé do bloco */
+  .folio {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: clamp(32px, 5vw, 64px);
+    padding-top: 10px;
+    border-top: 1px solid var(--linha);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--tinta-3);
   }
 
   /* =======================================================================
@@ -118,7 +316,7 @@
     line-height: 0.82;
     letter-spacing: -0.022em;
     text-transform: uppercase;
-    font-size: clamp(2.9rem, 13vw, 15rem);
+    font-size: clamp(2.6rem, 12vw, 14rem);
     /* nada de quebrar palavra no meio: numa palavra dessas o corte
        aparece como erro, não como estilo */
     overflow-wrap: normal;
@@ -126,14 +324,14 @@
   }
 
   .zine-titulo--medio {
-    font-size: clamp(2.2rem, 7.4vw, 6rem);
+    font-size: clamp(2rem, 7vw, 5.6rem);
     font-variation-settings: 'wdth' 82;
     line-height: 0.88;
   }
 
   .zine-sub {
     font-family: var(--font-mono);
-    font-size: clamp(0.62rem, 1.1vw, 0.75rem);
+    font-size: clamp(0.6rem, 1.05vw, 0.72rem);
     letter-spacing: 0.22em;
     text-transform: uppercase;
   }
@@ -153,80 +351,104 @@
     font-family: var(--font-display);
     font-variation-settings: 'wdth' 100;
     font-weight: 500;
-    line-height: 1.45;
+    line-height: 1.5;
     max-width: 34ch;
-    color: var(--text-2);
+    color: var(--tinta-2);
+  }
+
+  /* bloco de texto puxado, como entrelinha de revista */
+  .olho {
+    font-family: var(--font-display);
+    font-variation-settings: 'wdth' 88;
+    font-weight: 600;
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    color: var(--tinta);
+  }
+
+  /* Máscara de linha: o texto sobe de dentro dela na animação de entrada.
+     O padding existe por um motivo específico — com line-height 0.82 o
+     overflow corta o acento das maiúsculas, e CÓDIGO aparece na tela
+     como CODIGO. A margem negativa devolve o espaço no layout. */
+  .mascara-linha {
+    overflow: hidden;
+    padding-top: 0.18em;
+    margin-top: -0.18em;
   }
 
   /* contorno vazado, pra palavra gigante que fica atrás de tudo */
   .vazado {
     color: transparent;
-    -webkit-text-stroke: 1.5px var(--text);
-    opacity: 0.14;
+    -webkit-text-stroke: 1.2px var(--tinta);
+    opacity: 0.16;
+  }
+
+  /* trecho invertido: bloco de tinta cheia com o texto em papel */
+  .tarja {
+    background: var(--tinta);
+    color: var(--papel);
+    padding: 0.04em 0.22em 0.1em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
   /* =======================================================================
-     ATMOSFERA
-     Duas camadas discretas: um grão de filme e uma luz fria vindo de cima.
-     No tema claro elas eram multiply (fibra de papel). No escuro, multiply
-     só empasta — então a luz entra somando e o grão fica quase invisível.
+     TEXTURAS DE IMPRESSÃO
      ======================================================================= */
 
+  /* grão do papel, por cima de tudo, sem capturar clique */
   .grao {
     position: fixed;
     inset: 0;
     z-index: 60;
     pointer-events: none;
-    opacity: 0.05;
+    opacity: var(--grao-opacidade);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='0.5'/%3E%3C/svg%3E");
   }
 
-  /* luz de poste: um halo frio no topo e sombra fechando as beiradas */
-  .textura-papel {
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    background-image:
-      radial-gradient(ellipse 110% 70% at 50% -12%, rgba(140, 163, 188, 0.11), transparent 62%),
-      radial-gradient(ellipse 90% 60% at 100% 108%, rgba(110, 130, 153, 0.07), transparent 58%);
-  }
-
-  /* registro fora do lugar: as duas tintas saem da chapa no hover.
-     no escuro o blend é screen — multiply sumiria contra o fundo */
-  .desregistro {
-    position: relative;
-  }
-  .desregistro::before,
-  .desregistro::after {
-    content: attr(data-texto);
+  /* retícula: a malha de pontos da impressão offset, bem de leve */
+  .reticula {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0;
-    mix-blend-mode: screen;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: var(--halftone-opacidade);
+    background-image: radial-gradient(currentColor 0.6px, transparent 0.7px);
+    background-size: 3px 3px;
+    mix-blend-mode: multiply;
+    /* sem a máscara, a malha desenha um retângulo visível onde o elemento
+       acaba — o que denuncia a caixa em vez de sugerir impressão */
+    -webkit-mask-image: radial-gradient(ellipse 72% 68% at 50% 48%, #000 40%, transparent 82%);
+    mask-image: radial-gradient(ellipse 72% 68% at 50% 48%, #000 40%, transparent 82%);
   }
-  .desregistro::before {
-    color: var(--accent-2);
+  :root[data-tema='escuro'] .reticula,
+  :root:not([data-tema='claro']) .reticula {
+    mix-blend-mode: normal;
   }
-  .desregistro::after {
-    color: var(--ice);
-  }
-  .group:hover .desregistro::before,
-  .group:focus-visible .desregistro::before {
-    opacity: 0.42;
-    transform: translate3d(-4px, 3px, 0);
-  }
-  .group:hover .desregistro::after,
-  .group:focus-visible .desregistro::after {
-    opacity: 0.42;
-    transform: translate3d(4px, -3px, 0);
+  @media (prefers-color-scheme: light) {
+    :root:not([data-tema='escuro']) .reticula {
+      mix-blend-mode: multiply;
+    }
   }
 
-  /* borda de papel rasgado, usada nas quebras de seção */
+  /* A chapa 3D é renderizada em cor e vira cinza aqui. O ajuste muda por
+     edição por um motivo prático: mármore branco sobre papel branco quase
+     desaparece, então na edição de papel a chapa é escurecida; na noturna,
+     ao contrário, ela precisa de um pouco de luz pra sair do fundo. */
+  .chapa-3d {
+    filter: grayscale(1) contrast(1.42) brightness(0.82);
+  }
+  :root[data-tema='escuro'] .chapa-3d {
+    filter: grayscale(1) contrast(1.05) brightness(1.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-tema='claro']) .chapa-3d {
+      filter: grayscale(1) contrast(1.05) brightness(1.06);
+    }
+  }
+
+  /* borda de papel rasgado, usada nas quebras */
   .rasgo {
-    height: 14px;
+    height: 13px;
     width: 100%;
     background: currentColor;
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='14' preserveAspectRatio='none'%3E%3Cpath d='M0 14V6l8-2 7 4 9-5 6 3 10-4 8 5 7-3 9 4 8-5 7 3 10-2 6 4 9-4 8 3 7-4 9 5 8-3 7 2 9-4 6 4 10-3 7 4 8-5 7 3 9-2 6 4 8-4 7 3V14z' fill='%23000'/%3E%3C/svg%3E");
@@ -237,32 +459,69 @@
     mask-repeat: repeat-x;
   }
 
+  /* registro fora do lugar: a chapa sai do lugar no hover.
+     em preto e branco, o deslocamento é de cinza, não de cor */
+  .desregistro {
+    position: relative;
+  }
+  .desregistro::before,
+  .desregistro::after {
+    content: attr(data-texto);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    color: var(--tinta);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .group:hover .desregistro::before,
+  .group:focus-visible .desregistro::before {
+    opacity: 0.22;
+    transform: translate3d(-5px, 4px, 0);
+  }
+  .group:hover .desregistro::after,
+  .group:focus-visible .desregistro::after {
+    opacity: 0.16;
+    transform: translate3d(5px, -4px, 0);
+  }
+
   /* =======================================================================
      ELEMENTOS DESENHADOS À MÃO
      ======================================================================= */
 
   /* sublinhado torto — não é underline, é um traço de caneta.
-     data: URI não lê variável CSS, então o hex do --accent vive aqui também */
+     data: URI não lê variável CSS, então o traço usa currentColor via mask */
   .sublinha {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='12' preserveAspectRatio='none'%3E%3Cpath d='M2 8c34-5 62 2 96-2 30-3 58 3 100-1' fill='none' stroke='%238ca3bc' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    background-size: 100% 10px;
-    padding-bottom: 6px;
+    position: relative;
+    padding-bottom: 5px;
+  }
+  .sublinha::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 9px;
+    background: currentColor;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='12' preserveAspectRatio='none'%3E%3Cpath d='M2 8c34-5 62 2 96-2 30-3 58 3 100-1' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='12' preserveAspectRatio='none'%3E%3Cpath d='M2 8c34-5 62 2 96-2 30-3 58 3 100-1' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
   }
 
-  /* carimbo: caixinha torta, traço fino */
+  /* carimbo: caixinha torta */
   .carimbo {
     display: inline-block;
     font-family: var(--font-mono);
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    padding: 6px 12px 5px;
-    border: 1.5px solid currentColor;
-    border-radius: 3px;
-    transform: rotate(-4deg);
-    opacity: 0.85;
+    padding: 5px 11px 4px;
+    border: 1px solid currentColor;
+    transform: rotate(-3deg);
+    opacity: 0.8;
   }
 
   /* circulado à caneta */
@@ -274,21 +533,21 @@
     content: '';
     position: absolute;
     /* horizontal curto de propósito: a caneta não pode sair da margem
-       do envelope quando o texto circulado é largo */
+       da folha quando o texto circulado é largo */
     inset: -13% -2.5%;
-    border: 2px solid var(--accent);
+    border: 1.5px solid var(--tinta);
     border-radius: 48% 52% 46% 54% / 58% 44% 56% 42%;
     pointer-events: none;
-    opacity: 0.6;
+    opacity: 0.45;
   }
 
-  /* fita segurando as imagens — no escuro ela é luz, não sombra */
+  /* fita segurando as imagens na folha */
   .fita {
     position: absolute;
-    width: 104px;
-    height: 28px;
-    background: rgba(175, 198, 219, 0.12);
-    box-shadow: inset 0 0 0 1px rgba(232, 236, 241, 0.08);
+    width: 100px;
+    height: 26px;
+    background: color-mix(in srgb, var(--tinta) 8%, transparent);
+    box-shadow: inset 0 0 0 1px var(--linha);
     pointer-events: none;
     clip-path: polygon(3% 12%, 97% 0%, 100% 86%, 1% 100%);
   }
@@ -298,58 +557,50 @@
      ======================================================================= */
 
   .envelope {
-    width: min(1560px, 100%);
+    width: min(1360px, 100%);
     margin-inline: auto;
-    padding-inline: clamp(16px, 4vw, 64px);
+    padding-inline: clamp(18px, 5vw, 76px);
   }
 
   .linha-fina {
     border: 0;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--linha);
   }
 
-  /* botão principal: branco suave sobre o grafite, com o deslocamento duro
-     que o site inteiro usa — só que a sombra agora é grafite, não cor */
+  /* botão principal: bloco de tinta cheia */
   .botao {
     display: inline-flex;
     align-items: center;
     gap: 12px;
     font-family: var(--font-mono);
-    font-size: 0.78rem;
+    font-size: 0.74rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    padding: 15px 26px;
-    background: var(--text);
-    color: var(--bg);
-    border: 1.5px solid var(--text);
-    box-shadow: 5px 5px 0 var(--accent-2);
-    transition: transform 0.14s ease, box-shadow 0.14s ease, background 0.14s ease,
-      border-color 0.14s ease;
+    padding: 14px 24px;
+    background: var(--tinta);
+    color: var(--papel);
+    border: 1px solid var(--tinta);
+    transition: transform 0.14s ease, box-shadow 0.14s ease, opacity 0.14s ease;
+    box-shadow: 4px 4px 0 var(--linha-forte);
   }
   .botao:hover,
   .botao:focus-visible {
-    background: var(--ice);
-    border-color: var(--ice);
-    transform: translate3d(-3px, -3px, 0);
-    box-shadow: 9px 9px 0 var(--accent-2);
+    transform: translate3d(-2px, -2px, 0);
+    box-shadow: 7px 7px 0 var(--linha-forte);
   }
   .botao:active {
     transform: translate3d(2px, 2px, 0);
-    box-shadow: 2px 2px 0 var(--accent-2);
+    box-shadow: 1px 1px 0 var(--linha-forte);
   }
 
   .botao--vazio {
     background: transparent;
-    color: var(--text);
-    border-color: var(--border-forte);
-    box-shadow: 5px 5px 0 var(--surface-2);
+    color: var(--tinta);
+    border-color: var(--linha-forte);
   }
   .botao--vazio:hover,
   .botao--vazio:focus-visible {
-    background: transparent;
-    color: var(--ice);
-    border-color: var(--ice);
-    box-shadow: 9px 9px 0 var(--surface-2);
+    border-color: var(--tinta);
   }
 
   /* campo de formulário: linha de caderno, não caixinha de dashboard */
@@ -357,22 +608,21 @@
     width: 100%;
     background: transparent;
     border: 0;
-    border-bottom: 1.5px solid var(--border-forte);
-    padding: 14px 2px 10px;
+    border-bottom: 1px solid var(--linha-forte);
+    padding: 13px 2px 9px;
     font-family: var(--font-display);
-    font-size: 1.05rem;
+    font-size: 1.02rem;
     font-weight: 600;
-    color: var(--text);
+    color: var(--tinta);
     transition: border-color 0.18s ease;
   }
   .campo::placeholder {
-    color: var(--text-2);
-    opacity: 0.55;
+    color: var(--tinta-3);
     font-weight: 500;
   }
   .campo:focus {
     outline: none;
-    border-bottom-color: var(--ice);
+    border-bottom-color: var(--tinta);
   }
   .campo:focus-visible {
     outline: none;
@@ -381,10 +631,10 @@
   .rotulo {
     display: block;
     font-family: var(--font-mono);
-    font-size: 0.62rem;
+    font-size: 0.6rem;
     letter-spacing: 0.24em;
     text-transform: uppercase;
-    color: var(--text-2);
+    color: var(--tinta-3);
   }
 
   /* trilho do marquee */
@@ -406,7 +656,7 @@
     .palco-stack {
       position: relative;
       display: block;
-      height: 720px;
+      height: 700px;
     }
     .palco-stack > li {
       position: absolute;
@@ -461,7 +711,7 @@
 
 @keyframes piscada {
   0%, 92%, 100% { opacity: 1; }
-  94%, 98% { opacity: 0.3; }
+  94%, 98% { opacity: 0.25; }
 }
 .pisca {
   animation: piscada 5.5s infinite;
@@ -487,18 +737,18 @@
    ========================================================================= */
 
 ::-webkit-scrollbar {
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--surface);
+  background: var(--mesa);
 }
 ::-webkit-scrollbar-thumb {
-  background: #2e3640;
-  border: 3px solid var(--surface);
+  background: var(--tinta-3);
+  border: 3px solid var(--mesa);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-2);
+  background: var(--tinta-2);
 }
 
 /* =========================================================================

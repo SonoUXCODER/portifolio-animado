@@ -14,7 +14,7 @@ import { usePonteiroFino } from '@/hooks/useMedia';
      data-cursor="ver"    -> projeto
      data-cursor="abrir"  -> link externo
      data-cursor="olhar"  -> imagem / desenho
-     data-cursor="fechar" -> lightbox
+     data-cursor="trocar" -> botão de edição
    ------------------------------------------------------------------------- */
 
 const palavras: Record<string, string> = {
@@ -23,6 +23,7 @@ const palavras: Record<string, string> = {
   olhar: 'OLHAR',
   fechar: 'FECHAR',
   arrastar: 'ARRASTAR',
+  trocar: 'TROCAR',
 };
 
 export default function CustomCursor() {
@@ -88,8 +89,8 @@ export default function CustomCursor() {
         animate={{
           width: grande ? 76 : 14,
           height: grande ? 76 : 14,
-          backgroundColor: grande ? 'var(--text)' : 'transparent',
-          borderColor: 'var(--text)',
+          backgroundColor: grande ? 'var(--tinta)' : 'transparent',
+          borderColor: 'var(--tinta)',
           borderWidth: grande ? 0 : 2,
           scale: pressionado ? 0.82 : 1,
           rotate: grande ? -6 : 0,
@@ -105,7 +106,7 @@ export default function CustomCursor() {
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.14 }}
               className="mono text-[10px] font-semibold tracking-[0.2em]"
-              style={{ color: 'var(--bg)' }}
+              style={{ color: 'var(--papel)' }}
             >
               {palavra}
             </motion.span>

@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CustomCursor from '@/components/CustomCursor';
 import { ProvedorDeTransicao } from '@/components/PageTransition';
+import { ProvedorDeTema, scriptAntiPiscada } from '@/components/Tema';
 import { BarraDeProgresso } from '@/components/ScrollReveal';
 import { FiltrosSVG } from '@/components/Doodles';
 import './globals.css';
@@ -42,17 +43,16 @@ const caveat = Caveat({
    resolvido contra a metadataBase, perde o prefixo ("/assets" vira a raiz
    do domínio) — então tudo que vai pro <head> é montado absoluto a partir
    de site.url. Nada de caminho relativo aqui. */
-
 const abs = (caminho: string) => `${site.url}${caminho}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — desenvolvedor full-stack e designer`,
+    default: `${site.name} — arquivo de trabalho`,
     template: `%s · ${site.name}`,
   },
   description:
-    'Portfólio de desenvolvedor full-stack e designer de produto. Sites e web apps escritos à mão em React, Next.js e TypeScript, do Figma ao deploy.',
+    'Arquivo de trabalho de um desenvolvedor full-stack e designer de produto: cinco projetos, o processo inteiro e três estampas 3D. Feito à mão, em Next.js e TypeScript.',
   applicationName: site.handle,
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
@@ -63,6 +63,7 @@ export const metadata: Metadata = {
     'react',
     'typescript',
     'ux ui',
+    'design de produto',
     site.handle,
   ],
   alternates: { canonical: site.url },
@@ -71,14 +72,14 @@ export const metadata: Metadata = {
     locale: 'pt_BR',
     url: site.url,
     siteName: site.handle,
-    title: `${site.name} — desenvolvedor full-stack e designer`,
-    description: 'Projetos, ferramentas e experimentos. Feito à mão, mas com javascript.',
-    images: [{ url: abs('/assets/og.png'), width: 1200, height: 630, alt: `Portfólio de ${site.name}` }],
+    title: `${site.name} — arquivo de trabalho`,
+    description: 'Cinco projetos, o processo inteiro e três estampas 3D. Feito à mão, mas com javascript.',
+    images: [{ url: abs('/assets/og.png'), width: 1200, height: 630, alt: `Arquivo de trabalho de ${site.name}` }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${site.name} — desenvolvedor full-stack e designer`,
-    description: 'Projetos, ferramentas e experimentos.',
+    title: `${site.name} — arquivo de trabalho`,
+    description: 'Cinco projetos, o processo inteiro e três estampas 3D.',
     images: [abs('/assets/og.png')],
   },
   icons: {
@@ -92,8 +93,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0b0d10',
-  colorScheme: 'dark',
+  /* uma cor por edição: a barra do navegador acompanha o tema */
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#e3e3e1' },
+    { media: '(prefers-color-scheme: dark)', color: '#060606' },
+  ],
 };
 
 const jsonLd = {
@@ -109,24 +113,50 @@ const jsonLd = {
   sameAs: site.social.filter((s) => s.href.startsWith('http')).map((s) => s.href),
 };
 
+/** as quatro marcas de corte da folha */
+function MarcasDeCorte() {
+  return (
+    <>
+      {(['no', 'ne', 'so', 'se'] as const).map((canto) => (
+        <span key={canto} className="marca-corte" data-canto={canto} aria-hidden="true" />
+      ))}
+    </>
+  );
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${archivo.variable} ${plex.variable} ${caveat.variable}`}>
+    /* suppressHydrationWarning: o script de anti-piscada mexe no <html>
+       antes do React chegar, então servidor e cliente divergem de propósito */
+    <html
+      lang="pt-BR"
+      className={`${archivo.variable} ${plex.variable} ${caveat.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: scriptAntiPiscada }} />
+      </head>
       <body>
-        {/* as duas camadas de textura ficam por cima de tudo, sem capturar clique */}
-        <div className="textura-papel" aria-hidden="true" />
+        <ProvedorDeTema>
+          <ProvedorDeTransicao>
+            <BarraDeProgresso />
+            <Navbar />
+
+            {/* a folha: tudo que é conteúdo mora em cima dela */}
+            <div className="folha">
+              <MarcasDeCorte />
+              <main id="conteudo" className="relative">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </ProvedorDeTransicao>
+
+          <CustomCursor />
+        </ProvedorDeTema>
+
+        {/* o grão fica por cima da folha inteira, sem capturar clique */}
         <div className="grao" aria-hidden="true" />
-
-        <ProvedorDeTransicao>
-          <BarraDeProgresso />
-          <Navbar />
-          <main id="conteudo" className="relative z-[2]">
-            {children}
-          </main>
-          <Footer />
-        </ProvedorDeTransicao>
-
-        <CustomCursor />
         <FiltrosSVG />
 
         <script

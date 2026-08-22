@@ -3,67 +3,71 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { projects } from '@/data/projects';
+import { cadernoDe, folioDe, totalDeCadernos } from '@/data/arquivo';
 import ProjectCard from './ProjectCard';
 import Marquee from './Marquee';
 import { ScrollReveal } from './ScrollReveal';
 import { Seta } from './Doodles';
 
 /* -------------------------------------------------------------------------
-   A seção principal do site.
+   CADERNO 02 — O QUE EU FIZ. O caderno central do arquivo.
 
-   O título é maior do que a tela de propósito: ele desliza na horizontal
-   conforme a página rola, então quem chega lê "COISAS QUE EU FIZ" em
-   movimento, como manchete de jornal passando.
+   Não usa <Pagina> porque a manchete precisa sangrar nos dois lados da
+   folha, e o envelope do componente conteria ela. O cabeço e o fólio são
+   montados aqui na mão, com os mesmos dados de data/arquivo.ts.
 
-   Cada projeto sai deslocado de um jeito diferente, com bastante ar entre
-   eles — a lista tem que respirar como página de revista, não empilhar como
-   feed.
+   O título é maior que a folha em qualquer largura, então ele sangra dos
+   dois lados o tempo todo: o deslize lê como manchete passando, e não como
+   um texto que estourou o contêiner sem querer.
    ------------------------------------------------------------------------- */
 
-const deslocamentos = ['lg:ml-0', 'lg:ml-[6%]', 'lg:-ml-[2%]', 'lg:ml-[4%]'];
+const deslocamentos = ['lg:ml-0', 'lg:ml-[5%]', 'lg:-ml-[2%]', 'lg:ml-[3%]', 'lg:ml-[1%]'];
 
 export default function ProjectGrid() {
   const ref = useRef<HTMLDivElement>(null);
   const reduzido = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  /* o título é maior que a tela em qualquer largura, então ele sangra dos
-     dois lados o tempo todo: o deslize lê como manchete passando, e não
-     como um texto que estourou o contêiner sem querer */
   const x = useTransform(scrollYProgress, [0, 1], ['0%', '-13%']);
 
+  const caderno = cadernoDe('projetos');
+  const folio = folioDe('projetos');
+
   return (
-    <section id="projetos" className="relative py-[clamp(70px,11vw,150px)]">
-      {/* ---------- cabeçalho gigante ---------- */}
+    <section id="projetos" aria-labelledby="projetos-titulo" className="pagina relative py-[clamp(44px,7vw,96px)]">
+      {/* ---------- manchete ---------- */}
       <div ref={ref} className="relative">
         <div className="envelope">
-          <ScrollReveal direcao="esquerda" className="mb-3 flex items-center gap-4">
-            <span className="zine-sub">01 — TRABALHO</span>
-            <span className="h-[2px] flex-1" style={{ background: 'var(--border)' }} />
-            <span className="zine-sub" style={{ color: 'var(--accent)' }}>
-              {projects.length} PROJETOS
+          <div className="cabeco">
+            <span>
+              {folio} — {caderno?.titulo}
             </span>
-          </ScrollReveal>
+            <span className="hidden sm:inline" style={{ color: 'var(--tinta-3)' }}>
+              {projects.length} TRABALHOS · CHAPAS EM COR
+            </span>
+          </div>
         </div>
 
         <div className="overflow-hidden">
           <motion.h2
-            className="zine-titulo whitespace-nowrap text-[clamp(3.6rem,17vw,19rem)]"
-            style={reduzido ? { paddingLeft: 'clamp(16px,4vw,64px)' } : { x }}
+            id="projetos-titulo"
+            className="zine-titulo whitespace-nowrap text-[clamp(3.2rem,16vw,18rem)]"
+            style={reduzido ? { paddingLeft: 'clamp(18px,5vw,76px)' } : { x }}
           >
-            COISAS QUE EU FIZ
+            O QUE EU FIZ
           </motion.h2>
         </div>
 
         <div className="envelope mt-6 flex items-start justify-between gap-6">
-          <p className="corpo max-w-[42ch] text-[clamp(0.95rem,1.4vw,1.15rem)]">
-            Site de cliente, produto próprio e umas coisas no meio do caminho. Tudo no ar, tudo escrito à mão.
+          <p className="olho max-w-[40ch] text-[clamp(1rem,1.6vw,1.3rem)]">
+            Site de cliente, produto próprio e a loja de uma artista. Tudo no ar, tudo escrito à mão —
+            e cada um com o estudo de caso inteiro aqui dentro.
           </p>
-          <Seta className="hidden shrink-0 -rotate-12 opacity-60 lg:block" cor="var(--accent-2)" largura={150} />
+          <Seta className="hidden shrink-0 -rotate-12 opacity-40 lg:block" cor="var(--tinta)" largura={140} />
         </div>
       </div>
 
       {/* ---------- os projetos ---------- */}
-      <div className="envelope mt-[clamp(48px,7vw,96px)] flex flex-col gap-[clamp(80px,13vw,190px)]">
+      <div className="envelope mt-[clamp(44px,7vw,96px)] flex flex-col gap-[clamp(72px,12vw,170px)]">
         {projects.map((p, i) => (
           <div key={p.slug} className={deslocamentos[i % deslocamentos.length]}>
             <ProjectCard p={p} indice={i} />
@@ -71,13 +75,27 @@ export default function ProjectGrid() {
         ))}
       </div>
 
-      {/* ---------- faixa de fechamento ---------- */}
-      <div className="mt-[clamp(60px,9vw,120px)]">
+      <div className="mt-[clamp(52px,8vw,110px)]">
         <Marquee
-          itens={['MAIS PROJETOS EM BREVE', 'SITE NO AR', 'FEITO À MÃO', 'SEM TEMPLATE', 'SEM TEMA PRONTO']}
+          itens={['CADA UM COM ESTUDO DE CASO', 'SEM TEMPLATE', 'SEM TEMA PRONTO', 'TUDO NO AR']}
           velocidade={40}
-          separador="●"
+          separador="·"
         />
+      </div>
+
+      <div className="envelope">
+        <div className="folio">
+          <span className="escala-cinza" aria-hidden="true">
+            <i style={{ opacity: 0.15 }} />
+            <i style={{ opacity: 0.35 }} />
+            <i style={{ opacity: 0.55 }} />
+            <i style={{ opacity: 0.75 }} />
+            <i style={{ opacity: 1 }} />
+          </span>
+          <span>
+            PÁG. {folio} / {totalDeCadernos}
+          </span>
+        </div>
       </div>
     </section>
   );

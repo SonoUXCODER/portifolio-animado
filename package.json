@@ -8,19 +8,22 @@
     "deploy": "next build && gh-pages -d out --dotfiles -m \"deploy\""
   },
   "dependencies": {
+    "framer-motion": "^12.23.12",
+    "meshoptimizer": "^1.2.0",
     "next": "15.5.23",
     "react": "19.2.0",
     "react-dom": "19.2.0",
-    "framer-motion": "^12.23.12"
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.14",
-    "tailwindcss": "^4.1.14",
     "@types/node": "^22.10.5",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
-    "typescript": "^5.7.3",
-    "gh-pages": "^6.3.0"
+    "@types/three": "^0.185.4",
+    "gh-pages": "^6.3.0",
+    "tailwindcss": "^4.1.14",
+    "typescript": "^5.7.3"
   },
   "allowScripts": {
     "sharp@0.34.5": true
