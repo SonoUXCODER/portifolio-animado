@@ -42,7 +42,5 @@ export const sectionIndex = (id: string) => {
 
 export const sectionBy = (id: string) => sections.find((s) => s.id === id);
 
-export const sectionTotal = String(sections.length).padStart(2, '0');
-
 /** os ids que o espião de rolagem observa, incluindo o topo */
 export const spyIds = ['hero', ...sections.map((s) => s.id)];

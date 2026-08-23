@@ -84,8 +84,3 @@ export const capabilities: Capability[] = [
     visual: 'ascii',
   },
 ];
-
-export const capabilityNumber = (id: string) => {
-  const i = capabilities.findIndex((c) => c.id === id);
-  return String(i + 1).padStart(2, '0');
-};

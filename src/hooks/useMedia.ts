@@ -23,6 +23,3 @@ export function useMedia(query: string) {
 
 /** ponteiro fino de verdade: mouse, trackpad, caneta. exclui o dedo. */
 export const usePonteiroFino = () => useMedia('(hover: hover) and (pointer: fine)');
-
-/** desktop grande — libera as composições mais experimentais */
-export const useDesktop = () => useMedia('(min-width: 1024px)');
