@@ -27,8 +27,8 @@
   --color-text-secondary: #5c5c66;
   --color-accent: #c8102e;
 
-  --font-display: var(--fonte-display), 'Archivo', system-ui, sans-serif;
-  --font-mono: var(--fonte-mono), ui-monospace, 'IBM Plex Mono', monospace;
+  --font-display: var(--fonte-display), 'Fraunces', Georgia, serif;
+  --font-text: var(--fonte-texto), 'Instrument Sans', system-ui, sans-serif;
 }
 
 @layer base {
@@ -158,8 +158,8 @@
     margin: 0;
     background: var(--background);
     color: var(--text-primary);
-    font-family: var(--font-display);
-    font-variation-settings: 'wdth' 100;
+    /* o corpo é a sans; a serifa entra só onde é voz */
+    font-family: var(--font-text);
     font-synthesis-weight: none;
     overflow-x: clip;
     -webkit-font-smoothing: antialiased;
@@ -255,35 +255,70 @@
      caber linha longa sem virar imagem; o texto corrido fica em 100.
      ======================================================================= */
 
+  /* ---- display: a serifa ----
+     `opsz` acompanha o tamanho real de cada degrau. Não é enfeite: é o eixo
+     de tamanho óptico, e ele **redesenha** a letra em vez de esticá-la. No
+     display gigante o contraste entre haste e filete sobe e a serifa afina;
+     no título pequeno acontece o contrário, senão a letra some.
+
+     `WONK` troca as terminações pelas versões tortas, de eixo inclinado. Ele
+     só entra nos dois degraus maiores — onde a letra é imagem e o desenho
+     tem espaço pra aparecer. No corpo pequeno viraria ruído. */
+
   .display-xl {
-    font-weight: 800;
-    font-variation-settings: 'wdth' 88;
-    font-size: clamp(2.75rem, 8vw, 7rem);
-    line-height: 0.94;
-    letter-spacing: -0.035em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 1;
+    font-size: clamp(2.9rem, 9vw, 8.5rem);
+    line-height: 0.88;
+    letter-spacing: -0.03em;
   }
 
   .display-lg {
-    font-weight: 700;
-    font-variation-settings: 'wdth' 92;
-    font-size: clamp(2rem, 5vw, 4rem);
-    line-height: 1;
-    letter-spacing: -0.028em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variation-settings: 'opsz' 96, 'SOFT' 0, 'WONK' 1;
+    font-size: clamp(2.1rem, 5.6vw, 4.5rem);
+    line-height: 0.94;
+    letter-spacing: -0.022em;
   }
 
   .display-md {
-    font-weight: 700;
-    font-variation-settings: 'wdth' 96;
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    line-height: 1.08;
-    letter-spacing: -0.02em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variation-settings: 'opsz' 48, 'SOFT' 0, 'WONK' 0;
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    line-height: 1.06;
+    letter-spacing: -0.014em;
   }
 
   .title-sm {
-    font-weight: 650;
-    font-size: clamp(1.05rem, 1.6vw, 1.3rem);
-    line-height: 1.25;
-    letter-spacing: -0.012em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variation-settings: 'opsz' 24, 'SOFT' 0, 'WONK' 0;
+    font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+    line-height: 1.2;
+    letter-spacing: -0.006em;
+  }
+
+  /* ---- a nota ----
+     A observação em minúscula que aparece grudada num projeto, numa etapa ou
+     numa ferramenta. É onde mora a voz de quem escreveu o site, e por isso é
+     a única coisa em itálico: o leitor precisa sentir a troca de registro
+     sem que nada anuncie "agora vem um comentário".
+
+     `text-transform: none` está aqui de propósito — a nota é sempre escrita
+     como a pessoa falaria, e ninguém fala em caixa alta. */
+  .nota {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 400;
+    font-variation-settings: 'opsz' 14, 'SOFT' 40, 'WONK' 0;
+    font-size: clamp(0.95rem, 1.15vw, 1.08rem);
+    line-height: 1.4;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text-secondary);
   }
 
   /* olho / lead: o parágrafo que abre uma seção */
@@ -311,69 +346,88 @@
     color: var(--text-secondary);
   }
 
-  /* rótulo técnico: tudo que é metadado, número, categoria, estado */
+  /* ---- rótulo estrutural ----
+     Metadado, categoria, estado, ano. Continua em caixa alta porque é o que
+     separa "informação sobre a peça" de "a peça" — mas saiu do monoespaçado
+     e o tracking caiu de 0.14em pra 0.08em. Mono maiúsculo com tracking
+     largo em cada rótulo é a assinatura visual do portfólio de template;
+     o trabalho aqui é feito pelo caixa alta, não pelo espaçamento. */
   .label {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    font-family: var(--font-text);
+    font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
     color: var(--text-tertiary);
   }
 
-  .mono {
-    font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-  }
-
-  /* número grande de dado — usa tabular pra não dançar ao contar */
+  /* número: tabular pra não dançar quando conta, e na sans pra não trazer
+     junto a estética de terminal */
   .figure {
-    font-family: var(--font-mono);
+    font-family: var(--font-text);
     font-variant-numeric: tabular-nums;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1;
   }
 
+  /* número grande como elemento gráfico: a entrada do arquivo, a etapa do
+     processo. Serifa, porque aqui o algarismo é desenho, não dado. */
+  .numeral {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-variation-settings: 'opsz' 144, 'SOFT' 0, 'WONK' 1;
+    font-variant-numeric: tabular-nums lining-nums;
+    line-height: 0.8;
+    letter-spacing: -0.04em;
+  }
+
+  /* monoespaçado de sistema, sem baixar fonte nenhuma. Sobrou um único uso
+     de verdade: a onda de ASCII do laboratório, que só alinha em mono. */
+  .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
   /* =======================================================================
-     MARCADOR DE SEÇÃO
-     Uma régua fina com número e nome. É o que dá ritmo entre as cenas sem
-     precisar de enfeite: repete a mesma forma, muda o conteúdo.
+     KICKER — a linha que abre a seção
+
+     Antes existia aqui uma régua com número, nome e nota, idêntica em todas
+     as seções. Repetir a mesma forma seis vezes dá sistema, mas também dá o
+     ar de formulário preenchido — e era um dos motivos de a página parecer
+     gerada. O kicker faz o mesmo trabalho de orientação em uma linha só, e
+     o texto dele muda de seção pra seção porque é escrito, não montado.
+
+     A margem esquerda em acento é o único enfeite: um filete de 2px que
+     ancora a linha na grade sem pedir uma borda inteira.
      ======================================================================= */
 
-  .section-mark {
+  .kicker {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
-    gap: var(--space-4);
-    padding-bottom: var(--space-3);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .section-mark__index {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
+    gap: var(--space-2) var(--space-3);
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--accent);
+    font-family: var(--font-text);
+    font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
-    color: var(--accent);
-  }
-
-  .section-mark__name {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-primary);
-  }
-
-  .section-mark__note {
-    margin-left: auto;
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
     color: var(--text-tertiary);
+  }
+
+  /* o número da entrada, na frente */
+  .kicker__n {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* o separador — um ponto médio, nunca uma barra */
+  .kicker__sep {
+    color: var(--border-strong);
   }
 
   /* =======================================================================
@@ -393,10 +447,10 @@
     color: var(--btn-fg);
     border: 1px solid var(--btn-bg);
     border-radius: var(--radius-md);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
+    font-family: var(--font-text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     transition: background-color var(--duration-fast) var(--ease-micro),
       border-color var(--duration-fast) var(--ease-micro),
@@ -534,6 +588,41 @@
   }
 
   /* =======================================================================
+     FAIXA CORRIDA
+
+     Volta como peça de transição entre atos — e só isso. Uma faixa dessas em
+     cada seção viraria papel de parede animado; usada em duas ou três
+     emendas, ela faz o que uma margem grande não faz: marca que um assunto
+     acabou e outro começa.
+
+     Anima em CSS puro (translate de -50% num trilho duplicado). Não custa JS,
+     não trava com a rolagem, e para sozinha em prefers-reduced-motion.
+     ======================================================================= */
+
+  .marquee {
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    user-select: none;
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    animation: marquee var(--speed, 46s) linear infinite;
+  }
+
+  /* passar o mouse pausa: quem quis ler consegue ler */
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
+
+  .marquee[data-dir='reverso'] .marquee__track {
+    animation-direction: reverse;
+  }
+
+  /* =======================================================================
      LABORATÓRIO
      Só os estudos usam estas duas. Ficam em @layer components como todo o
      resto: fora de layer elas passariam na frente das utilities do Tailwind.
@@ -561,6 +650,15 @@
 @keyframes gira {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
@@ -630,5 +728,12 @@
      então desacelerar não adiantaria — ou roda, ou fica parado */
   .gira {
     animation: none !important;
+  }
+
+  /* a faixa para e volta pro começo: parada no meio ela cortaria a primeira
+     e a última palavra */
+  .marquee__track {
+    animation: none !important;
+    transform: none !important;
   }
 }

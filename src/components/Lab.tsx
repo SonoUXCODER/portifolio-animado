@@ -2,7 +2,7 @@
 
 import { experiments } from '@/data/experiments';
 import Experimento from './Experimento';
-import SectionMark from './SectionMark';
+import Kicker from './Kicker';
 import { Reveal, RevealGroup, RevealItem, WordsUp } from './Reveal';
 import { cn } from '@/lib/utils';
 
@@ -40,7 +40,7 @@ export default function Lab() {
       aria-labelledby="laboratorio-titulo"
       className="shell scroll-mt-[var(--header-h)] py-[var(--space-10)]"
     >
-      <SectionMark id="laboratorio" />
+      <Kicker id="laboratorio" />
 
       <div className="mt-[var(--space-8)] max-w-[20ch]">
         <WordsUp as="h2" text="O que eu testo quando ninguém pediu." className="display-lg" />

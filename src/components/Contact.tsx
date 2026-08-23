@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { site } from '@/data/site';
-import SectionMark from './SectionMark';
+import Kicker from './Kicker';
 import { Reveal, WordsUp } from './Reveal';
 
 /* -------------------------------------------------------------------------
@@ -43,7 +43,7 @@ export default function Contact() {
       aria-labelledby="contato-titulo"
       className="shell scroll-mt-[var(--header-h)] py-[var(--space-10)]"
     >
-      <SectionMark id="contato" />
+      <Kicker id="contato" />
 
       <div className="mt-[var(--space-8)] max-w-[18ch]">
         <WordsUp as="h2" text="Me conta o que você precisa." className="display-lg" />

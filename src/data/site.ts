@@ -13,7 +13,7 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonouxcoder.github.io/portifolio-animado',
   email: 'alissonvpt1@gmail.com',
   /* linha de crédito, no fim do rodapé */
-  colofao: 'Composto em Archivo e IBM Plex Mono. Escrito à mão em Next.js e TypeScript.',
+  colofao: 'Composto em Fraunces e Instrument Sans. Escrito à mão em Next.js e TypeScript.',
   social: [
     { label: 'GITHUB', href: 'https://github.com/SonoUXCODER' },
     { label: 'INSTAGRAM', href: 'https://instagram.com/somnifobias' },

@@ -37,25 +37,45 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
     <article className="pt-[calc(var(--header-h)+var(--space-8))]">
       {/* ================= manchete ================= */}
       <header className="shell">
-        <div className="section-mark">
+        <p className="kicker">
           <TransitionLink
-            href="/#projetos"
-            className="section-mark__index hit inline-flex items-center gap-[var(--space-2)] transition-transform duration-[var(--duration-normal)] hover:-translate-x-[3px]"
+            href="/#arquivo"
+            className="hit inline-flex items-center gap-[var(--space-2)] transition-transform duration-[var(--duration-normal)] hover:-translate-x-[3px]"
             cursor="ver"
           >
-            <span aria-hidden="true">←</span> Projetos
+            <span aria-hidden="true">←</span> Arquivo
           </TransitionLink>
-          <span className="section-mark__name">
-            {num} / {total}
+          <span className="kicker__sep" aria-hidden="true">
+            ·
           </span>
-          <span className="section-mark__note hidden sm:block">
-            {p.year} · {p.selo ?? 'projeto'} · {p.live ? 'no ar' : 'arquivado'}
+          <span className="kicker__n">
+            #{num} de {total}
           </span>
-        </div>
+          <span className="kicker__sep" aria-hidden="true">
+            ·
+          </span>
+          <span>{p.year}</span>
+          <span className="kicker__sep" aria-hidden="true">
+            ·
+          </span>
+          <span>{p.categoria}</span>
+          <span className="kicker__sep" aria-hidden="true">
+            ·
+          </span>
+          <span>{p.live ? 'no ar' : 'arquivado'}</span>
+        </p>
 
         <div className="mt-[var(--space-8)]">
           <WordsUp as="h1" text={p.title} className="display-xl" />
         </div>
+
+        {/* a nota da entrada abre o estudo de caso: é a voz antes do relato */}
+        <p className="nota mt-[var(--space-5)] flex max-w-[46ch] gap-[var(--space-3)]">
+          <span aria-hidden="true" style={{ color: 'var(--accent)' }}>
+            ↳
+          </span>
+          {p.nota}
+        </p>
 
         <Reveal delay={0.12}>
           <p className="lead mt-[var(--space-6)] max-w-[52ch]">{p.intro}</p>
@@ -182,7 +202,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
                     </div>
                   </Parallax>
                 </div>
-                {g.nota && <figcaption className="body-sm mt-[var(--space-3)]">{g.nota}</figcaption>}
+                {g.nota && <figcaption className="nota mt-[var(--space-3)]">{g.nota}</figcaption>}
               </figure>
             );
           })}

@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { experience } from '@/data/experience';
-import SectionMark from './SectionMark';
+import Kicker from './Kicker';
 import { TransitionLink } from './PageTransition';
 import { Reveal, RevealGroup, RevealItem, ScrollLine, WordsUp } from './Reveal';
 
@@ -34,7 +34,7 @@ export default function Experience() {
       aria-labelledby="experiencia-titulo"
       className="shell scroll-mt-[var(--header-h)] py-[var(--space-10)]"
     >
-      <SectionMark id="experiencia" />
+      <Kicker id="experiencia" />
 
       <div className="mt-[var(--space-8)] max-w-[20ch]">
         <WordsUp as="h2" text="Do primeiro cliente ao produto próprio." className="display-lg" />

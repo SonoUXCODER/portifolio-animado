@@ -1,8 +1,15 @@
 # portifolio-animado
 
-Portfólio de um desenvolvedor full-stack e designer de produto. A direção é
-**engenharia editorial**: grade suíça, precisão de documentação técnica, uma
-única cor de acento e nenhuma animação que não responda "por que isso existe?".
+Portfólio de um desenvolvedor full-stack e designer de produto, montado como
+**arquivo**: cada projeto é uma entrada numerada, com ano, categoria, estado e
+uma nota escrita à mão sobre o que aconteceu ali.
+
+A direção é editorial — grade firme, uma serifa com caráter no display, uma
+cor de acento só, e nenhuma animação que não responda "por que isso existe?".
+A diferença entre um arquivo e uma landing page está no ritmo: aqui as seções
+têm formas diferentes, e entre elas entram peças que não são seção (faixas
+corridas, uma declaração em fundo invertido, três esculturas) justamente pra
+que a leitura não vire uma pilha de blocos iguais.
 
 Next.js 15 (App Router) + React 19 + TypeScript + Tailwind v4 + Framer Motion.
 Export estático: o build gera HTML pronto pras 6 rotas e o GitHub Pages só
@@ -26,23 +33,42 @@ Nenhum texto de conteúdo mora dentro de componente. Tudo em `src/data`:
 
 | arquivo | o que controla |
 | --- | --- |
-| `src/data/sections.ts` | **a ordem das seções, os números dos marcadores e a navegação** |
+| `src/data/sections.ts` | **a ordem das seções, seus números e seus kickers** |
 | `src/data/site.ts` | nome, e-mail, redes, e a linha de crédito do rodapé |
-| `src/data/projects.ts` | os projetos: home, `/projetos/[slug]`, sitemap e metadata |
+| `src/data/projects.ts` | as entradas do arquivo: home, `/projetos/[slug]`, sitemap e metadata |
+| `src/data/process.ts` | as seis etapas, da ideia até o deploy |
 | `src/data/experience.ts` | a linha do tempo |
 | `src/data/stack.ts` | as ferramentas, agrupadas por camada |
-| `src/data/process.ts` | os seis passos do método, dentro de "Sobre" |
 | `src/data/experiments.ts` | os estudos do laboratório |
 | `src/data/estampas.ts` | as três esculturas 3D e suas legendas |
 
 **A ordem das seções sai de `sections.ts`.** A navegação, o indicador de seção
-ativa, o número de cada marcador e o menu mobile leem tudo de lá. Reordenar
+ativa, o número de cada kicker e o menu mobile leem tudo de lá. Reordenar
 aquele array reordena o site — mas `app/page.tsx` precisa acompanhar, porque é
-ele que decide onde entram as peças que **não** são seção (as esculturas e a
-faixa de declaração).
+ele que decide onde entram as peças que **não** são seção (as duas faixas
+corridas, a declaração e as três esculturas).
 
-> A `note` de uma seção não pode repetir o título dela. Em Projetos as duas
-> frases eram idênticas e a página dizia a mesma coisa duas vezes seguidas.
+> O `kicker` de uma seção não pode repetir o título dela, e não pode servir
+> para outra seção. Se dois kickers pudessem trocar de lugar sem ninguém
+> perceber, os dois estão genéricos — o kicker é escrito, não montado a
+> partir do nome.
+
+### As peças entre as seções
+
+São o que impede a página de virar uma pilha de sete blocos com o mesmo ritmo.
+Cada uma troca o fundo, a altura ou a densidade da tela:
+
+| peça | quantas | onde e por quê |
+| --- | --- | --- |
+| faixa corrida | 2 | depois do hero (os nomes das entradas, pra criar a expectativa) e antes do contato (a disponibilidade). Cada uma carrega informação que não existe em outro lugar. |
+| declaração | 1 | entre a stack e o arquivo: o fundo inverte inteiro e a página faz a única afirmação direta que se permite. |
+| escultura 3D | 3 | nas viradas da narrativa — depois de dizer quem assina, depois de mostrar o trabalho, e antes do convite. |
+
+A regra pra qualquer uma delas: **se fosse removida e ninguém sentisse falta,
+não deveria estar ali.** Uma faixa corrida por seção viraria papel de parede
+animado; foi por isso que a versão anterior tinha um letreiro rolando cargos
+e ele acabou removido — animava pra sempre e não dizia nada que o hero já não
+dissesse.
 
 **Trocar o domínio:** só `site.url`. Canonical, Open Graph, JSON-LD e o
 `sitemap.xml` leem de lá.
@@ -58,9 +84,15 @@ composição na home:
 - `vertical` — print comprido em coluna estreita, texto ao lado
 - `duo` — duas imagens montadas, uma mais alta que a outra
 
-É esse campo que impede a seção de virar grade de cards: nenhuma peça tem a
+É esse campo que impede a seção de virar grade de cards: nenhuma entrada tem a
 mesma proporção da anterior. A página `/projetos/[slug]` e a entrada no sitemap
 saem sozinhas.
+
+Todo projeto precisa de `categoria` e de `nota`. A `nota` é a linha em
+minúscula que aparece embaixo da descrição — não é resumo nem argumento de
+venda (`description` e `problema` já fazem isso), é a coisa que só quem
+construiu saberia dizer: o que quase deu errado, o que mudou no meio, o que
+saiu diferente do planejado. Uma linha, sempre.
 
 ---
 
@@ -69,9 +101,9 @@ saem sozinhas.
 ```
 src/
   app/          layout, home, /projetos/[slug], sitemap, robots, 404
-  components/   Nav, MobileMenu, Hero, About, Stack, Statement, Work,
-                Experience, Lab, Contact, Footer, SectionMark, Reveal,
-                Encarte3D, Experimento, ProjectPage, CustomCursor,
+  components/   Nav, MobileMenu, Hero, About, Stack, Statement, Archive,
+                Processo, Experience, Lab, Contact, Footer, Kicker, Marquee,
+                Reveal, Encarte3D, Experimento, ProjectPage, CustomCursor,
                 PageTransition, Theme, PauseOffscreen
   data/         todo o conteúdo
   hooks/        useMedia (ponteiro fino), useSectionSpy (seção ativa)
@@ -85,14 +117,39 @@ public/3d/      as três esculturas em .glb
 Tudo mora em tokens no topo de `globals.css`. Uma escala de espaço, três
 durações, três curvas, e um raio que é quase zero porque a linguagem é reta.
 
-**O acento é vermelho suíço** (`#c8102e`, e `#ff3b4e` no escuro — sobe de
-luminância senão some no fundo). Não é escolha decorativa: é onde ele trabalha,
-é o acento clássico dessa tradição, e ocupa menos de 2% da área da tela.
-Aparece em estado ativo, número de seção, marco da timeline e foco. Se um
+**O acento é vermelho** (`#c8102e`, e `#ff3b4e` no escuro — sobe de luminância
+senão some no fundo). Ocupa menos de 2% da área da tela: estado ativo, número
+de entrada, marco da timeline, o traço `↳` que abre cada nota, e o foco. Se um
 elemento não responde "por que isso existe?", ele não usa o acento.
 
-Duas famílias: **Archivo** (eixo de largura variável, faz todo o display) e
-**IBM Plex Mono** (dado técnico, rótulo, número, ano).
+### Tipografia
+
+Duas famílias. Já foram **Archivo + IBM Plex Mono**, que é a dupla padrão de
+praticamente todo portfólio de desenvolvedor dos últimos anos — somada ao
+hábito de escrever todo rótulo em mono maiúsculo com tracking largo, ela
+entrega o mesmo desenho em qualquer site e nenhuma decisão de quem o fez.
+
+**Fraunces** é a voz. Serifa variável, com três eixos além do peso:
+
+| eixo | faixa | o que faz aqui |
+| --- | --- | --- |
+| `opsz` | 9–144 | tamanho óptico de verdade: a letra é **redesenhada**, não esticada. Cada degrau do display declara o seu. |
+| `SOFT` | 0–100 | arredonda os cantos. Fica em 0 no display e sobe pra 40 nas notas. |
+| `WONK` | 0–1 | terminações tortas, de eixo inclinado. Só nos dois degraus maiores, onde a letra é imagem. |
+
+**Instrument Sans** é o resto: texto corrido, interface, rótulo e número.
+Neutra o bastante pra sumir e deixar a serifa falar.
+
+Não existe mais uma família monoespaçada baixada. Número usa a sans com
+`tabular-nums`; `.mono` sobrou para um único uso real — a onda de ASCII do
+laboratório, que só alinha em mono — e aponta pra fonte do sistema.
+
+**A nota é o dispositivo de voz.** A classe `.nota` é a única coisa em itálico
+no site inteiro: a observação em minúscula, precedida de `↳`, que aparece
+grudada num projeto, numa etapa do processo ou numa ferramenta. É onde o site
+soa como uma pessoa. A regra pra escrever uma: se ela pudesse estar em
+qualquer portfólio, ela está genérica — a nota tem que ser algo que só quem
+construiu aquilo saberia dizer.
 
 ### Contraste
 

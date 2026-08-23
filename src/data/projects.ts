@@ -40,6 +40,18 @@ export type Project = {
   year: string;
   /** carimbo: "produto próprio", "cliente" */
   selo?: string;
+  /** o que a coisa é: loja, site institucional, produto */
+  categoria: string;
+  /**
+   * A observação em minúscula que aparece junto da entrada.
+   *
+   * Não é resumo nem argumento de venda — para isso já existem `description`
+   * e `problema`. É a coisa que só quem construiu saberia dizer: o que quase
+   * deu errado, o que mudou de ideia no meio, o que ficou diferente do
+   * planejado. Uma linha, sempre. É o que impede a listagem de virar
+   * catálogo.
+   */
+  nota: string;
   layout: ProjectLayout;
   /** rotação em graus na composição */
   tilt: number;
@@ -53,6 +65,8 @@ export const projects: Project[] = [
   {
     title: 'PHOBIACORI',
     slug: 'phobiacori',
+    categoria: 'Loja',
+    nota: 'o carrinho vive no navegador de quem visita. sem conta, sem cadastro, sem banco de dados.',
     description: 'loja de uma artista de nanquim. tiragem pequena, impressão torta de propósito.',
     intro:
       'A PHOBIACORI desenha bicho estranho a nanquim desde 2019 e vendia por DM, uma mensagem de cada vez. A loja precisava caber nesse jeito de trabalhar: tiragem pequena, embalagem na mão, nada de esteira.',
@@ -99,6 +113,8 @@ export const projects: Project[] = [
   {
     title: 'Dra. Thayse Marques',
     slug: 'thayse-marques',
+    categoria: 'Site institucional',
+    nota: 'oito páginas em vez de uma foi decisão de conteúdo, não de SEO. o SEO veio junto de brinde.',
     description: 'site de escritório de advocacia. o formulário lê o caso e manda pra área certa.',
     intro:
       'Um escritório no Rio recebia caso de família, trabalhista e previdenciário tudo no mesmo WhatsApp. A ideia foi virar a primeira conversa do avesso: a triagem acontece antes do contato.',
@@ -145,6 +161,8 @@ export const projects: Project[] = [
   {
     title: 'knifes.me',
     slug: 'knifes-me',
+    categoria: 'Produto próprio',
+    nota: 'a parte difícil não foi construir. foi decidir o que não construir.',
     description: 'meu produto: link-in-bio onde cada pessoa monta a própria página.',
     intro:
       'Comecei porque toda ferramenta de link na bio parecia a mesma coisa. Aqui a pessoa escolhe cor, fundo, música e layout — e a página continua sendo dela, não do template.',
@@ -191,6 +209,8 @@ export const projects: Project[] = [
   {
     title: 'Sandra Hair Salon',
     slug: 'sandra-hair-salon',
+    categoria: 'Site institucional',
+    nota: 'foi aqui que parei de tratar tradução como camada e passei a tratar como arquitetura.',
     description: 'salão suíço em três idiomas, com preço em CHF e agenda no bolso.',
     intro:
       'Um salão em Buchs (SG) atende alemão, inglês e português no mesmo balcão. O site precisava fazer a mesma coisa sem virar três sites.',
@@ -237,6 +257,8 @@ export const projects: Project[] = [
   {
     title: 'Truffle N.B.',
     slug: 'truffle-nb',
+    categoria: 'Catálogo',
+    nota: 'projetar para conteúdo que envelhece sozinho mudou como eu penso prazo de validade.',
     description: 'catálogo de trufa fresca italiana entregue na suíça inteira.',
     intro:
       'Trufa fresca dura poucos dias. O site tinha que dizer o que existe hoje, quanto tempo demora pra chegar, e nada além disso.',

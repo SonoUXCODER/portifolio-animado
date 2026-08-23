@@ -2,8 +2,7 @@
 
 import Image from 'next/image';
 import { site } from '@/data/site';
-import { processo } from '@/data/process';
-import SectionMark from './SectionMark';
+import Kicker from './Kicker';
 import { Parallax, Reveal, RevealGroup, RevealItem, WordsUp } from './Reveal';
 
 /* -------------------------------------------------------------------------
@@ -21,7 +20,7 @@ import { Parallax, Reveal, RevealGroup, RevealItem, WordsUp } from './Reveal';
 export default function About() {
   return (
     <section id="sobre" aria-labelledby="sobre-titulo" className="shell scroll-mt-[var(--header-h)] py-[var(--space-10)]">
-      <SectionMark id="sobre" />
+      <Kicker id="sobre" />
 
       <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-8)]">
         {/* ---- retrato ---- */}
@@ -74,26 +73,28 @@ export default function About() {
         </div>
       </div>
 
-      {/* ---- método ---- */}
-      <div className="mt-[var(--space-9)]">
-        <Reveal>
-          <h3 className="label mb-[var(--space-5)]">O método, em seis passos</h3>
-        </Reveal>
-
-        <RevealGroup as="ol" className="grid grid-cols-2 gap-x-[var(--space-5)] gap-y-[var(--space-6)] md:grid-cols-3 lg:grid-cols-6">
-          {processo.map((etapa) => (
-            <RevealItem as="li" key={etapa.n}>
-              <div className="border-t pt-[var(--space-3)]" style={{ borderColor: 'var(--border)' }}>
-                <span className="figure text-[0.75rem]" style={{ color: 'var(--accent)' }}>
-                  {etapa.n}
-                </span>
-                <h4 className="title-sm mt-[var(--space-2)]">{etapa.titulo}</h4>
-                <p className="body-sm mt-[var(--space-2)]">{etapa.texto}</p>
-              </div>
-            </RevealItem>
-          ))}
-        </RevealGroup>
-      </div>
+      {/* ---- dados de catálogo ----
+           O que um arquivo diria sobre quem assina: onde, em quantas línguas,
+           desde quando. Fecha a seção com informação dura depois de dois
+           parágrafos de voz — é a alternância que dá ritmo. */}
+      <RevealGroup
+        as="dl"
+        className="mt-[var(--space-9)] grid grid-cols-2 gap-[var(--space-6)] border-t border-[var(--border)] pt-[var(--space-5)] sm:grid-cols-4"
+      >
+        {(
+          [
+            ['Base', 'Suíça'],
+            ['Idiomas', 'PT · DE · EN'],
+            ['Escrevendo código desde', '2021'],
+            ['Sozinho no projeto', 'quase sempre'],
+          ] as Array<[string, string]>
+        ).map(([rotulo, valor]) => (
+          <RevealItem key={rotulo}>
+            <dt className="label">{rotulo}</dt>
+            <dd className="title-sm mt-[var(--space-2)]">{valor}</dd>
+          </RevealItem>
+        ))}
+      </RevealGroup>
     </section>
   );
 }

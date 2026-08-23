@@ -5,16 +5,22 @@ export const metadata = { title: 'Página não encontrada' };
 export default function NaoEncontrado() {
   return (
     <section className="shell flex min-h-[70svh] flex-col justify-center py-[var(--space-10)]">
-      <div className="section-mark">
-        <span className="section-mark__index">404</span>
-        <span className="section-mark__name">Não encontrado</span>
-      </div>
+      <p className="kicker">
+        <span className="kicker__n">404</span>
+        <span>Entrada não encontrada</span>
+      </p>
 
-      <h1 className="display-lg mt-[var(--space-7)] max-w-[16ch]">Esta página não existe.</h1>
+      <h1 className="display-lg mt-[var(--space-7)] max-w-[14ch]">Esta página não existe.</h1>
 
-      <p className="lead mt-[var(--space-5)] max-w-[42ch]">
-        O endereço está errado, ou a página saiu do ar. As duas coisas acontecem — o caminho de
-        volta é o mesmo.
+      <p className="nota mt-[var(--space-5)] flex max-w-[42ch] gap-[var(--space-3)]">
+        <span aria-hidden="true" style={{ color: 'var(--accent)' }}>
+          ↳
+        </span>
+        ou existiu e saiu do ar. as duas coisas acontecem.
+      </p>
+
+      <p className="lead mt-[var(--space-5)] max-w-[40ch]">
+        O caminho de volta é o mesmo nos dois casos.
       </p>
 
       <p className="mt-[var(--space-7)]">

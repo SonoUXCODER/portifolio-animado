@@ -2,55 +2,70 @@
 
 import Image from 'next/image';
 import { projects, type Project } from '@/data/projects';
-import SectionMark from './SectionMark';
+import Kicker from './Kicker';
 import { TransitionLink } from './PageTransition';
 import { Parallax, Reveal, WordsUp } from './Reveal';
 import { useSectionSpy } from '@/hooks/useSectionSpy';
 import { cn } from '@/lib/utils';
 
 /* -------------------------------------------------------------------------
-   PROJETOS.
+   O ARQUIVO.
 
-   Cada trabalho recebe a composição que o print dele pede, não a mesma
-   moldura repetida cinco vezes. O campo `layout` em projects.ts escolhe:
+   Cada projeto é uma entrada, não um card: número, ano, categoria, estado,
+   e uma nota escrita à mão sobre o que aconteceu ali. A ficha de catálogo é
+   o que faz cinco trabalhos parecerem um acervo em vez de uma vitrine.
+
+   O `layout` de cada projeto escolhe a composição, e é ele que impede a
+   seção de virar grade — nenhuma entrada tem a proporção da anterior:
 
      full         imagem larga, texto embaixo em duas colunas
      small-right  texto à esquerda, imagem menor deslocada à direita
      vertical     print comprido em coluna estreita, texto ao lado
      duo          duas imagens montadas, uma mais alta que a outra
 
-   É por isso que a seção não parece uma grade de cards: nenhuma peça tem a
-   mesma proporção da anterior. O trilho vertical à esquerda é a única coisa
-   que se repete — é ele que diz que ainda é o mesmo capítulo.
-
-   O trilho usa o mesmo observer da navegação e só aparece em `lg`: no
-   estreito ele roubaria a largura de que o texto precisa.
+   O número da entrada é grande de propósito e vem antes de tudo: é ele que
+   diz "isto é um acervo, e isto é o item três dele". Sai da posição no
+   array — inserir um projeto no meio renumera o resto sozinho.
 
    Não existe link pro site do cliente, aqui nem no estudo de caso. Quem
-   chega vê o trabalho por dentro deste portfólio; `live` é informação sobre
-   o estado do projeto, nunca uma saída. Decisão antiga, mantida de propósito.
+   chega vê o trabalho por dentro deste arquivo; `live` é informação sobre o
+   estado da entrada, nunca uma saída. Decisão antiga, mantida de propósito.
    ------------------------------------------------------------------------- */
 
-const numero = (i: number) => String(i + 1).padStart(2, '0');
+const numero = (i: number) => String(i + 1).padStart(3, '0');
 
-/* ---------- a ficha de texto, igual em toda peça ---------- */
+/* ---------- a ficha ---------- */
 function Ficha({ project, index }: { project: Project; index: number }) {
   return (
     <>
-      <div className="flex flex-wrap items-baseline gap-x-[var(--space-4)] gap-y-[var(--space-1)]">
-        <span className="figure text-[0.8rem]" style={{ color: 'var(--accent)' }}>
-          {numero(index)}
+      {/* ---- cabeçalho da entrada ---- */}
+      <div className="flex flex-wrap items-baseline gap-x-[var(--space-3)] gap-y-[var(--space-1)]">
+        <span className="label" style={{ color: 'var(--accent)' }}>
+          #{numero(index)}
+        </span>
+        <span className="kicker__sep" aria-hidden="true">
+          ·
         </span>
         <span className="label">{project.year}</span>
-        {project.selo && <span className="label">{project.selo}</span>}
+        <span className="kicker__sep" aria-hidden="true">
+          ·
+        </span>
+        <span className="label">{project.categoria}</span>
+        <span className="kicker__sep" aria-hidden="true">
+          ·
+        </span>
+        {/* o estado é dado, não enfeite: sai de `live`, que é a fonte */}
+        <span className="label" style={project.live ? { color: 'var(--text-secondary)' } : undefined}>
+          {project.live ? 'no ar' : 'arquivado'}
+        </span>
       </div>
 
-      <h3 id={`projeto-${project.slug}-titulo`} className="display-md mt-[var(--space-3)]">
+      <h3 id={`projeto-${project.slug}-titulo`} className="display-md mt-[var(--space-4)]">
         <TransitionLink
           href={`/projetos/${project.slug}`}
           className="link hit"
           cursor="abrir"
-          aria-label={`Ver o estudo de caso de ${project.title}`}
+          aria-label={`Abrir o estudo de caso de ${project.title}`}
         >
           {project.title}
         </TransitionLink>
@@ -58,22 +73,37 @@ function Ficha({ project, index }: { project: Project; index: number }) {
 
       <p className="body mt-[var(--space-3)] max-w-[46ch]">{project.description}</p>
 
-      <ul className="mt-[var(--space-4)] flex flex-wrap gap-x-[var(--space-4)] gap-y-[var(--space-2)]">
-        {project.technologies.map((t) => (
-          <li key={t} className="label">
+      {/* ---- a nota ----
+           Recuada e com o traço na frente: é a única coisa da entrada que
+           não é dado, e precisa parecer escrita depois, na margem. */}
+      <p className="nota mt-[var(--space-4)] flex max-w-[44ch] gap-[var(--space-3)]">
+        <span aria-hidden="true" style={{ color: 'var(--accent)' }}>
+          ↳
+        </span>
+        {project.nota}
+      </p>
+
+      <ul className="mt-[var(--space-5)] flex flex-wrap gap-x-[var(--space-3)] gap-y-[var(--space-2)]">
+        {project.technologies.map((t, i) => (
+          <li key={t} className="label flex items-baseline gap-[var(--space-3)]">
             {t}
+            {i < project.technologies.length - 1 && (
+              <span className="kicker__sep" aria-hidden="true">
+                /
+              </span>
+            )}
           </li>
         ))}
       </ul>
 
-      <p className="mt-[var(--space-5)]">
+      <p className="mt-[var(--space-6)]">
         <TransitionLink
           href={`/projetos/${project.slug}`}
           className="btn btn--ghost"
           cursor="abrir"
-          aria-label={`Abrir o estudo de caso de ${project.title}`}
+          aria-label={`Ver como ${project.title} foi feito`}
         >
-          Estudo de caso
+          Ver como foi feito
         </TransitionLink>
       </p>
     </>
@@ -117,7 +147,7 @@ function Chapa({
   );
 }
 
-function Peca({ project, index }: { project: Project; index: number }) {
+function Entrada({ project, index }: { project: Project; index: number }) {
   const primeira = index === 0;
   const capa = project.image;
   const segunda = project.gallery[0];
@@ -215,45 +245,58 @@ function Peca({ project, index }: { project: Project; index: number }) {
     <article
       id={`projeto-${project.slug}`}
       aria-labelledby={`projeto-${project.slug}-titulo`}
-      className="scroll-mt-[var(--header-h)]"
+      className="scroll-mt-[var(--header-h)] border-t pt-[var(--space-7)]"
+      style={{ borderColor: 'var(--border)' }}
     >
+      {/* ---- o algarismo da entrada, grande, na margem ----
+           Some da árvore de acessibilidade porque o mesmo número já está
+           escrito na ficha, em texto. Aqui ele é desenho. */}
+      <div
+        aria-hidden="true"
+        className="numeral mb-[var(--space-6)] text-[clamp(3rem,9vw,7rem)]"
+        style={{ color: 'var(--border-strong)' }}
+      >
+        {numero(index)}
+      </div>
+
       <Reveal direction="none">{composicao}</Reveal>
     </article>
   );
 }
 
-export default function Work() {
+export default function Archive() {
   const ids = projects.map((p) => `projeto-${p.slug}`);
   const ativo = useSectionSpy(ids);
   const indiceAtivo = Math.max(0, ids.indexOf(ativo));
 
   return (
     <section
-      id="projetos"
-      aria-labelledby="projetos-titulo"
+      id="arquivo"
+      aria-labelledby="arquivo-titulo"
       className="shell scroll-mt-[var(--header-h)] py-[var(--space-10)]"
     >
-      <SectionMark id="projetos" />
+      <Kicker id="arquivo" />
 
-      <div className="mt-[var(--space-8)] max-w-[24ch]">
-        <WordsUp as="h2" text="Cinco trabalhos, por dentro." className="display-lg" />
-        <span id="projetos-titulo" className="sr-only">
-          Projetos
+      <div className="mt-[var(--space-7)] max-w-[13ch]">
+        {/* quebrado em três linhas de propósito: o título é a imagem da cena */}
+        <WordsUp as="h2" text="Cinco coisas que ficaram de pé" className="display-lg" />
+        <span id="arquivo-titulo" className="sr-only">
+          Arquivo
         </span>
       </div>
 
       <Reveal delay={0.1}>
-        <p className="lead mt-[var(--space-5)] max-w-[48ch]">
-          Cada um traz o problema que existia antes de mim, a decisão que tomei e o que ficou de pé
-          depois. O print é o resultado; o texto é o motivo.
+        <p className="lead mt-[var(--space-6)] max-w-[48ch]">
+          Cada entrada traz o problema que existia antes de mim, a decisão que tomei e o que
+          sobrou depois. A imagem é o resultado; o texto é o motivo.
         </p>
       </Reveal>
 
       <div className="relative mt-[var(--space-9)]">
         {/* ---- trilho de leitura ----
-             Marca em qual peça o olho está. Decorativo no sentido estrito —
-             a informação já está no número de cada ficha — então sai da
-             árvore de acessibilidade e some no estreito. */}
+             Marca em qual entrada o olho está. Decorativo no sentido estrito
+             — o número já está escrito em cada ficha — então sai da árvore de
+             acessibilidade e some no estreito. */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -left-[var(--space-7)] top-0 hidden h-full w-[var(--space-5)] lg:block"
@@ -262,10 +305,10 @@ export default function Work() {
             {projects.map((p, i) => (
               <li
                 key={p.slug}
-                className="figure text-[0.7rem] transition-colors duration-[var(--duration-normal)]"
+                className="label transition-colors duration-[var(--duration-normal)]"
                 style={{ color: i === indiceAtivo ? 'var(--accent)' : 'var(--text-tertiary)' }}
               >
-                {numero(i)}
+                {String(i + 1).padStart(2, '0')}
               </li>
             ))}
           </ul>
@@ -273,7 +316,7 @@ export default function Work() {
 
         <div className="flex flex-col gap-[var(--space-10)]">
           {projects.map((p, i) => (
-            <Peca key={p.slug} project={p} index={i} />
+            <Entrada key={p.slug} project={p} index={i} />
           ))}
         </div>
       </div>

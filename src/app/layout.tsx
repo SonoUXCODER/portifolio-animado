@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Archivo, IBM_Plex_Mono } from 'next/font/google';
+import { Fraunces, Instrument_Sans } from 'next/font/google';
 import { site } from '@/data/site';
 import { basePath } from '@/lib/base';
 import Nav from '@/components/Nav';
@@ -12,31 +12,49 @@ import PauseOffscreen from '@/components/PauseOffscreen';
 import './globals.css';
 
 /* -------------------------------------------------------------------------
-   Fontes. Duas, e nada mais.
+   Fontes. Duas.
 
-   O Archivo entra com o eixo de largura (wdth): é ele que deixa o título
-   gigante estreito o bastante pra caber na linha sem virar imagem. O Plex
-   Mono carrega todo dado técnico — rótulo, número, ano.
+   Antes eram Archivo e IBM Plex Mono — que é, literalmente, a dupla padrão
+   de todo portfólio de desenvolvedor gerado nos últimos dois anos. Somada ao
+   hábito de escrever todo rótulo em mono maiúsculo com tracking largo, ela
+   entrega o mesmo desenho em qualquer site, e nenhuma decisão de quem fez.
 
-   Havia uma terceira, o Caveat, para as legendas manuscritas do impresso.
-   Saiu junto com elas: era uma família inteira baixada para meia dúzia de
-   linhas, e nada na direção atual pede letra de mão.
+   **Fraunces** é a voz. É uma serifa variável com três eixos além do peso:
+
+     opsz  9..144   tamanho óptico de verdade — a letra é redesenhada, não
+                    esticada. No corpo pequeno as serifas engrossam e a
+                    contraforma abre; no display gigante o contraste sobe e
+                    o desenho afina. É a diferença entre tipografia e escala.
+     SOFT  0..100   arredonda os cantos. Zero é seco e duro; alto amolece.
+     WONK  0..1     troca as terminações por versões tortas, com o eixo
+                    inclinado. É onde a fonte tem cara própria — e é por isso
+                    que ela entra só no display, onde a letra é imagem.
+
+   **Instrument Sans** é o resto: texto corrido, interface, rótulo, número.
+   Neutra o suficiente pra sumir e deixar a serifa falar.
+
+   Não existe mais uma família mono. Dado técnico agora usa a sans com
+   `tabular-nums`, que resolve o alinhamento de número sem trazer junto a
+   estética de terminal.
 
    Ambas com display:swap — texto na tela antes de a fonte chegar.
    ------------------------------------------------------------------------- */
 
-const archivo = Archivo({
+const fraunces = Fraunces({
   subsets: ['latin'],
-  axes: ['wdth'],
+  axes: ['SOFT', 'WONK', 'opsz'],
+  /* o itálico não é enfeite: é a voz das notas — as observações em minúscula
+     que aparecem ao lado dos projetos e das etapas. Sem ele elas viravam só
+     "texto menor", que é como qualquer template escreve legenda. */
+  style: ['normal', 'italic'],
   display: 'swap',
   variable: '--fonte-display',
 });
 
-const plex = IBM_Plex_Mono({
+const instrument = Instrument_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
   display: 'swap',
-  variable: '--fonte-mono',
+  variable: '--fonte-texto',
 });
 
 /* O site mora numa subpasta no Pages. Um caminho com barra na frente,
@@ -125,7 +143,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
        React chegar, então servidor e cliente divergem de propósito */
     <html
       lang="pt-BR"
-      className={`${archivo.variable} ${plex.variable}`}
+      className={`${fraunces.variable} ${instrument.variable}`}
       suppressHydrationWarning
     >
       <head>

@@ -78,9 +78,9 @@ export default function Hero() {
   /* dados reais, contados dos arquivos — nenhum número digitado à mão */
   const dados = [
     { rotulo: 'Base', valor: 'Suíça' },
-    { rotulo: 'Hora local', valor: hora ?? '--:--' },
-    { rotulo: 'Projetos', valor: String(projects.length).padStart(2, '0') },
-    { rotulo: 'Ferramentas', valor: String(stack.length).padStart(2, '0') },
+    { rotulo: 'Agora são', valor: hora ?? '--:--' },
+    { rotulo: 'Entradas no arquivo', valor: String(projects.length).padStart(2, '0') },
+    { rotulo: 'Ferramentas em uso', valor: String(stack.length).padStart(2, '0') },
   ];
 
   return (
@@ -91,25 +91,39 @@ export default function Hero() {
       className="relative flex min-h-[100svh] flex-col justify-between pb-[var(--space-8)] pt-[calc(var(--header-h)+var(--space-8))]"
     >
       <div className="shell w-full">
-        {/* ---- estado ---- */}
+        {/* ---- a linha de abertura do arquivo ----
+             Diz o que a coisa é antes de dizer quem a fez. O ponto pulsante
+             é o único elemento da página que anima sozinho pra sempre, e ele
+             ganha essa licença porque o que ele comunica é literalmente um
+             estado ao vivo: se está aceitando trabalho agora. */}
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: duration.normal }}
-          className="label flex items-center gap-[var(--space-3)]"
+          className="kicker"
         >
-          <span className="relative flex h-[7px] w-[7px]">
-            {!reduced && (
-              <motion.span
-                className="absolute inset-0 rounded-full"
-                style={{ background: 'var(--accent)' }}
-                animate={{ scale: [1, 2.2], opacity: [0.5, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
-              />
-            )}
-            <span className="relative h-full w-full rounded-full" style={{ background: 'var(--accent)' }} />
+          <span>Arquivo de trabalho</span>
+          <span className="kicker__sep" aria-hidden="true">
+            ·
           </span>
-          Disponível para projetos
+          <span>2021 — {new Date().getFullYear()}</span>
+          <span className="kicker__sep" aria-hidden="true">
+            ·
+          </span>
+          <span className="flex items-center gap-[var(--space-2)]">
+            <span className="relative flex h-[7px] w-[7px]">
+              {!reduced && (
+                <motion.span
+                  className="absolute inset-0 rounded-full"
+                  style={{ background: 'var(--accent)' }}
+                  animate={{ scale: [1, 2.2], opacity: [0.5, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
+                />
+              )}
+              <span className="relative h-full w-full rounded-full" style={{ background: 'var(--accent)' }} />
+            </span>
+            Aceitando projetos
+          </span>
         </motion.p>
       </div>
 
@@ -133,6 +147,18 @@ export default function Hero() {
             As duas coisas, no mesmo projeto, pela mesma pessoa. É por isso que a decisão de design
             chega inteira até o deploy.
           </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ ...enter, delay: 0.62 }}
+            className="nota mt-[var(--space-4)] flex max-w-[38ch] gap-[var(--space-3)]"
+          >
+            <span aria-hidden="true" style={{ color: 'var(--accent)' }}>
+              ↳
+            </span>
+            não é agência. é uma pessoa só, e dá pra falar comigo direto.
+          </motion.p>
         </motion.div>
 
         <motion.div
@@ -141,7 +167,7 @@ export default function Hero() {
           transition={{ ...enter, delay: 0.66 }}
           className="mt-[var(--space-7)] flex flex-wrap items-center gap-[var(--space-3)]"
         >
-          <a href="#projetos" className="btn" data-cursor="ver">
+          <a href="#arquivo" className="btn" data-cursor="ver">
             Ver o trabalho
           </a>
           <a href={`mailto:${site.email}`} className="btn btn--ghost" data-cursor="abrir">
@@ -168,8 +194,8 @@ export default function Hero() {
           ))}
         </dl>
 
-        <div className="mt-[var(--space-5)] flex items-center justify-between">
-          <span className="label">Role para continuar</span>
+        <div className="mt-[var(--space-5)] flex items-baseline justify-between gap-[var(--space-4)]">
+          <span className="nota">role, tem bastante coisa aqui embaixo</span>
           <motion.span
             aria-hidden="true"
             className="label"

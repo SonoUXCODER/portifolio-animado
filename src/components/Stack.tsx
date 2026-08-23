@@ -1,7 +1,7 @@
 'use client';
 
 import { layers } from '@/data/stack';
-import SectionMark from './SectionMark';
+import Kicker from './Kicker';
 import { Reveal, RevealGroup, RevealItem, WordsUp } from './Reveal';
 
 /* -------------------------------------------------------------------------
@@ -27,7 +27,7 @@ export default function Stack() {
       aria-labelledby="stack-titulo"
       className="shell scroll-mt-[var(--header-h)] py-[var(--space-10)]"
     >
-      <SectionMark id="stack" />
+      <Kicker id="stack" />
 
       <div className="mt-[var(--space-8)] max-w-[20ch]">
         <WordsUp as="h2" text="Ferramentas que aguentam produção." className="display-lg" />
@@ -87,7 +87,7 @@ export default function Stack() {
 
                   <span className="label tabular-nums">desde {tool.desde}</span>
 
-                  <p className="body-sm col-span-2 max-w-[52ch]">{tool.nota}</p>
+                  <p className="nota col-span-2 max-w-[52ch]">{tool.nota}</p>
                 </RevealItem>
               ))}
             </RevealGroup>
