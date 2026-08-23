@@ -17,6 +17,13 @@ import type { SectionId } from './shared';
    EXPERIENCES." forma um retângulo, e é o retângulo que se compõe contra a
    grade. Cada idioma escolhe as próprias quebras, porque a mesma frase tem
    comprimentos diferentes em alemão e em português.
+
+   >>> O LIMITE DE LARGURA <<<
+   Em 375px a caixa de conteúdo tem 335px, e o display do hero roda em
+   51.2px. Isso dá teto de **cerca de 13 caracteres por linha** antes de a
+   frase quebrar sozinha e virar quatro linhas visuais, que é justamente o
+   acidente que este array existe pra evitar. Medido: "the same product."
+   dava 423px e quebrava nos três idiomas.
    ------------------------------------------------------------------------- */
 
 export type ApproachCopy = {
@@ -112,12 +119,13 @@ export type Content = {
   hero: {
     lines: string[];
     lead: string;
+    /** a linha de prova logo abaixo do lead: cinco produtos no ar */
+    proof: string;
+    productsLabel: string;
     ctaWork: string;
     ctaContact: string;
     basedIn: string;
     localTime: string;
-    disciplines: string;
-    disciplinesValue: string;
     languages: string;
     languagesValue: string;
     scroll: string;
@@ -134,6 +142,9 @@ export type Content = {
   work: {
     lines: string[];
     intro: string;
+    /** o convite que fecha a seção de trabalho */
+    ctaAfter: string;
+    ctaAfterLink: string;
     roleLabel: string;
     stackLabel: string;
     yearLabel: string;
@@ -148,6 +159,8 @@ export type Content = {
   capabilities: {
     lines: string[];
     intro: string;
+    ctaAfter: string;
+    ctaAfterLink: string;
     deliverablesLabel: string;
     items: Record<string, CapabilityCopy>;
   };
@@ -188,6 +201,8 @@ export type Content = {
     lead: string;
     cta: string;
     emailSubject: string;
+    /** como a conversa começa, pra tirar fricção antes do clique */
+    howItWorks: string;
     basedIn: string;
     coordinates: string;
     responseTime: string;
@@ -243,6 +258,9 @@ export type Content = {
     visitLive: string;
     source: string;
     privateRepo: string;
+    /** o convite que fecha o estudo de caso, antes do próximo projeto */
+    ctaEnd: string;
+    ctaEndLink: string;
     nextProject: string;
   };
 

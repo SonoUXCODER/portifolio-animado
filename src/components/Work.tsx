@@ -10,6 +10,7 @@ import SectionIndex from './SectionIndex';
 import Statement from './Statement';
 import LivePreview from './LivePreview';
 import Magnetic from './Magnetic';
+import InlineCta from './InlineCta';
 import { TransitionLink } from './PageTransition';
 import { Lines, Reveal } from './Reveal';
 import { cn } from '@/lib/utils';
@@ -390,6 +391,10 @@ export default function Work() {
             </div>
           );
         })}
+      </div>
+
+      <div className="mt-[var(--space-10)]">
+        <InlineCta pergunta={t.work.ctaAfter} acao={t.work.ctaAfterLink} />
       </div>
 
       {aoVivo?.live && (

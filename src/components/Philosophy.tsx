@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { Lines, Reveal } from './Reveal';
+import { useT } from './ContentProvider';
 
 /* -------------------------------------------------------------------------
    FILOSOFIA.
@@ -22,6 +23,7 @@ import { Lines, Reveal } from './Reveal';
    ------------------------------------------------------------------------- */
 
 export default function Philosophy() {
+  const t = useT();
   const ref = useRef<HTMLElement>(null);
   const reduzido = useReducedMotion();
 
@@ -49,28 +51,22 @@ export default function Philosophy() {
     >
       <motion.div className="shell" style={reduzido ? undefined : { y }}>
         <p className="index-line">
-          <span style={{ color: 'var(--text-primary)' }}>Philosophy</span>
+          <span style={{ color: 'var(--text-primary)' }}>{t.philosophy.label}</span>
           <span className="index-line__rule" aria-hidden="true" />
         </p>
 
         <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-7)]">
           <div className="col-span-12 lg:col-span-8">
-            <Lines
-              lines={['Good design', 'should feel', 'inevitable.']}
-              as="h2"
-              className="display-xl"
-            />
+            <Lines lines={t.philosophy.lines} as="h2" className="display-xl" />
             <span id="philosophy-title" className="sr-only">
-              Philosophy
+              {t.philosophy.label}
             </span>
           </div>
 
           <div className="col-span-12 md:col-span-8 lg:col-span-3 lg:col-start-10 lg:self-end">
             <Reveal delay={0.1}>
               <p className="body">
-                The best digital experiences are not only beautiful. They are clear, useful, fast
-                and built to evolve. By the time you notice the design, it should already feel
-                like the only way it could have been done.
+                {t.philosophy.text}
               </p>
             </Reveal>
           </div>

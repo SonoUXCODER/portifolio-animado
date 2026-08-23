@@ -231,12 +231,15 @@ export function Lines({
   delay = 0,
   /** anima assim que monta, em vez de esperar entrar na tela — para o hero */
   immediate = false,
+  id,
 }: {
   lines: string[];
   className?: string;
   as?: 'h1' | 'h2' | 'h3' | 'p' | 'div';
   delay?: number;
   immediate?: boolean;
+  /** pra quando uma seção precisa apontar o aria-labelledby pra este título */
+  id?: string;
 }) {
   const reduced = useReducedMotion();
   const M = motion[Tag] as typeof motion.h2;
@@ -244,6 +247,7 @@ export function Lines({
   if (reduced) {
     return (
       <M
+        id={id}
         className={className}
         initial={{ opacity: 0 }}
         {...(immediate ? { animate: { opacity: 1 } } : { whileInView: { opacity: 1 }, viewport })}
@@ -260,6 +264,7 @@ export function Lines({
 
   return (
     <M
+      id={id}
       className={className}
       initial="hidden"
       {...(immediate ? { animate: 'shown' } : { whileInView: 'shown', viewport })}

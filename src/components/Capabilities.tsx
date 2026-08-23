@@ -6,6 +6,7 @@ import { useConteudo } from './ContentProvider';
 import SectionIndex from './SectionIndex';
 import Visual from './Visual';
 import { Lines, Reveal } from './Reveal';
+import InlineCta from './InlineCta';
 import { duration, easeStandard } from '@/lib/motion';
 
 /* -------------------------------------------------------------------------
@@ -192,6 +193,10 @@ export default function Capabilities() {
         })}
       </ul>
       <div className="border-t" style={{ borderColor: 'var(--line)' }} />
+
+      <div className="mt-[var(--space-9)]">
+        <InlineCta pergunta={t.capabilities.ctaAfter} acao={t.capabilities.ctaAfterLink} />
+      </div>
     </section>
   );
 }

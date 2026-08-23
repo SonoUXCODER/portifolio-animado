@@ -46,9 +46,11 @@ export default function Contact() {
         <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-7)]">
           <div className="col-span-12 lg:col-span-5">
             <Reveal delay={0.1}>
-              <p className="lead">
-                {t.contact.lead}
-              </p>
+              <p className="lead">{t.contact.lead}</p>
+
+              {/* o que acontece depois do clique. Sem isto, a pessoa trava
+                  na pergunta "e agora, o que eu escrevo?" */}
+              <p className="body mt-[var(--space-5)]">{t.contact.howItWorks}</p>
 
               <p className="mt-[var(--space-7)]">
                 <Magnetic strength={12}>

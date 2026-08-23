@@ -147,17 +147,18 @@ export default function Hero() {
       {/* ================= a declaração ================= */}
       <div className="shell relative w-full py-[var(--space-8)]">
         <motion.div style={fino && !reduzido ? { x, y } : undefined}>
-          <h1 id="hero-title" className="sr-only">
-            {identity.name}, {t.meta.role}
-          </h1>
-
+          {/* O título visível é o h1. Ele já foi um <p>, com um h1 em
+              sr-only por cima: dava a hierarquia certa pro leitor de tela e
+              a errada pra todo o resto, porque a manchete de 13rem não
+              contava como cabeçalho. */}
           {/* A quebra é composição, não acidente de largura: as três linhas
               formam um retângulo, e é o retângulo que se compõe contra a
               grade. Deixar o navegador quebrar daria três formas diferentes
               em três telas. */}
           <Lines
+            id="hero-title"
             lines={t.hero.lines}
-            as="p"
+            as="h1"
             className="display-hero"
             immediate
             delay={0.25}
@@ -171,8 +172,15 @@ export default function Hero() {
             transition={{ ...enter, delay: 0.75 }}
             className="col-span-12 md:col-span-6 lg:col-span-5 lg:col-start-7"
           >
-            <p className="lead">
-              {t.hero.lead}
+            <p className="lead">{t.hero.lead}</p>
+
+            {/* a prova mais forte do site estava atrás de um botão na tela
+                oito: os cinco projetos abrem rodando aqui dentro */}
+            <p className="body-sm mt-[var(--space-4)] flex gap-[var(--space-3)]">
+              <span aria-hidden="true" style={{ color: 'var(--accent)' }}>
+                ↳
+              </span>
+              {t.hero.proof}
             </p>
 
             <div className="mt-[var(--space-6)] flex flex-wrap items-center gap-[var(--space-4)]">
@@ -203,10 +211,10 @@ export default function Hero() {
           style={{ borderColor: 'var(--line)' }}
         >
           {[
+            [t.hero.productsLabel, String(identity.shipped)],
             [t.hero.basedIn, `${identity.city}, ${t.meta.country}`],
-            [t.hero.localTime, hora ?? '--:--'],
-            [t.hero.disciplines, t.hero.disciplinesValue],
             [t.hero.languages, t.hero.languagesValue],
+            [t.hero.localTime, hora ?? '--:--'],
           ].map(([rotulo, valor]) => (
             <div key={rotulo}>
               <dt className="label label--dim">{rotulo}</dt>

@@ -7,6 +7,7 @@ import { useHref, useT } from './ContentProvider';
 import { TransitionLink } from './PageTransition';
 import LivePreview from './LivePreview';
 import Magnetic from './Magnetic';
+import InlineCta from './InlineCta';
 import { Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Reveal';
 
 /* -------------------------------------------------------------------------
@@ -426,6 +427,19 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
             </div>
           </Reveal>
         </div>
+      </section>
+
+      {/* ================================================================
+          A SAÍDA COMERCIAL
+
+          O estudo de caso terminava em "próximo projeto", e só. Quem leu
+          duas mil palavras sobre o processo é exatamente quem contrataria,
+          e era devolvido pro laço em vez de pro contato. O convite vem
+          primeiro; o próximo projeto continua logo abaixo, como segunda
+          opção pra quem quer continuar lendo.
+          ================================================================ */}
+      <section className="shell mt-[var(--space-10)]">
+        <InlineCta pergunta={t.project.ctaEnd} acao={t.project.ctaEndLink} />
       </section>
 
       {/* ================================================================

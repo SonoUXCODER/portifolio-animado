@@ -48,20 +48,20 @@ export const de: Content = {
   sections: {
     about: { name: 'Über mich', nav: 'Über mich', note: 'Eine Person, zwei Disziplinen' },
     work: { name: 'Ausgewählte Arbeiten', nav: 'Arbeiten', note: 'Fünf Produkte, vom Start bis live' },
-    capabilities: { name: 'Leistungen', nav: 'Skills', note: 'Vom Interface bis zur Infrastruktur' },
-    experience: { name: 'Erfahrung', nav: 'Werdegang', note: 'In umgekehrter Reihenfolge' },
+    capabilities: { name: 'Leistungen', nav: 'Leistungen', note: 'Vom Interface bis zur Infrastruktur' },
+    experience: { name: 'Werdegang', nav: 'Werdegang', note: 'In umgekehrter Reihenfolge' },
     contact: { name: 'Kontakt', nav: 'Kontakt', note: 'Wo das hier endet und etwas anfängt' },
   },
 
   hero: {
-    lines: ['Ich baue', 'digitale', 'Erlebnisse.'],
-    lead: 'Full-Stack-Entwickler und UX/UI-Designer. Ich baue digitale Produkte, in denen Design und Technik ein einziges System sind.',
+    lines: ['Ich gestalte', 'und baue', 'ein Produkt.'],
+    lead: 'Eine Person von der Recherche bis zum Deployment. Die Interface-Entscheidung fällt schon mit dem Wissen, was sie im Bau kostet, und der Code entsteht schon mit dem Wissen, wie er sich anfühlen muss.',
+    proof: 'Fünf Produkte im Produktivbetrieb. Du kannst jedes davon direkt hier öffnen, ohne die Seite zu verlassen.',
+    productsLabel: 'Im Betrieb',
     ctaWork: 'Ausgewählte Arbeiten',
     ctaContact: 'Gespräch starten',
     basedIn: 'Standort',
     localTime: 'Ortszeit',
-    disciplines: 'Disziplinen',
-    disciplinesValue: 'Design · Technik',
     languages: 'Sprachen',
     languagesValue: 'DE · EN · PT',
     scroll: 'Scrollen zum Start',
@@ -95,6 +95,8 @@ export const de: Content = {
     roleLabel: 'Rolle',
     stackLabel: 'Stack',
     yearLabel: 'Jahr',
+    ctaAfter: 'Sieht dein Problem aus wie eines davon?',
+    ctaAfterLink: 'Erzähl es mir',
     seeLive: 'Live ansehen',
     caseStudy: 'Fallstudie',
     openCase: 'Fallstudie zu {title} öffnen',
@@ -109,6 +111,8 @@ export const de: Content = {
     lines: ['Was ich', 'mache.'],
     intro:
       'Sechs Dinge, und nur sechs. Eine Leistungsseite mit elf Punkten sagt nicht „ich mache alles“. Sie sagt, dass niemand entschieden hat, was das hier ist.',
+    ctaAfter: 'Brauchst du beide Hälften in einer Person?',
+    ctaAfterLink: 'Gespräch starten',
     deliverablesLabel: 'Was dabei herauskommt',
     items: {
       'ux-ui': {
@@ -352,10 +356,12 @@ export const de: Content = {
   },
 
   contact: {
-    lines: ['Lass uns etwas', 'bauen, das', 'zählt.'],
+    lines: ['Bauen wir', 'etwas, das', 'zählt.'],
     lead: 'Verfügbar für freie Aufträge, Produktkooperationen und kreative digitale Projekte.',
     cta: 'Gespräch starten',
     emailSubject: 'Projektanfrage',
+    howItWorks:
+      'So läuft es: schick mir das Problem in zwei Zeilen. Ich antworte innerhalb von zwei Tagen mit dem, was ich tun würde, wie lange es dauert und was es kostet. Kein Discovery-Call, kein dreissigseitiges Angebot.',
     basedIn: 'Standort',
     coordinates: 'Koordinaten',
     responseTime: 'Antwortzeit',
@@ -411,6 +417,8 @@ export const de: Content = {
     visitLive: 'Projekt live ansehen',
     source: 'Quellcode',
     privateRepo: 'Repository ist privat. Der Code gehört der Kundschaft.',
+    ctaEnd: 'So habe ich dieses gelöst. Erzähl mir von deinem.',
+    ctaEndLink: 'Gespräch starten',
     nextProject: 'Nächstes Projekt',
   },
 

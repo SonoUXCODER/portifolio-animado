@@ -48,20 +48,20 @@ export const pt: Content = {
   sections: {
     about: { name: 'Sobre', nav: 'Sobre', note: 'Uma pessoa, duas metades' },
     work: { name: 'Trabalho Selecionado', nav: 'Trabalho', note: 'Cinco produtos, do início ao ar' },
-    capabilities: { name: 'Capacidades', nav: 'Skills', note: 'Da interface à infraestrutura' },
-    experience: { name: 'Experiência', nav: 'Trajetória', note: 'Em ordem inversa' },
+    capabilities: { name: 'Capacidades', nav: 'Capacidades', note: 'Da interface à infraestrutura' },
+    experience: { name: 'Trajetória', nav: 'Trajetória', note: 'Em ordem inversa' },
     contact: { name: 'Contato', nav: 'Contato', note: 'Onde isto acaba e outra coisa começa' },
   },
 
   hero: {
-    lines: ['Eu construo', 'experiências', 'digitais.'],
-    lead: 'Desenvolvedor full-stack e designer UX/UI criando produtos digitais onde design e tecnologia funcionam como um sistema só.',
+    lines: ['Desenho', 'e construo', 'um produto.'],
+    lead: 'Uma pessoa da pesquisa ao deploy. A decisão de interface já nasce sabendo o que custa construir, e o código já nasce sabendo o que precisa parecer.',
+    proof: 'Cinco produtos no ar. Dá pra abrir todos aqui dentro, sem sair da página.',
+    productsLabel: 'No ar',
     ctaWork: 'Ver o trabalho',
     ctaContact: 'Começar uma conversa',
     basedIn: 'Base',
     localTime: 'Hora local',
-    disciplines: 'Frentes',
-    disciplinesValue: 'Design · Engenharia',
     languages: 'Idiomas',
     languagesValue: 'PT · DE · EN',
     scroll: 'Role para começar',
@@ -95,6 +95,8 @@ export const pt: Content = {
     roleLabel: 'Papel',
     stackLabel: 'Stack',
     yearLabel: 'Ano',
+    ctaAfter: 'Seu problema se parece com algum destes?',
+    ctaAfterLink: 'Me conta',
     seeLive: 'Ver rodando',
     caseStudy: 'Estudo de caso',
     openCase: 'Abrir o estudo de caso de {title}',
@@ -109,6 +111,8 @@ export const pt: Content = {
     lines: ['O que', 'eu faço.'],
     intro:
       'Seis coisas, e só seis. Uma página de serviços com onze itens não diz “faço tudo”. Diz que ninguém decidiu o que isto é.',
+    ctaAfter: 'Precisa das duas metades na mesma pessoa?',
+    ctaAfterLink: 'Começar uma conversa',
     deliverablesLabel: 'O que você recebe',
     items: {
       'ux-ui': {
@@ -352,10 +356,12 @@ export const pt: Content = {
   },
 
   contact: {
-    lines: ['Vamos construir', 'alguma coisa', 'que importa.'],
+    lines: ['Vamos fazer', 'alguma coisa', 'que importa.'],
     lead: 'Disponível para freelas, colaborações de produto e projetos digitais criativos.',
     cta: 'Começar uma conversa',
     emailSubject: 'Contato sobre projeto',
+    howItWorks:
+      'Como funciona: você manda o problema em duas linhas. Eu respondo em até dois dias com o que eu faria, quanto tempo leva e quanto custa. Sem reunião de descoberta, sem proposta de trinta páginas.',
     basedIn: 'Base',
     coordinates: 'Coordenadas',
     responseTime: 'Tempo de resposta',
@@ -411,6 +417,8 @@ export const pt: Content = {
     visitLive: 'Ver o projeto no ar',
     source: 'Código',
     privateRepo: 'Repositório fechado. O código é do cliente.',
+    ctaEnd: 'Foi assim que eu resolvi este. Me conta o seu.',
+    ctaEndLink: 'Começar uma conversa',
     nextProject: 'Próximo projeto',
   },
 

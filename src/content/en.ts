@@ -40,20 +40,20 @@ export const en: Content = {
   sections: {
     about: { name: 'About', nav: 'About', note: 'One person, two disciplines' },
     work: { name: 'Selected Work', nav: 'Work', note: 'Five products, start to ship' },
-    capabilities: { name: 'Capabilities', nav: 'Skills', note: 'From interface to infrastructure' },
+    capabilities: { name: 'Capabilities', nav: 'Capabilities', note: 'From interface to infrastructure' },
     experience: { name: 'Experience', nav: 'Experience', note: 'In reverse order' },
     contact: { name: 'Contact', nav: 'Contact', note: 'Where this ends and something starts' },
   },
 
   hero: {
-    lines: ['I build', 'digital', 'experiences.'],
-    lead: 'Full-Stack Developer & UX/UI Designer creating digital products where design and technology work as one system.',
+    lines: ['I design', 'and build', 'one product.'],
+    lead: 'One person from research to deploy. The interface decision is made already knowing what it costs to build, and the code is written already knowing what it has to feel like.',
+    proof: 'Five products in production. You can open every one of them right here, without leaving the page.',
+    productsLabel: 'In production',
     ctaWork: 'Selected work',
     ctaContact: 'Start a conversation',
     basedIn: 'Based in',
     localTime: 'Local time',
-    disciplines: 'Disciplines',
-    disciplinesValue: 'Design · Engineering',
     languages: 'Languages',
     languagesValue: 'EN · DE · PT',
     scroll: 'Scroll to begin',
@@ -87,6 +87,8 @@ export const en: Content = {
     roleLabel: 'Role',
     stackLabel: 'Stack',
     yearLabel: 'Year',
+    ctaAfter: 'Does your problem look like one of these?',
+    ctaAfterLink: 'Tell me about it',
     seeLive: 'See it live',
     caseStudy: 'Case study',
     openCase: 'Open the {title} case study',
@@ -101,6 +103,8 @@ export const en: Content = {
     lines: ['What', 'I do.'],
     intro:
       'Six things, and only six. A services page with eleven items does not say “I do everything”. It says nobody decided what this is.',
+    ctaAfter: 'Need both halves in one person?',
+    ctaAfterLink: 'Start a conversation',
     deliverablesLabel: 'What you get',
     items: {
       'ux-ui': {
@@ -348,6 +352,8 @@ export const en: Content = {
     lead: 'Available for freelance, product collaborations and creative digital projects.',
     cta: 'Start a conversation',
     emailSubject: 'Project enquiry',
+    howItWorks:
+      'How it works: send me the problem in two lines. I answer within two days with what I would do, how long it takes and what it costs. No discovery call, no thirty-page proposal.',
     basedIn: 'Based in',
     coordinates: 'Coordinates',
     responseTime: 'Response time',
@@ -403,6 +409,8 @@ export const en: Content = {
     visitLive: 'Visit live project',
     source: 'Source',
     privateRepo: 'Repository is private. The code belongs to the client.',
+    ctaEnd: 'That is how I solved this one. Tell me about yours.',
+    ctaEndLink: 'Start a conversation',
     nextProject: 'Next project',
   },
 
