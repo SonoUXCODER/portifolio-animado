@@ -285,8 +285,6 @@ export default function Interlude({ peca, indice }: { peca: Peca; indice: number
     };
   }, [perto]);
 
-  const romano = ['I', 'II', 'III', 'IV', 'V'][indice] ?? String(indice + 1);
-
   return (
     <section
       ref={secao}
@@ -301,9 +299,7 @@ export default function Interlude({ peca, indice }: { peca: Peca; indice: number
             className="flex items-start justify-between gap-[var(--space-5)] border-b pb-[var(--space-3)]"
             style={{ borderColor: 'var(--line)' }}
           >
-            <p className="label">
-              <span style={{ color: 'var(--accent)' }}>{romano}</span>
-              <span className="index-line__sep"> / </span>
+            <p className="label" style={{ color: 'var(--accent)' }}>
               Interlude
             </p>
             <p className="label label--dim text-right">{peca.technique}</p>
@@ -336,7 +332,7 @@ export default function Interlude({ peca, indice }: { peca: Peca; indice: number
               </h2>
               <p className="body-sm mt-[var(--space-2)] max-w-[56ch]">{peca.caption}</p>
             </div>
-            <p className="label label--dim">{romano} of III</p>
+            <p className="label label--dim">{peca.title}</p>
           </div>
         </div>
       </div>

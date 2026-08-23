@@ -6,9 +6,9 @@ import { Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
 /* -------------------------------------------------------------------------
    TECHNOLOGY STACK.
 
-   Um blueprint, não uma nuvem de logotipos. Quatro colunas com filete,
-   cada ferramenta numa linha numerada, e o ano em que ela entrou pra valer
-   alinhado à direita em tabular.
+   Um blueprint, não uma nuvem de logotipos. Cinco colunas com filete,
+   cada ferramenta numa linha, e o ano em que ela entrou pra valer alinhado
+   à direita em tabular.
 
    Duas decisões que sustentam a seção:
 
@@ -24,9 +24,9 @@ import { Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
    reservado. Empurrar layout no hover é a diferença entre uma tabela viva
    e uma tabela que pula.
 
-   Esta seção não é numerada: ela é a segunda metade de CAPABILITIES, e
-   dividir "o que eu faço" de "com o que eu faço" em dois capítulos daria
-   dois números para um assunto só.
+   Esta seção não tem abertura própria: ela é a segunda metade de
+   CAPABILITIES, e separar "o que eu faço" de "com o que eu faço" em dois
+   capítulos daria dois títulos para um assunto só.
    ------------------------------------------------------------------------- */
 
 export default function TechStack() {
@@ -47,9 +47,9 @@ export default function TechStack() {
               right now, and what each piece is actually doing there.
             </p>
             <p className="label label--dim mt-[var(--space-5)]">
-              {String(stack.length).padStart(2, '0')} tools
+              {stack.length} tools
               <span className="index-line__sep"> / </span>
-              {String(layers.length).padStart(2, '0')} layers
+              {layers.length} layers
             </p>
           </Reveal>
         </div>
@@ -68,7 +68,7 @@ export default function TechStack() {
             </Reveal>
 
             <RevealGroup as="ul" className="mt-[var(--space-6)] flex flex-col" delay={0.05}>
-              {layer.tools.map((tool, i) => (
+              {layer.tools.map((tool) => (
                 <RevealItem
                   as="li"
                   key={tool.label}
@@ -77,7 +77,6 @@ export default function TechStack() {
                 >
                   <div className="flex items-baseline justify-between gap-[var(--space-3)]">
                     <span className="flex items-baseline gap-[var(--space-3)]">
-                      <span className="label label--dim">{String(i + 1).padStart(2, '0')}</span>
                       <span
                         className="title-sm transition-colors duration-[var(--duration-fast)] group-hover:text-[var(--accent)]"
                         style={{ fontSize: '1rem' }}
@@ -104,7 +103,7 @@ export default function TechStack() {
                   <div
                     className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-[var(--duration-normal)] ease-[var(--ease-standard)] group-hover:grid-rows-[1fr] group-focus-within:grid-rows-[1fr]"
                   >
-                    <p className="body-sm overflow-hidden pl-[calc(var(--space-4)+var(--space-3))] opacity-0 transition-opacity duration-[var(--duration-normal)] group-hover:opacity-100 group-focus-within:opacity-100">
+                    <p className="body-sm overflow-hidden opacity-0 transition-opacity duration-[var(--duration-normal)] group-hover:opacity-100 group-focus-within:opacity-100">
                       <span className="block pt-[var(--space-2)]">{tool.note}</span>
                     </p>
                   </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { currentYear, site } from '@/data/site';
+import { site } from '@/data/site';
 import { basePath } from '@/lib/base';
 import { duration, easeStandard, enter } from '@/lib/motion';
 import { Lines } from './Reveal';
@@ -17,10 +17,11 @@ import { useMedia, usePonteiroFino } from '@/hooks/useMedia';
    parte da página em que cada elemento a mais custa impacto, porque o
    impacto aqui *é* o vazio ao redor do título.
 
-   A composição é de três faixas: metadados no topo, a declaração no meio
-   ocupando quase a largura inteira, e a régua técnica embaixo. É a mesma
-   estrutura de uma capa de revista, e é ela que dá a sensação editorial
-   antes de qualquer animação rodar.
+   A composição é de duas faixas: a declaração ocupando quase a largura
+   inteira, e a régua técnica embaixo. Havia uma terceira no topo, com
+   disponibilidade e coordenada; ela saiu porque repetia o que a navegação
+   e o contato já dizem, e porque o vazio acima do título é metade do
+   impacto dele.
 
    Movimento, em ordem de entrada:
      1. as três linhas do título sobem de trás da máscara, 80ms entre si;
@@ -104,30 +105,30 @@ export default function Hero() {
       className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pb-[var(--space-7)] pt-[calc(var(--header-h)+var(--space-7))]"
     >
       {/* ---- fundo ----
-           Duas camadas, e as duas somam quase nada.
+           Uma camada só: o vídeo, em cinza e a 14%. Nessa opacidade ninguém
+           lê "pessoa digitando num laptop", que seria a imagem de banco mais
+           batida que existe. O que fica é luz que se move.
 
-           A de baixo é o vídeo, em cinza e a 12%: nessa opacidade ninguém
-           lê "pessoa digitando", que seria a imagem de banco mais batida do
-           mundo — o que fica é luz que se move. São 355kB, cortados pra 11
-           segundos e 1280px de largura, e ele só existe fora do celular.
+           Havia uma grade técnica de 1px por cima. Saiu: com o vídeo atrás,
+           as duas texturas disputavam a mesma área e o hero ficava ocupado
+           justamente onde ele precisa de vazio. Sem a grade o vídeo pode
+           subir de opacidade e virar o único evento do fundo.
 
-           A de cima é uma grade de 1px com máscara radial. Custa um
-           gradiente e nenhum elemento. As duas deslizam mais devagar que o
-           conteúdo enquanto o hero sai de cena, e é isso que dá
-           profundidade sem imagem nenhuma em primeiro plano. */}
-      <motion.div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={reduzido ? undefined : { y: fundoY, opacity: fundoOpacidade }}
-      >
-        {comVideo && (
+           Ele desliza mais devagar que o conteúdo enquanto o hero sai de
+           cena, e é isso que dá profundidade sem imagem em primeiro plano. */}
+      {comVideo && (
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={reduzido ? undefined : { y: fundoY, opacity: fundoOpacidade }}
+        >
           <video
             className="absolute inset-0 h-full w-full object-cover"
             style={{
-              opacity: 0.12,
-              maskImage: 'radial-gradient(ellipse 75% 65% at 60% 45%, #000 10%, transparent 72%)',
+              opacity: 0.14,
+              maskImage: 'radial-gradient(ellipse 80% 70% at 55% 45%, #000 15%, transparent 78%)',
               WebkitMaskImage:
-                'radial-gradient(ellipse 75% 65% at 60% 45%, #000 10%, transparent 72%)',
+                'radial-gradient(ellipse 80% 70% at 55% 45%, #000 15%, transparent 78%)',
             }}
             src={`${basePath}/video/hero.mp4`}
             autoPlay
@@ -138,47 +139,14 @@ export default function Hero() {
             /* `data-pause` não serve pra <video>: quem congela o loop fora
                da tela é o próprio navegador, que pausa mídia invisível. */
           />
-        )}
-        <span className="blueprint" />
-      </motion.div>
-
-      {/* ================= faixa 1: metadados ================= */}
-      <div className="shell relative w-full">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: duration.normal, delay: 0.1 }}
-          className="flex flex-wrap items-baseline justify-between gap-x-[var(--space-6)] gap-y-[var(--space-2)]"
-        >
-          {/* o ponto pulsante é o único elemento da página que anima sozinho
-              pra sempre. Ele ganha essa licença porque o que ele comunica é
-              literalmente um estado ao vivo: se estou aceitando trabalho. */}
-          <p className="label flex items-center gap-[var(--space-3)]" style={{ color: 'var(--text-primary)' }}>
-            <span className="relative flex h-[7px] w-[7px]" aria-hidden="true">
-              {!reduzido && (
-                <motion.span
-                  className="absolute inset-0 rounded-full"
-                  style={{ background: 'var(--accent)' }}
-                  animate={{ scale: [1, 2.4], opacity: [0.55, 0] }}
-                  transition={{ duration: 2.4, repeat: Infinity, ease: 'easeOut' }}
-                />
-              )}
-              <span className="relative h-full w-full rounded-full" style={{ background: 'var(--accent)' }} />
-            </span>
-            {site.availability}
-          </p>
-
-          <p className="label label--dim">
-            {site.coordinates} <span className="index-line__sep">/</span> {currentYear()}
-          </p>
         </motion.div>
-      </div>
+      )}
 
-      {/* ================= faixa 2: a declaração ================= */}
+      {/* ================= a declaração ================= */}
       <div className="shell relative w-full py-[var(--space-8)]">
         <motion.div style={fino && !reduzido ? { x, y } : undefined}>
           <h1 id="hero-title" className="sr-only">
-            {site.name} — {site.role}
+            {site.name}, {site.role}
           </h1>
 
           {/* A quebra é composição, não acidente de largura: as três linhas
@@ -222,7 +190,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ================= faixa 3: a régua técnica ================= */}
+      {/* ================= a régua técnica ================= */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

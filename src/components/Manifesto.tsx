@@ -2,10 +2,10 @@
 
 import Image from 'next/image';
 import { currentYear, site } from '@/data/site';
-import { projects } from '@/data/projects';
 import { stack } from '@/data/stack';
 import { startYear } from '@/data/experience';
 import SectionIndex from './SectionIndex';
+import TiltCard from './TiltCard';
 import { Counter, Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Reveal';
 
 /* -------------------------------------------------------------------------
@@ -27,7 +27,7 @@ import { Counter, Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Rev
    ------------------------------------------------------------------------- */
 
 const cadeia = [
-  { step: 'Design', note: 'Research, flows, interface — decided while it is still cheap to change.' },
+  { step: 'Design', note: 'Research, flows, interface. Decided while it is still cheap to change.' },
   { step: 'System', note: 'Tokens and components, so the second screen costs a fraction of the first.' },
   { step: 'Build', note: 'Written by hand. No builder, no theme, no handoff between two people.' },
   { step: 'Ship', note: 'Domain, metrics, and the first visit from someone who is not me.' },
@@ -37,7 +37,7 @@ export default function Manifesto() {
   const anos = currentYear() - startYear;
 
   const estatisticas: Array<{ valor: number; sufixo?: string; rotulo: string }> = [
-    { valor: projects.length, rotulo: 'Products shipped' },
+    { valor: site.shipped, sufixo: '+', rotulo: 'Products shipped' },
     { valor: anos, sufixo: '+', rotulo: 'Years building' },
     { valor: stack.length, rotulo: 'Tools in production' },
     { valor: 3, rotulo: 'Languages spoken' },
@@ -65,7 +65,7 @@ export default function Manifesto() {
             <RevealItem>
               <p className="body">
                 I work between design systems, interfaces, front-end architecture and digital
-                experiences. My process connects strategy, UX, visual design and engineering —
+                experiences. My process connects strategy, UX, visual design and engineering,
                 because I learned both halves at the same time, with nobody to hand the other one to.
               </p>
             </RevealItem>
@@ -83,17 +83,24 @@ export default function Manifesto() {
       {/* ================= retrato + cadeia ================= */}
       <div className="grid-12 mt-[var(--space-10)] gap-y-[var(--space-8)]">
         <div className="col-span-12 sm:col-span-6 lg:col-span-4">
+          {/* O retrato é a única peça da página que reage ao cursor como um
+              objeto: o mesmo gesto do knifes.me, cartão torto que inclina
+              em direção ao ponteiro. Aqui ele ganha função além do charme —
+              é o que impede a foto de virar mais um retângulo numa página
+              cheia deles. */}
           <Parallax strength={30}>
-            <figure className="media media--dim aspect-[4/5] w-full max-w-[420px]">
-              <Image
-                src="/assets/foto-cracha.webp"
-                alt={`Portrait of ${site.name}`}
-                width={620}
-                height={827}
-                sizes="(max-width: 640px) 80vw, 400px"
-                className="h-full w-full"
-              />
-            </figure>
+            <TiltCard className="w-full max-w-[420px]">
+              <figure className="media media--dim aspect-[4/5] w-full">
+                <Image
+                  src="/assets/foto-cracha.webp"
+                  alt={`Portrait of ${site.name}`}
+                  width={620}
+                  height={827}
+                  sizes="(max-width: 640px) 80vw, 400px"
+                  className="h-full w-full"
+                />
+              </figure>
+            </TiltCard>
           </Parallax>
           <Reveal delay={0.1}>
             <p className="label label--dim mt-[var(--space-4)]">
@@ -113,18 +120,15 @@ export default function Manifesto() {
           </Reveal>
 
           <RevealGroup as="ol" className="mt-[var(--space-5)] flex flex-col">
-            {cadeia.map((c, i) => (
+            {cadeia.map((c) => (
               <RevealItem
                 as="li"
                 key={c.step}
-                className="grid grid-cols-[auto_1fr] items-baseline gap-x-[var(--space-5)] gap-y-[var(--space-2)] border-t py-[var(--space-5)]"
+                className="border-t py-[var(--space-5)]"
                 style={{ borderColor: 'var(--line)' }}
               >
-                <span className="label label--accent">{String(i + 1).padStart(2, '0')}</span>
-                <div>
-                  <h3 className="display-md">{c.step}</h3>
-                  <p className="body mt-[var(--space-2)] max-w-[46ch]">{c.note}</p>
-                </div>
+                <h3 className="display-md">{c.step}</h3>
+                <p className="body mt-[var(--space-2)] max-w-[46ch]">{c.note}</p>
               </RevealItem>
             ))}
           </RevealGroup>

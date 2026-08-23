@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
-import { projectNumber, projectTotal, type Project } from '@/data/projects';
+import { type Project } from '@/data/projects';
 import { TransitionLink } from './PageTransition';
+import LivePreview from './LivePreview';
 import Magnetic from './Magnetic';
 import { Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Reveal';
 
@@ -42,7 +44,7 @@ function Rotulo({ children }: { children: React.ReactNode }) {
 }
 
 export default function ProjectPage({ p, proximo }: { p: Project; proximo: Project }) {
-  const num = projectNumber(p.slug);
+  const [aoVivo, setAoVivo] = useState(false);
 
   return (
     <article>
@@ -59,12 +61,6 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
             >
               <span aria-hidden="true">←</span> Work
             </TransitionLink>
-            <span className="index-line__sep" aria-hidden="true">
-              /
-            </span>
-            <span className="index-line__n">
-              {num} of {projectTotal}
-            </span>
             <span className="index-line__rule" aria-hidden="true" />
             <span className="hidden sm:inline">{p.badge}</span>
           </p>
@@ -108,7 +104,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
             </div>
             <div>
               <dt className="label label--dim">Disciplines</dt>
-              <dd className="mt-[var(--space-2)] text-[0.95rem]">{p.disciplines.join(' — ')}</dd>
+              <dd className="mt-[var(--space-2)] text-[0.95rem]">{p.disciplines.join(' / ')}</dd>
             </div>
             <div>
               <dt className="label label--dim">Status</dt>
@@ -166,7 +162,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
         </Reveal>
 
         <RevealGroup as="ol" className="mt-[var(--space-8)] flex flex-col">
-          {p.approach.map((a, i) => (
+          {p.approach.map((a) => (
             <RevealItem
               as="li"
               key={a.step}
@@ -174,8 +170,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
               style={{ borderColor: 'var(--line)' }}
             >
               <div className="col-span-12 md:col-span-3">
-                <p className="label label--accent">{String(i + 1).padStart(2, '0')}</p>
-                <p className="label mt-[var(--space-2)]" style={{ color: 'var(--text-primary)' }}>
+                <p className="label" style={{ color: 'var(--accent)' }}>
                   {a.step}
                 </p>
               </div>
@@ -299,14 +294,13 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
 
           <div className="col-span-12 lg:col-span-6 lg:col-start-7">
             <RevealGroup as="ul" className="flex flex-col">
-              {p.stack.map((t, i) => (
+              {p.stack.map((t) => (
                 <RevealItem
                   as="li"
                   key={t}
-                  className="flex items-baseline gap-[var(--space-5)] border-t py-[var(--space-4)]"
+                  className="border-t py-[var(--space-4)]"
                   style={{ borderColor: 'var(--line)' }}
                 >
-                  <span className="label label--dim shrink-0">{String(i + 1).padStart(2, '0')}</span>
                   <span className="display-md">{t}</span>
                 </RevealItem>
               ))}
@@ -322,14 +316,18 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
             </Reveal>
           </div>
           <RevealGroup as="ol" className="col-span-12 md:col-span-8 md:col-start-5 flex flex-col">
-            {p.outcome.map((r, i) => (
+            {p.outcome.map((r) => (
               <RevealItem
                 as="li"
                 key={r}
                 className="flex items-baseline gap-[var(--space-4)] border-t py-[var(--space-4)]"
                 style={{ borderColor: 'var(--line)' }}
               >
-                <span className="label label--accent shrink-0">{String(i + 1).padStart(2, '0')}</span>
+                <span
+                  aria-hidden="true"
+                  className="mt-[0.6em] block h-px w-[var(--space-6)] shrink-0"
+                  style={{ background: 'var(--accent)' }}
+                />
                 <p className="lead" style={{ maxWidth: '44ch' }}>
                   {r}
                 </p>
@@ -386,10 +384,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
                 />
               </div>
               {g.caption && (
-                <figcaption className="label label--dim mt-[var(--space-3)]">
-                  {String(i + 1).padStart(2, '0')} <span className="index-line__sep">/</span>{' '}
-                  {g.caption}
-                </figcaption>
+                <figcaption className="label label--dim mt-[var(--space-3)]">{g.caption}</figcaption>
               )}
             </figure>
           ))}
@@ -401,15 +396,11 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
             <div className="flex flex-wrap items-center gap-[var(--space-4)]">
               {p.live && (
                 <Magnetic>
-                  <a
-                    href={p.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn"
-                    data-cursor="open"
-                  >
-                    Visit live project <span aria-hidden="true">↗</span>
-                  </a>
+                  {/* abre o site aqui dentro, não numa aba nova: quem sai
+                      pra outra aba quase nunca volta pro estudo de caso */}
+                  <button type="button" onClick={() => setAoVivo(true)} className="btn" data-cursor="open">
+                    Visit live project
+                  </button>
                 </Magnetic>
               )}
               {p.github ? (
@@ -425,7 +416,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
                   </a>
                 </Magnetic>
               ) : (
-                <p className="body-sm">Repository is private — the code belongs to the client.</p>
+                <p className="body-sm">Repository is private. The code belongs to the client.</p>
               )}
             </div>
           </Reveal>
@@ -453,6 +444,15 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
           </div>
         </TransitionLink>
       </section>
+
+      {aoVivo && p.live && (
+        <LivePreview
+          url={p.live}
+          title={p.title}
+          embeddable={p.embeddable}
+          aoFechar={() => setAoVivo(false)}
+        />
+      )}
     </article>
   );
 }

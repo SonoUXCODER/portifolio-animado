@@ -48,7 +48,7 @@ export const interludes: Interlude[] = [
     slug: 'daphne',
     title: 'Daphne',
     caption:
-      'She turns into a tree mid-escape. Which is roughly what happens to an idea between the sketch and the deploy — it arrives on the other side as something else.',
+      'She turns into a tree mid-escape. Which is roughly what happens to an idea between the sketch and the deploy. It arrives on the other side as something else.',
     technique: 'Point-cloud scan · vertex colour · no texture',
     file: '/3d/daphne.glb',
     startAngle: 0.5,

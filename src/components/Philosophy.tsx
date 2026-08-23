@@ -49,7 +49,6 @@ export default function Philosophy() {
     >
       <motion.div className="shell" style={reduzido ? undefined : { y }}>
         <p className="index-line">
-          <span className="index-line__n">—</span>
           <span style={{ color: 'var(--text-primary)' }}>Philosophy</span>
           <span className="index-line__rule" aria-hidden="true" />
         </p>
@@ -70,7 +69,7 @@ export default function Philosophy() {
             <Reveal delay={0.1}>
               <p className="body">
                 The best digital experiences are not only beautiful. They are clear, useful, fast
-                and built to evolve — and by the time you notice the design, it should already feel
+                and built to evolve. By the time you notice the design, it should already feel
                 like the only way it could have been done.
               </p>
             </Reveal>

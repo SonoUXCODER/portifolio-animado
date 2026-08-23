@@ -94,7 +94,7 @@ export default function Capabilities() {
             <Reveal delay={0.1}>
               <p className="body">
                 Five things, and only five. A services page with eleven items does not say “I do
-                everything” — it says nobody decided what this is.
+                everything”. It says nobody decided what this is.
               </p>
             </Reveal>
           </div>
@@ -119,12 +119,14 @@ export default function Capabilities() {
                     className="group flex w-full items-baseline gap-[var(--space-4)] py-[var(--space-6)] text-left sm:gap-[var(--space-7)]"
                     data-cursor={estaAberto ? 'close' : 'open'}
                   >
+                    {/* o traço substituiu o número. Ele faz o mesmo trabalho
+                        de marcar onde a linha começa, e acende em acento no
+                        item ativo — sem dar à lista o ar de formulário. */}
                     <span
-                      className="label shrink-0 transition-colors duration-[var(--duration-normal)]"
-                      style={{ color: destacado ? 'var(--accent)' : 'var(--text-tertiary)' }}
-                    >
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
+                      aria-hidden="true"
+                      className="block h-px w-[var(--space-6)] shrink-0 translate-y-[-0.35em] transition-colors duration-[var(--duration-normal)]"
+                      style={{ background: destacado ? 'var(--accent)' : 'var(--line-strong)' }}
+                    />
 
                     <span
                       className="display-lg flex-1 transition-[color,opacity] duration-[var(--duration-normal)]"

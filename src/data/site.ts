@@ -28,8 +28,19 @@ export const site = {
   coordinates: '46.9480° N / 7.4474° E',
   timezone: 'Europe/Zurich',
 
-  /* estado de disponibilidade, no hero e no contato */
+  /* estado de disponibilidade, usado no contato e na navegação */
   availability: 'Available for selected projects',
+
+  /**
+   * Quantos produtos já foram entregues, ao todo.
+   *
+   * Não sai de `projects.length`, e é de propósito: o arquivo de projetos
+   * tem os cinco que valem um estudo de caso escrito, não tudo que já saiu
+   * daqui. Contar o array daria cinco e subestimaria o trabalho em quatro
+   * vezes. Este número é mantido à mão porque é a única coisa da página que
+   * o código não tem como saber.
+   */
+  shipped: 21,
 
   /* linha de crédito, no fim do rodapé */
   colophon: 'Set in Archivo and Instrument Sans. Hand-written in Next.js and TypeScript.',

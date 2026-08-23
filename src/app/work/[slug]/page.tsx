@@ -19,7 +19,7 @@ export async function generateMetadata({
   const p = getProject(slug);
   if (!p) return { title: 'Project not found' };
 
-  const titulo = `${p.title} — ${p.year}`;
+  const titulo = `${p.title} · ${p.year}`;
   return {
     title: titulo,
     description: p.summary,

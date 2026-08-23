@@ -57,7 +57,7 @@ export const capabilities: Capability[] = [
     id: 'design-systems',
     title: 'Design Systems',
     summary: 'Reusable components and consistent product ecosystems.',
-    text: 'Tokens, components, and the written rule for when to reach for each one. What makes it a system is the decisions already taken — the component library is just where they are stored. Built right, the second screen costs an afternoon and the tenth costs an hour.',
+    text: 'Tokens, components, and the written rule for when to reach for each one. What makes it a system is the decisions already taken, and the component library is just where they are stored. Built right, the second screen costs an afternoon and the tenth costs an hour.',
     deliverables: ['Token architecture', 'Component library', 'Usage documentation', 'Accessibility baseline'],
     visual: 'moire',
   },
@@ -65,7 +65,7 @@ export const capabilities: Capability[] = [
     id: 'ai',
     title: 'AI Engineering',
     summary: 'LLM features in production, and AI as part of how the work gets made.',
-    text: 'Two separate things, and I do both. Shipping features on top of language models — streaming responses, context that fits the budget, output you can actually trust in front of a paying customer. And using AI daily in my own workflow, on the parts of the job where it is genuinely faster: scaffolding, refactors, test coverage, second opinions at 2am. It writes drafts. The decisions are still mine, and so is every line that survives review.',
+    text: 'Two separate things, and I do both. Shipping features on top of language models: streaming responses, context that fits the budget, output you can actually trust in front of a paying customer. And using AI daily in my own workflow, on the parts of the job where it is genuinely faster: scaffolding, refactors, test coverage, second opinions at 2am. It writes drafts. The decisions are still mine, and so is every line that survives review.',
     deliverables: [
       'LLM API integration',
       'Prompt and context design',

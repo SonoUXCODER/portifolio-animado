@@ -33,11 +33,11 @@ export type Entry = {
 
 export const experience: Entry[] = [
   {
-    period: '2026 — Now',
+    period: '2026 / Now',
     title: 'Full-Stack Developer & Product Designer',
     org: 'Independent · Bern, Switzerland',
     summary:
-      'Designing and building digital products end to end, for clients across Switzerland and Brazil — and for myself.',
+      'Designing and building digital products end to end, for clients across Switzerland and Brazil, and for myself.',
     details: [
       'Working in three languages: German, English and Portuguese.',
       'Every project runs from research through design, build and deployment with one person accountable for all of it.',
@@ -53,7 +53,7 @@ export const experience: Entry[] = [
     summary:
       'Moved from frontend to an entire product: database, accounts, subscriptions, and the decision about what not to build.',
     details: [
-      'Theme engine built on CSS custom properties stored as database rows — new themes cost bytes, not bundle size.',
+      'Theme engine built on CSS custom properties stored as database rows, so new themes cost bytes, not bundle size.',
       'Stripe subscriptions with webhook reconciliation running in production.',
       'The hardest work was scope: three features were cut after being built.',
     ],
@@ -66,11 +66,11 @@ export const experience: Entry[] = [
     title: 'PHOBIACORI',
     org: 'Client · Independent artist',
     summary:
-      'The first store I built from nothing. The problem was never selling — it was making a small-run catalogue not look like factory stock.',
+      'The first store I built from nothing. The problem was never selling. It was making a small-run catalogue not look like factory stock.',
     details: [
       'Cart state lives entirely in the browser: no accounts, no database, no running cost.',
       'The product list is a typed data file the artist edits herself.',
-      'Static export on GitHub Pages — nothing to go down, nothing to renew.',
+      'Static export on GitHub Pages: nothing to go down, nothing to renew.',
     ],
     roles: ['Art direction', 'UI design', 'Frontend', 'Content architecture'],
     slug: 'phobiacori',
@@ -80,7 +80,7 @@ export const experience: Entry[] = [
     title: 'Truffle N.B. Tricolore',
     org: 'Client · Switzerland',
     summary:
-      'A seasonal product forced me to design for content that ages by itself — the catalogue had to go out of date without breaking.',
+      'A seasonal product forced me to design for content that ages by itself. The catalogue had to go out of date without breaking.',
     details: [
       'Availability drives the layout: what is out of season becomes information, not a dead end.',
       'React and Vite, first paint under one second on 4G.',
@@ -112,13 +112,13 @@ export const experience: Entry[] = [
     details: [
       'A year of incoming enquiries was clustered by need, and those clusters became the site architecture.',
       'The form composes a message already classified by practice area.',
-      'Eight indexed pages replaced a single one — the ranking followed the content, not the other way round.',
+      'Eight indexed pages replaced a single one, and the ranking followed the content, not the other way round.',
     ],
     roles: ['Research and content', 'UI design', 'Frontend', 'Technical SEO'],
     slug: 'thayse-marques',
   },
   {
-    period: '2021 — 2024',
+    period: '2021 / 2024',
     title: 'Learning both halves at once',
     org: 'Self-taught',
     summary:

@@ -1,61 +1,109 @@
 'use client';
 
+import { useRef, useState } from 'react';
 import Image from 'next/image';
-import { projects, projectTotal, type Project } from '@/data/projects';
+import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { projects, type Project } from '@/data/projects';
 import SectionIndex from './SectionIndex';
 import Statement from './Statement';
+import LivePreview from './LivePreview';
+import Magnetic from './Magnetic';
 import { TransitionLink } from './PageTransition';
-import { Lines, Parallax, Reveal } from './Reveal';
-import { useSectionSpy } from '@/hooks/useSectionSpy';
+import { Lines, Reveal } from './Reveal';
 import { cn } from '@/lib/utils';
 
 /* -------------------------------------------------------------------------
-   SELECTED WORK — a seção principal.
+   SELECTED WORK.
 
-   Cada projeto é um capítulo, não um cartão: ocupa quase uma tela, tem
-   número, ano, disciplina e uma nota escrita à mão sobre o que aconteceu
-   ali. A diferença entre "portfólio" e "catálogo" mora nessa nota.
+   Cada projeto é um capítulo, não um cartão: ocupa quase uma tela, e tem
+   uma nota escrita à mão sobre o que aconteceu ali. A diferença entre
+   "portfólio" e "catálogo" mora nessa nota.
 
-   O `layout` de cada projeto escolhe a composição, e é ele que impede a
-   seção de virar grade — nenhuma entrada tem a proporção da anterior:
+   >>> A COMPOSIÇÃO <<<
+   O `layout` de cada projeto escolhe a forma, e é ele que impede a seção de
+   virar grade. Nenhuma entrada tem a proporção da anterior:
 
      wide    chapa larga em 2:1, texto embaixo em coluna estreita
      offset  texto à esquerda, chapa menor deslocada à direita
      tall    print vertical comprido em coluna estreita, texto ao lado
      split   duas chapas montadas, uma mais alta que a outra
 
-   O número do capítulo é grande de propósito e vem antes de tudo: é ele que
-   diz "isto é um acervo, e isto é o item três dele". Sai da posição no
-   array — inserir um projeto no meio renumera o resto sozinho.
+   >>> O MOVIMENTO <<<
+   Cada capítulo entra em 3D: chega deitado 12° pra trás, endireita, e volta
+   a deitar ao sair de cena, encolhendo e escurecendo. É como uma folha
+   sendo virada sobre uma mesa, e resolve o problema de cinco blocos
+   entrarem todos com o mesmo fade.
 
-   O hover não é um efeito: é o quadro saindo da penumbra. Em repouso toda
-   chapa está em brightness 0.72; a que está sob o cursor volta pra 1 e
-   ganha 4% de escala. É a mesma gramática de uma sala com foco de luz, e é
-   o motivo de a listagem inteira funcionar sem uma única sombra ou borda
-   arredondada.
+   Três cuidados que fazem isso ser uma cena e não um efeito:
+   1. a perspectiva mora no contêiner da lista, e não em cada capítulo.
+      Uma perspectiva por elemento faz cada um ter o próprio ponto de fuga,
+      e o conjunto perde a sensação de espaço único;
+   2. a rotação é de 12°, no máximo. Acima disso o texto entra ilegível e a
+      pessoa espera a animação terminar pra começar a ler, que é o oposto
+      do que uma entrada deveria fazer;
+   3. o progresso passa por mola. Sem ela a rolagem picotada aparece como
+      tremor na borda da imagem.
+
+   >>> O QUE MUDOU DE PROPÓSITO <<<
+   Saiu a numeração (`01 / 05`) e o trilho de leitura com os cinco números.
+   Os dois orientavam, mas davam à seção o ar de formulário — e a posição na
+   página já diz onde a pessoa está.
+
+   Saiu também a regra antiga de não ter saída pro site do cliente. Agora
+   tem, mas sem tirar ninguém daqui: `<LivePreview/>` abre o site rodando
+   dentro do portfólio.
    ------------------------------------------------------------------------- */
-
-const numero = (i: number) => String(i + 1).padStart(2, '0');
 
 /* -------------------------------------------------------------------------
    As declarações que entram no meio da sequência.
 
    A chave é o índice do projeto *depois* do qual a frase aparece. Elas
    existem porque cinco capítulos seguidos, por melhor que cada um seja,
-   viram uma pilha — e a pilha é o que faz um portfólio parecer uma lista.
-   Uma frase em 8rem no vazio, no meio do caminho, é o respiro que separa
-   um ato do outro.
+   viram uma pilha. Uma frase em 8rem no vazio é o respiro que separa um ato
+   do outro.
 
    Duas, e só duas. Uma a cada dois projetos é ritmo; uma entre cada par é
-   um refrão, e refrão cansa antes do terceiro.
+   refrão, e refrão cansa antes do terceiro.
    ------------------------------------------------------------------------- */
 const declaracoes: Record<number, { lines: string[]; align: 'left' | 'right' }> = {
   1: { lines: ['Design with', 'intention.'], align: 'left' },
   3: { lines: ['Build with', 'precision.'], align: 'right' },
 };
 
+/* ---------- a folha 3D ----------
+   Envolve o capítulo inteiro e o inclina conforme ele atravessa a tela. */
+function Folha({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduzido = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
+  const suave = useSpring(scrollYProgress, { stiffness: 90, damping: 30, mass: 0.4 });
+
+  const rotateX = useTransform(suave, [0, 0.28, 0.72, 1], [12, 0, 0, -7]);
+  const scale = useTransform(suave, [0, 0.28, 0.72, 1], [0.9, 1, 1, 0.93]);
+  const opacity = useTransform(suave, [0, 0.2, 0.8, 1], [0.25, 1, 1, 0.3]);
+
+  if (reduzido) return <div ref={ref}>{children}</div>;
+
+  return (
+    <div ref={ref}>
+      <motion.div
+        style={{
+          rotateX,
+          scale,
+          opacity,
+          transformStyle: 'preserve-3d',
+          willChange: 'transform, opacity',
+        }}
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
 /* ---------- a ficha ---------- */
-function Ficha({ project, index }: { project: Project; index: number }) {
+function Ficha({ project, aoVer }: { project: Project; aoVer: () => void }) {
   return (
     <>
       <h3 className="display-lg">
@@ -69,14 +117,14 @@ function Ficha({ project, index }: { project: Project; index: number }) {
         </TransitionLink>
       </h3>
 
-      {/* disciplina — `UX/UI — FRONTEND — FULL-STACK` */}
+      {/* disciplina */}
       <p className="label mt-[var(--space-4)] flex flex-wrap items-center gap-x-[var(--space-3)] gap-y-[var(--space-1)]">
         {project.disciplines.map((d, i) => (
           <span key={d} className="flex items-center gap-[var(--space-3)]">
             {d}
             {i < project.disciplines.length - 1 && (
               <span className="index-line__sep" aria-hidden="true">
-                —
+                /
               </span>
             )}
           </span>
@@ -85,8 +133,8 @@ function Ficha({ project, index }: { project: Project; index: number }) {
 
       <p className="body mt-[var(--space-5)] max-w-[44ch]">{project.summary}</p>
 
-      {/* a nota: a única coisa da entrada que não é dado. Fica recuada e com
-          o traço na frente, pra parecer escrita depois, na margem. */}
+      {/* a nota: a única coisa da entrada que não é dado. Recuada e com o
+          traço na frente, pra parecer escrita depois, na margem. */}
       <p className="body-sm mt-[var(--space-4)] flex max-w-[46ch] gap-[var(--space-3)] italic">
         <span aria-hidden="true" style={{ color: 'var(--accent)' }}>
           ↳
@@ -109,67 +157,87 @@ function Ficha({ project, index }: { project: Project; index: number }) {
           </dd>
         </div>
         <div>
-          <dt className="label label--dim">Type</dt>
+          <dt className="label label--dim">Year</dt>
           <dd className="body-sm mt-[var(--space-2)]" style={{ color: 'var(--text-primary)' }}>
-            {project.badge}
+            {project.year} <span className="index-line__sep">/</span> {project.badge}
           </dd>
         </div>
       </dl>
 
-      <p className="mt-[var(--space-7)]">
-        <TransitionLink
-          href={`/work/${project.slug}`}
-          className="btn btn--ghost"
-          cursor="case"
-          aria-label={`Read the ${project.title} case study`}
-        >
-          View case study <span aria-hidden="true">↗</span>
-        </TransitionLink>
-      </p>
-
-      <span className="sr-only">Project {numero(index)}</span>
+      <div className="mt-[var(--space-7)] flex flex-wrap items-center gap-[var(--space-4)]">
+        {project.live && (
+          <Magnetic>
+            <button type="button" onClick={aoVer} className="btn" data-cursor="open">
+              See it live
+            </button>
+          </Magnetic>
+        )}
+        <Magnetic>
+          <TransitionLink
+            href={`/work/${project.slug}`}
+            className="btn btn--ghost"
+            cursor="case"
+            aria-label={`Read the ${project.title} case study`}
+          >
+            Case study <span aria-hidden="true">↗</span>
+          </TransitionLink>
+        </Magnetic>
+      </div>
     </>
   );
 }
 
-/* ---------- a chapa, sempre com parallax curto ---------- */
+/* ---------- a chapa ----------
+   O quadro inteiro é um link pro estudo de caso. Antes só o título e o
+   botão levavam pra lá, e a imagem — que é a coisa grande e óbvia de
+   clicar — não fazia nada. Todo mundo clica na imagem primeiro. */
 function Chapa({
-  src,
-  alt,
-  width,
-  height,
+  project,
+  media,
   ratio,
-  strength = 34,
   priority = false,
   sizes,
 }: {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
+  project: Project;
+  media: { src: string; alt: string; width: number; height: number };
   ratio: string;
-  strength?: number;
   priority?: boolean;
   sizes: string;
 }) {
   return (
-    <Parallax strength={strength}>
-      <figure className={cn('media media--dim w-full', ratio)} data-cursor="case">
+    <TransitionLink
+      href={`/work/${project.slug}`}
+      className="block"
+      cursor="case"
+      tabIndex={-1}
+      /* -1 porque o título logo ao lado já leva ao mesmo lugar: dois paradas
+         de teclado pro mesmo destino é ruído pra quem navega por Tab */
+      aria-hidden="true"
+    >
+      <figure className={cn('media media--dim w-full', ratio)}>
         <Image
-          src={src}
-          alt={alt}
-          width={width}
-          height={height}
+          src={media.src}
+          alt={media.alt}
+          width={media.width}
+          height={media.height}
           sizes={sizes}
           priority={priority}
           className="h-full w-full"
         />
       </figure>
-    </Parallax>
+    </TransitionLink>
   );
 }
 
-function Capitulo({ project, index }: { project: Project; index: number }) {
+function Capitulo({
+  project,
+  index,
+  aoVer,
+}: {
+  project: Project;
+  index: number;
+  aoVer: () => void;
+}) {
   const primeira = index === 0;
   const capa = project.cover;
   const segunda = project.gallery[0];
@@ -179,17 +247,15 @@ function Capitulo({ project, index }: { project: Project; index: number }) {
       <div className="grid-12 gap-y-[var(--space-7)]">
         <div className="col-span-12">
           <Chapa
-            src={capa.src}
-            alt={capa.alt}
-            width={capa.width}
-            height={capa.height}
+            project={project}
+            media={capa}
             ratio="aspect-[16/10] sm:aspect-[2/1]"
             priority={primeira}
             sizes="(max-width: 1024px) 92vw, 88vw"
           />
         </div>
         <div className="col-span-12 md:col-span-7">
-          <Ficha project={project} index={index} />
+          <Ficha project={project} aoVer={aoVer} />
         </div>
       </div>
     ),
@@ -197,14 +263,12 @@ function Capitulo({ project, index }: { project: Project; index: number }) {
     offset: (
       <div className="grid-12 items-center gap-y-[var(--space-7)]">
         <div className="col-span-12 md:col-span-5">
-          <Ficha project={project} index={index} />
+          <Ficha project={project} aoVer={aoVer} />
         </div>
         <div className="col-span-12 md:col-span-6 md:col-start-7">
           <Chapa
-            src={capa.src}
-            alt={capa.alt}
-            width={capa.width}
-            height={capa.height}
+            project={project}
+            media={capa}
             ratio="aspect-[4/3]"
             sizes="(max-width: 768px) 92vw, 46vw"
           />
@@ -216,17 +280,14 @@ function Capitulo({ project, index }: { project: Project; index: number }) {
       <div className="grid-12 items-center gap-y-[var(--space-7)]">
         <div className="col-span-12 sm:col-span-6 md:col-span-4">
           <Chapa
-            src={capa.src}
-            alt={capa.alt}
-            width={capa.width}
-            height={capa.height}
+            project={project}
+            media={capa}
             ratio="aspect-[3/4] md:aspect-[9/16]"
-            strength={46}
             sizes="(max-width: 768px) 65vw, 30vw"
           />
         </div>
         <div className="col-span-12 md:col-span-7 md:col-start-6">
-          <Ficha project={project} index={index} />
+          <Ficha project={project} aoVer={aoVer} />
         </div>
       </div>
     ),
@@ -235,10 +296,8 @@ function Capitulo({ project, index }: { project: Project; index: number }) {
       <div className="grid-12 gap-y-[var(--space-7)]">
         <div className="col-span-12 sm:col-span-7">
           <Chapa
-            src={capa.src}
-            alt={capa.alt}
-            width={capa.width}
-            height={capa.height}
+            project={project}
+            media={capa}
             ratio="aspect-[4/3]"
             sizes="(max-width: 640px) 92vw, 52vw"
           />
@@ -246,46 +305,31 @@ function Capitulo({ project, index }: { project: Project; index: number }) {
         {segunda && (
           <div className="col-span-12 sm:col-span-4 sm:col-start-9 sm:self-end">
             <Chapa
-              src={segunda.src}
-              alt={segunda.alt}
-              width={segunda.width}
-              height={segunda.height}
+              project={project}
+              media={segunda}
               ratio="aspect-[3/4]"
-              strength={54}
               sizes="(max-width: 640px) 92vw, 28vw"
             />
           </div>
         )}
         <div className="col-span-12 md:col-span-7">
-          <Ficha project={project} index={index} />
+          <Ficha project={project} aoVer={aoVer} />
         </div>
       </div>
     ),
   }[project.layout];
 
   return (
-    <article
-      id={`work-${project.slug}`}
-      aria-label={project.title}
-      className="group scroll-mt-[var(--header-h)]"
-    >
-      {/* ---- cabeçalho do capítulo ----
-           Número, ano e tipo numa régua só, encostada no filete que separa
-           um capítulo do outro. É a linha que dá o ar de ficha de acervo. */}
+    <article id={`work-${project.slug}`} aria-label={project.title} className="group scroll-mt-[var(--header-h)]">
+      {/* ---- régua do capítulo ---- */}
       <div
         className="mb-[var(--space-7)] flex flex-wrap items-baseline justify-between gap-[var(--space-4)] border-t pt-[var(--space-4)]"
         style={{ borderColor: 'var(--line)' }}
       >
-        <p className="index-line">
-          <span className="index-line__n">{numero(index)}</span>
-          <span className="index-line__sep" aria-hidden="true">
-            /
-          </span>
-          <span>{projectTotal}</span>
+        <p className="label" style={{ color: 'var(--text-primary)' }}>
+          {project.kind}
         </p>
-        <p className="label label--dim">
-          {project.kind} <span className="index-line__sep">·</span> {project.year}
-        </p>
+        <p className="label label--dim">{project.year}</p>
       </div>
 
       <Reveal direction="none">{composicao}</Reveal>
@@ -294,9 +338,8 @@ function Capitulo({ project, index }: { project: Project; index: number }) {
 }
 
 export default function Work() {
-  const ids = projects.map((p) => `work-${p.slug}`);
-  const ativo = useSectionSpy(ids);
-  const indiceAtivo = Math.max(0, ids.indexOf(ativo));
+  /* qual projeto está aberto no visualizador; null = nenhum */
+  const [aoVivo, setAoVivo] = useState<Project | null>(null);
 
   return (
     <section
@@ -318,47 +361,38 @@ export default function Work() {
           <Reveal delay={0.1}>
             <p className="body">
               Five products, each one carried from the first conversation to the day someone who is
-              not me opened it. Every case study states the problem that existed before, the
-              decision I took, and what is still standing.
+              not me opened it. Every one of them can be opened right here, running, without
+              leaving this page.
             </p>
           </Reveal>
         </div>
       </div>
 
-      <div className="relative mt-[var(--space-10)]">
-        {/* ---- trilho de leitura ----
-             Marca em qual capítulo o olho está. Decorativo no sentido
-             estrito — o número já está escrito em cada régua — então sai da
-             árvore de acessibilidade e some no estreito. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -left-[var(--space-7)] top-0 hidden h-full w-[var(--space-5)] xl:block"
-        >
-          <ul className="sticky top-[calc(var(--header-h)+var(--space-7))] flex flex-col gap-[var(--space-3)]">
-            {projects.map((p, i) => (
-              <li
-                key={p.slug}
-                className="label transition-colors duration-[var(--duration-normal)]"
-                style={{ color: i === indiceAtivo ? 'var(--accent)' : 'var(--text-tertiary)' }}
-              >
-                {numero(i)}
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div className="flex flex-col gap-[var(--space-10)]">
-          {projects.map((p, i) => {
-            const declaracao = declaracoes[i];
-            return (
-              <div key={p.slug} className="flex flex-col gap-[var(--space-10)]">
-                <Capitulo project={p} index={i} />
-                {declaracao && <Statement lines={declaracao.lines} align={declaracao.align} />}
-              </div>
-            );
-          })}
-        </div>
+      {/* A perspectiva mora aqui, uma vez só, e vale pra todos os capítulos:
+          é o que faz eles parecerem folhas na mesma mesa em vez de cinco
+          animações independentes que por acaso são parecidas. */}
+      <div className="mt-[var(--space-10)] flex flex-col gap-[var(--space-10)]" style={{ perspective: 1600 }}>
+        {projects.map((p, i) => {
+          const declaracao = declaracoes[i];
+          return (
+            <div key={p.slug} className="flex flex-col gap-[var(--space-10)]">
+              <Folha>
+                <Capitulo project={p} index={i} aoVer={() => setAoVivo(p)} />
+              </Folha>
+              {declaracao && <Statement lines={declaracao.lines} align={declaracao.align} />}
+            </div>
+          );
+        })}
       </div>
+
+      {aoVivo?.live && (
+        <LivePreview
+          url={aoVivo.live}
+          title={aoVivo.title}
+          embeddable={aoVivo.embeddable}
+          aoFechar={() => setAoVivo(null)}
+        />
+      )}
     </section>
   );
 }

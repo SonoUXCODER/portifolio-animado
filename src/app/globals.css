@@ -548,26 +548,6 @@
     transform: scale(1.04);
   }
 
-  /* =======================================================================
-     GRADE TÉCNICA — o fundo do hero
-
-     Duas linhas de 1px repetidas, com máscara radial pra sumir nas bordas.
-     Custa um gradiente e nenhum elemento; a alternativa (canvas, ou 200
-     divs) custaria as duas coisas.
-     ======================================================================= */
-
-  .blueprint {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image: linear-gradient(to right, var(--line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
-    background-size: clamp(48px, 7vw, 96px) clamp(48px, 7vw, 96px);
-    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 45%, #000 20%, transparent 78%);
-    mask-image: radial-gradient(ellipse 90% 70% at 50% 45%, #000 20%, transparent 78%);
-    opacity: 0.75;
-  }
-
   /* grão de filme. Um SVG de turbulência em data-uri, fixo na viewport, em
      opacidade baixíssima — é o que tira o aspecto de "preto chapado do
      navegador" e dá textura de sala escura. */

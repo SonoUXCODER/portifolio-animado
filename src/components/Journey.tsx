@@ -115,11 +115,13 @@ function Entrada({ entry, index }: { entry: Entry; index: number }) {
                 className="overflow-hidden"
               >
                 <ul className="mt-[var(--space-5)] flex flex-col gap-[var(--space-3)] pb-[var(--space-2)]">
-                  {entry.details.map((d, i) => (
+                  {entry.details.map((d) => (
                     <li key={d} className="flex gap-[var(--space-4)]">
-                      <span className="label label--accent shrink-0 pt-[3px]">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
+                      <span
+                        aria-hidden="true"
+                        className="mt-[0.7em] block h-px w-[var(--space-5)] shrink-0"
+                        style={{ background: 'var(--accent)' }}
+                      />
                       <p className="body max-w-[54ch]">{d}</p>
                     </li>
                   ))}

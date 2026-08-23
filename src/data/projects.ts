@@ -65,6 +65,19 @@ export type Project = {
   gallery: Media[];
   /** o endereço no ar, quando existe */
   live: string | null;
+  /**
+   * Se o site aceita ser aberto dentro do portfólio, num iframe.
+   *
+   * Não é preferência: é o que o servidor daquele domínio responde. Um
+   * `X-Frame-Options` ou um `frame-ancestors` no CSP faz o navegador
+   * recusar o documento, e não existe jeito de descobrir isso pelo JS —
+   * o evento `load` dispara igual. Então o valor é conferido na mão:
+   *
+   *     curl -sSI <url> | grep -i "x-frame-options|content-security"
+   *
+   * Com `false`, o visualizador mostra o motivo em vez de um quadro branco.
+   */
+  embeddable: boolean;
   github: string | null;
   /** carimbo curto: client work, own product */
   badge: string;
@@ -122,6 +135,7 @@ export const projects: Project[] = [
       },
     ],
     live: 'https://sonouxcoder.github.io/phobiacore/',
+    embeddable: true,
     github: null,
     challenge:
       'Selling art in small runs has nothing to do with running a generic shop. The catalogue changes every week, half the pieces are one of a kind, and a marketplace layout made her work look like factory stock. On top of that: no budget for a backend, and no appetite for a platform that takes a cut of every sale.',
@@ -129,12 +143,12 @@ export const projects: Project[] = [
       {
         step: 'Research',
         title: 'Reading two years of direct messages',
-        text: 'Before any interface, I read how she was already selling. Buyers never asked for a size chart — they asked whether the piece was still available and how it would be packed. That single finding decided the whole information hierarchy.',
+        text: 'Before any interface, I read how she was already selling. Buyers never asked for a size chart. They asked whether the piece was still available and how it would be packed. That single finding decided the whole information hierarchy.',
       },
       {
         step: 'UX Strategy',
         title: 'A catalogue, not a shop window',
-        text: 'Each piece became a record card: the drawing large, the text next to it, availability stated in plain language. Buying is three taps and never asks who you are — the cart lives in local storage and the order leaves as a written message.',
+        text: 'Each piece became a record card: the drawing large, the text next to it, availability stated in plain language. Buying is three taps and never asks who you are: the cart lives in local storage and the order leaves as a written message.',
       },
       {
         step: 'Wireframes',
@@ -144,7 +158,7 @@ export const projects: Project[] = [
       {
         step: 'UI Design',
         title: 'Photocopy, tape, ink',
-        text: 'The interface borrows the material language of the work itself — paper white, ink black, one red for alerts. Nothing is centred, nothing is rounded, and every image sits slightly off the grid on purpose.',
+        text: 'The interface borrows the material language of the work itself: paper white, ink black, one red for alerts. Nothing is centred, nothing is rounded, and every image sits slightly off the grid on purpose.',
       },
       {
         step: 'Development',
@@ -166,8 +180,8 @@ export const projects: Project[] = [
         { role: 'Text', family: 'Inter', note: 'Descriptions and shipping copy' },
       ],
       components: ['Piece card', 'Cart drawer', 'Availability tag', 'Taped figure', 'Order composer'],
-      grid: '12 columns, 24px gutter, 1180px max — pieces break the grid by design',
-      spacing: '4 / 8 / 16 / 32 / 64 — one scale, no loose values',
+      grid: '12 columns, 24px gutter, 1180px max. Pieces break the grid by design',
+      spacing: '4 / 8 / 16 / 32 / 64. One scale, no loose values',
     },
     outcome: [
       'She updates the catalogue without calling me',
@@ -184,7 +198,7 @@ export const projects: Project[] = [
     badge: 'Own product',
     summary: 'My product: a link-in-bio where the page actually belongs to the person.',
     intro:
-      'I started it because every link-in-bio tool looked like the same page wearing a different colour. Here the person picks the palette, the background, the music and the layout — and the result still reads as theirs, not as the template’s.',
+      'I started it because every link-in-bio tool looked like the same page wearing a different colour. Here the person picks the palette, the background, the music and the layout, and the result still reads as theirs, not as the template’s.',
     note: 'the hard part was never building. it was deciding what not to build.',
     disciplines: ['PRODUCT', 'UX/UI', 'FULL-STACK'],
     role: ['Product', 'UI design', 'Frontend', 'Backend', 'Database', 'Subscriptions'],
@@ -213,6 +227,8 @@ export const projects: Project[] = [
       },
     ],
     live: 'https://knifes.me/',
+    /* CSP com frame-ancestors 'none' — é produto com conta e pagamento */
+    embeddable: false,
     github: 'https://github.com/SonoUXCODER',
     challenge:
       'Real customisation is expensive in performance: every new theme becomes more CSS shipped to someone who only wanted to tap a link. The product had to let people change almost everything without making the public page slower for the visitor who changes nothing.',
@@ -230,7 +246,7 @@ export const projects: Project[] = [
       {
         step: 'Wireframes',
         title: 'Preview beside the control, always',
-        text: 'Every control sits next to the thing it changes, and the preview is the real page — not an approximation of it. Nothing to publish, nothing to confirm: the save is the deploy.',
+        text: 'Every control sits next to the thing it changes, and the preview is the real page, not an approximation of it. Nothing to publish, nothing to confirm: the save is the deploy.',
       },
       {
         step: 'UI Design',
@@ -240,7 +256,7 @@ export const projects: Project[] = [
       {
         step: 'Development',
         title: 'The theme is data, not code',
-        text: 'A theme is a handful of CSS custom properties stored as a row. The public profile renders on the server with those values already inlined — so a new theme costs bytes in a database, not kilobytes in a bundle.',
+        text: 'A theme is a handful of CSS custom properties stored as a row. The public profile renders on the server with those values already inlined, so a new theme costs bytes in a database, not kilobytes in a bundle.',
       },
     ],
     system: {
@@ -265,7 +281,7 @@ export const projects: Project[] = [
         'Analytics tile',
       ],
       grid: '12 columns on the dashboard, single 520px column on the public profile',
-      spacing: '4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 — driven by design tokens',
+      spacing: '4 / 8 / 12 / 16 / 24 / 32 / 48 / 64. Driven by design tokens',
     },
     outcome: [
       'Public profile live at knifes.me/name',
@@ -311,6 +327,7 @@ export const projects: Project[] = [
       },
     ],
     live: 'https://sandrahairsalon.ch/',
+    embeddable: true,
     github: null,
     challenge:
       'The neighbourhood is trilingual. Translating afterwards, as a layer on top, always breaks something: a price renders wrong, a button overflows, someone lands on half a page in German. And the salon needed to change its own prices without opening a code editor.',
@@ -328,7 +345,7 @@ export const projects: Project[] = [
       {
         step: 'Wireframes',
         title: 'The price table is the page',
-        text: 'Everything else supports it. Service, duration, price in CHF, and a booking button attached to each row — because the question a salon site has to answer is always “how much, how long”.',
+        text: 'Everything else supports it. Service, duration, price in CHF, and a booking button attached to each row, because the question a salon site has to answer is always “how much, how long”.',
       },
       {
         step: 'UI Design',
@@ -355,8 +372,8 @@ export const projects: Project[] = [
         { role: 'Technical', family: 'Tabular sans', note: 'CHF prices and durations, aligned' },
       ],
       components: ['Language switch', 'Service row', 'Price tag', 'Booking composer', 'Opening-hours block'],
-      grid: '12 columns, 20px gutter, 1140px max — single column below 720px',
-      spacing: '8 / 16 / 24 / 40 / 64 — larger steps than usual, for thumb reach',
+      grid: '12 columns, 20px gutter, 1140px max. Single column below 720px',
+      spacing: '8 / 16 / 24 / 40 / 64. Larger steps than usual, for thumb reach',
     },
     outcome: [
       'Three languages without three pages',
@@ -402,9 +419,10 @@ export const projects: Project[] = [
       },
     ],
     live: 'https://drathaysemarques.adv.br/',
+    embeddable: true,
     github: null,
     challenge:
-      'Everything arrived through one channel with no context. The lawyer spent the first half hour of every conversation working out what the case was even about — and a good share of those cases were not hers to take.',
+      'Everything arrived through one channel with no context. The lawyer spent the first half hour of every conversation working out what the case was even about, and a good share of those cases were not hers to take.',
     approach: [
       {
         step: 'Research',
@@ -464,7 +482,7 @@ export const projects: Project[] = [
     badge: 'Client work',
     summary: 'A catalogue of fresh Italian truffle, delivered across Switzerland.',
     intro:
-      'Fresh truffle lasts days, not months. The site had to say what exists today and how long it takes to arrive — and nothing beyond that, because everything beyond that goes out of date faster than anyone can edit it.',
+      'Fresh truffle lasts days, not months. The site had to say what exists today and how long it takes to arrive, and nothing beyond that, because everything beyond that goes out of date faster than anyone can edit it.',
     note: 'designing for content that ages by itself changed how I think about shelf life.',
     disciplines: ['UX/UI', 'FRONTEND'],
     role: ['UI design', 'Frontend in React', 'Content integration', 'Deployment'],
@@ -493,9 +511,10 @@ export const projects: Project[] = [
       },
     ],
     live: 'https://kyso1.github.io/fg-systems/',
+    embeddable: true,
     github: 'https://github.com/kyso1/fg-systems',
     challenge:
-      'Seasonal produce ages on screen. A static page still advertising a truffle that ran out three weeks ago is worse than having no page at all — it costs trust, and trust is the entire product when someone is spending CHF 200 on something they cannot see.',
+      'Seasonal produce ages on screen. A static page still advertising a truffle that ran out three weeks ago is worse than having no page at all. It costs trust, and trust is the entire product when someone is spending CHF 200 on something they cannot see.',
     approach: [
       {
         step: 'Research',
@@ -505,7 +524,7 @@ export const projects: Project[] = [
       {
         step: 'UX Strategy',
         title: 'Availability is the top-level filter',
-        text: 'The page opens on what is in season right now. Everything else is one scroll below, marked with the month it returns — out of stock becomes information rather than a dead end.',
+        text: 'The page opens on what is in season right now. Everything else is one scroll below, marked with the month it returns. Out of stock becomes information rather than a dead end.',
       },
       {
         step: 'Wireframes',
@@ -520,7 +539,7 @@ export const projects: Project[] = [
       {
         step: 'Development',
         title: 'The catalogue reads a data file',
-        text: 'React and Vite, with the product list in a typed file the client edits. Anything out of season drops off the list and the delivery copy changes with it — the site expires correctly, on its own.',
+        text: 'React and Vite, with the product list in a typed file the client edits. Anything out of season drops off the list and the delivery copy changes with it. The site expires correctly, on its own.',
       },
     ],
     system: {
@@ -538,7 +557,7 @@ export const projects: Project[] = [
       ],
       components: ['Product card', 'Season badge', 'Delivery estimator', 'Origin note', 'Order composer'],
       grid: '12 columns, 32px gutter, 1240px max',
-      spacing: '8 / 16 / 32 / 64 / 96 — generous, because the photography carries it',
+      spacing: '8 / 16 / 32 / 64 / 96. Generous, because the photography carries it',
     },
     outcome: [
       'A catalogue that expires correctly, on its own',

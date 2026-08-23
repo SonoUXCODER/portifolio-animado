@@ -58,7 +58,7 @@ const descricao =
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — ${site.role}`,
+    default: `${site.name} · ${site.role}`,
     template: `%s · ${site.name}`,
   },
   description: descricao,
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     locale: 'en',
     url: site.url,
     siteName: site.handle,
-    title: `${site.name} — ${site.role}`,
+    title: `${site.name} · ${site.role}`,
     description: site.tagline,
     images: [
       { url: abs('/assets/og.png'), width: 1200, height: 630, alt: `Portfolio of ${site.name}` },
@@ -91,7 +91,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${site.name} — ${site.role}`,
+    title: `${site.name} · ${site.role}`,
     description: site.tagline,
     images: [abs('/assets/og.png')],
   },

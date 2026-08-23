@@ -36,7 +36,7 @@ export const layers: Layer[] = [
     tools: [
       { label: 'React', note: 'the base of everything I have built since 2022', since: '2022', primary: true },
       { label: 'Next.js', note: 'routing, server rendering, and the build behind this site', since: '2023', primary: true },
-      { label: 'TypeScript', note: 'contract before execution — it is what lets me sleep', since: '2023', primary: true },
+      { label: 'TypeScript', note: 'contract before execution, which is what lets me sleep', since: '2023', primary: true },
       { label: 'JavaScript', note: 'the parts that predate the framework, and still ship', since: '2021' },
       { label: 'Tailwind CSS', note: 'speed without the mess, with design tokens on top', since: '2023' },
       { label: 'CSS', note: 'grid, type and motion by hand when it matters', since: '2021', primary: true },
@@ -60,7 +60,7 @@ export const layers: Layer[] = [
     title: 'Design',
     summary: 'Where the decision gets made while it is still cheap to change.',
     tools: [
-      { label: 'Figma', note: 'I think before I code — being wrong here costs nothing', since: '2021', primary: true },
+      { label: 'Figma', note: 'I think before I code, because being wrong here costs nothing', since: '2021', primary: true },
       { label: 'UX Research', note: 'reading what people already do before drawing what they should', since: '2022' },
       { label: 'Prototyping', note: 'ugly and fast, because an honest prototype is an ugly one', since: '2022' },
       { label: 'Design Systems', note: 'tokens, components and the rule for when to use each', since: '2023', primary: true },
@@ -78,7 +78,7 @@ export const layers: Layer[] = [
       { label: 'Prompt design', note: 'context budgets, structured output, failure modes written down', since: '2025', primary: true },
       { label: 'Streaming UI', note: 'token-by-token responses that stay readable while they arrive', since: '2025' },
       { label: 'Evaluations', note: 'a test suite for output, because "it looked fine" is not a check', since: '2026' },
-      { label: 'AI-assisted build', note: 'scaffolding, refactors and coverage — the drafts, never the decisions', since: '2024' },
+      { label: 'AI-assisted build', note: 'scaffolding, refactors and coverage: the drafts, never the decisions', since: '2024' },
     ],
   },
   {
