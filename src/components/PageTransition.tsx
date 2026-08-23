@@ -4,7 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { site } from '@/data/site';
+import { identity } from '@/content';
 
 /* -------------------------------------------------------------------------
    TRANSIÇÃO ENTRE PÁGINAS.
@@ -108,7 +108,7 @@ export function ProvedorDeTransicao({ children }: { children: ReactNode }) {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.14, duration: 0.2 }}
             >
-              {site.wordmark}
+              {identity.wordmark}
             </motion.span>
             <motion.span
               className="label label--dim"

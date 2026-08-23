@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import type { VisualKind } from '@/data/capabilities';
+import type { VisualKind } from '@/content';
 
 /* -------------------------------------------------------------------------
    OS VISUAIS DAS CAPACIDADES.

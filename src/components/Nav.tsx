@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import { usePathname } from 'next/navigation';
-import { sections, spyIds } from '@/data/sections';
-import { site } from '@/data/site';
+import { identity, spyIds } from '@/content';
+import { useConteudo } from './ContentProvider';
+import LanguageSwitcher from './LanguageSwitcher';
 import { useSectionSpy } from '@/hooks/useSectionSpy';
 import { TransitionLink } from './PageTransition';
 import MobileMenu from './MobileMenu';
@@ -24,11 +25,15 @@ import { cn } from '@/lib/utils';
    ------------------------------------------------------------------------- */
 
 export default function Nav() {
+  const { t, sections, lang } = useConteudo();
   const { scrollY } = useScroll();
   const [ancorada, setAncorada] = useState(false);
   const [aberto, setAberto] = useState(false);
   const pathname = usePathname();
-  const naHome = pathname === '/';
+  /* `trailingSlash: true` faz o roteador devolver "/de/", com barra no fim.
+     Comparar com "/de" cru dava falso em toda página, e a navegação de
+     capítulos simplesmente não aparecia na home. */
+  const naHome = (pathname ?? '').replace(/\/$/, '') === `/${lang}`;
 
   /* o espião só roda na home: fora dela não existem seções pra observar */
   const ativa = useSectionSpy(naHome ? spyIds : []);
@@ -43,7 +48,7 @@ export default function Nav() {
         href="#content"
         className="btn sr-only fixed left-[var(--space-4)] top-[var(--space-4)] z-[95] focus:not-sr-only focus:inline-flex"
       >
-        Skip to content
+        {t.ui.skipToContent}
       </a>
 
       {/* com o menu aberto a faixa sobe acima do painel: o header cria
@@ -58,21 +63,25 @@ export default function Nav() {
         >
           <div className="shell flex h-[var(--header-h)] items-center justify-between gap-[var(--space-5)]">
             {/* ---- assinatura ---- */}
-            <TransitionLink href="/" className="hit group flex items-baseline gap-[var(--space-3)]" cursor="home">
+            <TransitionLink
+              href={`/${lang}`}
+              className="hit group flex items-baseline gap-[var(--space-3)]"
+              cursor="home"
+            >
               <span
                 className="text-[1rem] font-semibold tracking-[-0.02em]"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
-                {site.wordmark}
+                {identity.wordmark}
               </span>
               <span className="label label--dim hidden sm:inline">
-                {naHome ? 'Full-stack · UX·UI' : 'Case study'}
+                {naHome ? t.ui.roleLabel : t.ui.caseStudyLabel}
               </span>
             </TransitionLink>
 
             {/* ---- capítulos — só desktop ---- */}
             {naHome && (
-              <nav aria-label="Sections" className="hidden lg:block">
+              <nav aria-label={t.ui.sections} className="hidden lg:block">
                 <ul className="flex items-center gap-[var(--space-1)]">
                   {sections.map((s) => {
                     const atual = ativa === s.id;
@@ -102,7 +111,9 @@ export default function Nav() {
               </nav>
             )}
 
-            <div className="flex items-center gap-[var(--space-5)]">
+            <div className="flex items-center gap-[var(--space-4)]">
+              <LanguageSwitcher className="hidden sm:flex" />
+
               {/* ---- estado ao vivo ----
                    O único elemento da faixa que não é navegação. Ele está
                    aqui porque é a informação que decide se a pessoa vai até
@@ -113,7 +124,7 @@ export default function Nav() {
                   className="block h-[6px] w-[6px] rounded-full"
                   style={{ background: 'var(--accent)' }}
                 />
-                Available
+                {t.ui.available}
               </span>
 
               <button
@@ -124,7 +135,7 @@ export default function Nav() {
                 className="label relative z-[85] -mr-[var(--space-2)] flex min-h-[44px] min-w-[44px] items-center justify-end gap-[var(--space-3)] lg:hidden"
                 style={{ color: 'var(--text-primary)' }}
               >
-                {aberto ? 'Close' : 'Menu'}
+                {aberto ? t.ui.close : t.ui.menu}
                 <span aria-hidden="true" className="flex w-4 flex-col gap-[4px]">
                   <span
                     className={cn(

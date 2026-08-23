@@ -1,9 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { currentYear, site } from '@/data/site';
-import { stack } from '@/data/stack';
-import { startYear } from '@/data/experience';
+import { identity } from '@/content';
+import { useConteudo } from './ContentProvider';
 import SectionIndex from './SectionIndex';
 import TiltCard from './TiltCard';
 import { Counter, Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Reveal';
@@ -26,7 +25,7 @@ import { Counter, Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Rev
    de fechar, que é "como é trabalhar com você".
    ------------------------------------------------------------------------- */
 
-const cadeia = [
+const cadeiaLegado = [
   { step: 'Design', note: 'Research, flows, interface. Decided while it is still cheap to change.' },
   { step: 'System', note: 'Tokens and components, so the second screen costs a fraction of the first.' },
   { step: 'Build', note: 'Written by hand. No builder, no theme, no handoff between two people.' },
@@ -34,13 +33,15 @@ const cadeia = [
 ];
 
 export default function Manifesto() {
-  const anos = currentYear() - startYear;
+  const { t, tools } = useConteudo();
+  const cadeia = t.manifesto.chain;
+  const anos = new Date().getFullYear() - identity.startYear;
 
   const estatisticas: Array<{ valor: number; sufixo?: string; rotulo: string }> = [
-    { valor: site.shipped, sufixo: '+', rotulo: 'Products shipped' },
-    { valor: anos, sufixo: '+', rotulo: 'Years building' },
-    { valor: stack.length, rotulo: 'Tools in production' },
-    { valor: 3, rotulo: 'Languages spoken' },
+    { valor: identity.shipped, sufixo: '+', rotulo: t.manifesto.stats.shipped },
+    { valor: anos, sufixo: '+', rotulo: t.manifesto.stats.years },
+    { valor: tools.length, rotulo: t.manifesto.stats.tools },
+    { valor: 3, rotulo: t.manifesto.stats.languages },
   ];
 
   return (
@@ -54,28 +55,19 @@ export default function Manifesto() {
       {/* ================= a afirmação ================= */}
       <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-8)]">
         <div className="col-span-12 lg:col-span-7">
-          <Lines lines={['Code is', 'my material.']} as="h2" className="display-xl" />
+          <Lines lines={t.manifesto.lines} as="h2" className="display-xl" />
           <span id="about-title" className="sr-only">
-            About
+            {t.sections.about.name}
           </span>
         </div>
 
         <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
           <RevealGroup className="flex flex-col gap-[var(--space-4)]" delay={0.1}>
-            <RevealItem>
-              <p className="body">
-                I work between design systems, interfaces, front-end architecture and digital
-                experiences. My process connects strategy, UX, visual design and engineering,
-                because I learned both halves at the same time, with nobody to hand the other one to.
-              </p>
-            </RevealItem>
-            <RevealItem>
-              <p className="body">
-                That used to be a limitation. Now it is the argument: the interface decision is made
-                already knowing what it costs to build, and the code is written already knowing what
-                it has to feel like. Nothing is lost in translation, because there is no translation.
-              </p>
-            </RevealItem>
+            {t.manifesto.paragraphs.map((p) => (
+              <RevealItem key={p}>
+                <p className="body">{p}</p>
+              </RevealItem>
+            ))}
           </RevealGroup>
         </div>
       </div>
@@ -93,7 +85,7 @@ export default function Manifesto() {
               <figure className="media media--dim aspect-[4/5] w-full">
                 <Image
                   src="/assets/foto-cracha.webp"
-                  alt={`Portrait of ${site.name}`}
+                  alt={`${identity.name}`}
                   width={620}
                   height={827}
                   sizes="(max-width: 640px) 80vw, 400px"
@@ -104,7 +96,8 @@ export default function Manifesto() {
           </Parallax>
           <Reveal delay={0.1}>
             <p className="label label--dim mt-[var(--space-4)]">
-              {site.handle} <span className="index-line__sep">/</span> {site.city}, {site.country}
+              {identity.handle} <span className="index-line__sep">/</span> {identity.city},{' '}
+              {t.meta.country}
             </p>
           </Reveal>
         </div>
@@ -116,7 +109,7 @@ export default function Manifesto() {
              ritmo de documento. */}
         <div className="col-span-12 lg:col-span-7 lg:col-start-6">
           <Reveal>
-            <p className="label label--dim">The method, every time</p>
+            <p className="label label--dim">{t.manifesto.methodLabel}</p>
           </Reveal>
 
           <RevealGroup as="ol" className="mt-[var(--space-5)] flex flex-col">

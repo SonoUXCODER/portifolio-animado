@@ -1,65 +1,67 @@
-import Hero from '@/components/Hero';
-import Manifesto from '@/components/Manifesto';
-import Work from '@/components/Work';
-import Capabilities from '@/components/Capabilities';
-import TechStack from '@/components/TechStack';
-import Journey from '@/components/Journey';
-import Philosophy from '@/components/Philosophy';
-import Contact from '@/components/Contact';
-import Interlude from '@/components/Interlude';
-import { interludes } from '@/data/interludes';
+import RootRedirect from '@/components/RootRedirect';
+import { langNames, langs } from '@/lib/lang';
 
 /* -------------------------------------------------------------------------
-   A PÁGINA, NA ORDEM EM QUE É LIDA.
+   A RAIZ.
 
-   Cinco capítulos numerados, e entre eles as peças que não são capítulo.
-   A ordem dos numerados é a mesma de data/sections.ts — é o que faz a
-   navegação, o número de cada índice e o indicador de seção ativa nunca
-   desencontrarem do conteúdo. Mexer lá reordena tudo; mexer só aqui quebra.
+   Não existe página em `/`: existem /en, /pt e /de. Esta rota só decide pra
+   qual delas mandar.
 
-   As peças entre capítulos existem por um motivo estrutural, não decorativo.
-   Sem elas a página vira uma pilha de sete blocos com o mesmo ritmo, e
-   ritmo constante é exatamente o que faz um site parecer gerado:
+   >>> POR QUE NO CLIENTE <<<
+   A escolha depende do que o navegador da pessoa pede
+   (`navigator.languages`), e o site é export estático servido pelo GitHub
+   Pages: não há servidor pra ler o cabeçalho `Accept-Language` nem pra
+   responder um 302. Então o HTML sai igual pra todo mundo e o redirecionamento
+   acontece na primeira execução de script.
 
-     escultura    três, nas viradas da narrativa — depois de dizer quem
-                  assina, depois de mostrar o trabalho, e depois de mostrar
-                  as ferramentas. Cada uma toma a tela inteira e não pede
-                  nada em troca. É a pausa.
-
-     stack        não é capítulo numerado: é a segunda metade de
-                  CAPABILITIES. Separar "o que eu faço" de "com o que eu
-                  faço" em dois números daria dois capítulos pro mesmo
-                  assunto.
-
-     filosofia    a única tela clara do site, logo antes do contato. Depois
-                  de sete cenas numa sala escura, inverter a página por uma
-                  tela é mais forte do que qualquer animação — e é o último
-                  respiro antes do convite.
-
-   As declarações ("design with intention", "build with precision") vivem
-   dentro de <Work/>, entre os projetos, porque é lá que elas fazem sentido:
-   separam um capítulo do outro sem tirar o leitor da seção.
+   >>> O QUE FICA VISÍVEL <<<
+   Os três links abaixo não são fallback decorativo. Eles são a página
+   inteira pra três casos reais: quem tem JavaScript desligado, quem chega
+   por um rastreador que não executa script, e o meio segundo antes de o
+   redirecionamento acontecer. Por isso são links de verdade, com `hrefLang`,
+   e não um "carregando…".
    ------------------------------------------------------------------------- */
 
-export default function Home() {
+export const metadata = {
+  title: 'SONO',
+  /* a raiz nunca deve competir com /en no índice do buscador: ela é uma
+     porta, não uma página */
+  robots: { index: false, follow: true },
+};
+
+export default function Raiz() {
   return (
     <>
-      <Hero />
+      <RootRedirect />
 
-      <Manifesto />
-      <Interlude peca={interludes[0]} indice={0} />
+      <section className="shell flex min-h-[100svh] flex-col justify-center py-[var(--space-9)]">
+        <p className="label label--dim">SONO</p>
 
-      <Work />
-      <Interlude peca={interludes[1]} indice={1} />
+        <h1 className="display-lg mt-[var(--space-6)] max-w-[16ch]">
+          Full-Stack Developer &amp; UX·UI Designer
+        </h1>
 
-      <Capabilities />
-      <TechStack />
-      <Interlude peca={interludes[2]} indice={2} />
+        <p className="body mt-[var(--space-5)]">Choose a language · Escolha um idioma · Sprache wählen</p>
 
-      <Journey />
-
-      <Philosophy />
-      <Contact />
+        <ul className="mt-[var(--space-7)] flex flex-col">
+          {langs.map((l) => (
+            <li key={l} className="border-t" style={{ borderColor: 'var(--line)' }}>
+              <a
+                href={`/${l}`}
+                hrefLang={l}
+                className="group flex items-center justify-between gap-[var(--space-4)] py-[var(--space-5)]"
+              >
+                <span className="display-md transition-transform duration-[var(--duration-normal)] ease-[var(--ease-standard)] group-hover:translate-x-[var(--space-3)]">
+                  {langNames[l]}
+                </span>
+                <span aria-hidden="true" className="label">
+                  →
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
     </>
   );
 }

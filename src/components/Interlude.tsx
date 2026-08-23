@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import type { Interlude as Peca } from '@/data/interludes';
+import type { Interlude as Peca } from '@/content';
+import { useT } from './ContentProvider';
 import { basePath } from '@/lib/base';
 
 /* -------------------------------------------------------------------------
@@ -33,7 +34,8 @@ type Recursos = {
   setProgresso: (p: number) => void;
 };
 
-export default function Interlude({ peca, indice }: { peca: Peca; indice: number }) {
+export default function Interlude({ peca }: { peca: Peca }) {
+  const t = useT();
   const secao = useRef<HTMLElement>(null);
   const palco = useRef<HTMLDivElement>(null);
   const recursos = useRef<Recursos | null>(null);
@@ -300,7 +302,7 @@ export default function Interlude({ peca, indice }: { peca: Peca; indice: number
             style={{ borderColor: 'var(--line)' }}
           >
             <p className="label" style={{ color: 'var(--accent)' }}>
-              Interlude
+              {t.interludes.label}
             </p>
             <p className="label label--dim text-right">{peca.technique}</p>
           </div>
@@ -315,7 +317,7 @@ export default function Interlude({ peca, indice }: { peca: Peca; indice: number
 
           {estado !== 'pronto' && (
             <p className="label absolute inset-0 flex items-center justify-center" role="status">
-              {estado === 'erro' ? 'Model unavailable' : 'Loading…'}
+              {estado === 'erro' ? t.livePreview.blockedTitle : t.livePreview.loading}
             </p>
           )}
         </div>

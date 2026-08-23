@@ -1,6 +1,6 @@
 'use client';
 
-import { layers, stack } from '@/data/stack';
+import { useConteudo } from './ContentProvider';
 import { Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
 
 /* -------------------------------------------------------------------------
@@ -30,26 +30,27 @@ import { Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
    ------------------------------------------------------------------------- */
 
 export default function TechStack() {
+  const { t, layers, tools } = useConteudo();
+
   return (
     <section aria-labelledby="stack-title" className="shell py-[var(--space-10)]">
       <div className="grid-12 gap-y-[var(--space-6)]">
         <div className="col-span-12 lg:col-span-7">
-          <Lines lines={['Tools are', 'just the beginning.']} as="h2" className="display-lg" />
+          <Lines lines={t.stack.lines} as="h2" className="display-lg" />
           <span id="stack-title" className="sr-only">
-            Technology stack
+            {t.sections.capabilities.name}
           </span>
         </div>
 
         <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
           <Reveal delay={0.1}>
             <p className="body">
-              Not a list of everything I have opened once. This is what is running in production
-              right now, and what each piece is actually doing there.
+              {t.stack.intro}
             </p>
             <p className="label label--dim mt-[var(--space-5)]">
-              {stack.length} tools
+              {tools.length} {t.stack.toolsWord}
               <span className="index-line__sep"> / </span>
-              {layers.length} layers
+              {layers.length} {t.stack.layersWord}
             </p>
           </Reveal>
         </div>
@@ -87,8 +88,8 @@ export default function TechStack() {
                         /* o ponto diz "esta é a principal da camada". o title
                            existe porque cor sozinha não é informação. */
                         <span
-                          title="Primary tool in this layer"
-                          aria-label="Primary tool in this layer"
+                          title={t.stack.primaryTool}
+                          aria-label={t.stack.primaryTool}
                           className="inline-block h-[5px] w-[5px] shrink-0 translate-y-[-3px] rounded-full"
                           style={{ background: 'var(--accent)' }}
                         />

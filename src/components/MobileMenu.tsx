@@ -2,8 +2,9 @@
 
 import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { sections, sectionIndex } from '@/data/sections';
-import { site } from '@/data/site';
+import { identity } from '@/content';
+import { useConteudo } from './ContentProvider';
+import LanguageSwitcher from './LanguageSwitcher';
 import { duration, easeEmphasis, easeStandard } from '@/lib/motion';
 
 /* -------------------------------------------------------------------------
@@ -30,6 +31,7 @@ export default function MobileMenu({
   fechar: () => void;
   ativa: string;
 }) {
+  const { t, sections } = useConteudo();
   const painel = useRef<HTMLDivElement>(null);
   const focoAnterior = useRef<HTMLElement | null>(null);
 
@@ -84,7 +86,7 @@ export default function MobileMenu({
           id="menu-mobile"
           role="dialog"
           aria-modal="true"
-          aria-label="Navigation"
+          aria-label={t.ui.navigation}
           className="fixed inset-0 z-[80] flex flex-col justify-between overflow-y-auto px-[var(--gutter)] pb-[var(--space-7)] pt-[calc(var(--header-h)+var(--space-7))] lg:hidden"
           style={{ background: 'var(--background)' }}
           initial={{ y: '-100%' }}
@@ -92,7 +94,7 @@ export default function MobileMenu({
           exit={{ y: '-100%' }}
           transition={{ duration: 0.62, ease: easeEmphasis }}
         >
-          <nav aria-label="Sections">
+          <nav aria-label={t.ui.sections}>
             <ul className="flex flex-col">
               {sections.map((s, i) => {
                 const atual = ativa === s.id;
@@ -105,11 +107,10 @@ export default function MobileMenu({
                       className="flex min-h-[68px] items-baseline gap-[var(--space-4)] py-[var(--space-4)]"
                     >
                       <span
-                        className="label w-6 shrink-0"
-                        style={{ color: atual ? 'var(--accent)' : 'var(--text-tertiary)' }}
-                      >
-                        {sectionIndex(s.id)}
-                      </span>
+                        aria-hidden="true"
+                        className="mt-[0.5em] block h-px w-[var(--space-5)] shrink-0 transition-colors"
+                        style={{ background: atual ? 'var(--accent)' : 'var(--line-strong)' }}
+                      />
                       <span className="overflow-hidden pt-[0.12em] [margin-top:-0.12em]">
                         <motion.span
                           className="display-lg block"
@@ -139,11 +140,13 @@ export default function MobileMenu({
             className="mt-[var(--space-8)] flex flex-col gap-[var(--space-4)] border-t pt-[var(--space-5)]"
             style={{ borderColor: 'var(--line)' }}
           >
-            <a href={`mailto:${site.email}`} className="title-sm link w-fit">
-              {site.email}
+            <LanguageSwitcher />
+
+            <a href={`mailto:${identity.email}`} className="title-sm link w-fit">
+              {identity.email}
             </a>
             <ul className="flex flex-wrap gap-x-[var(--space-5)] gap-y-[var(--space-3)]">
-              {site.social
+              {identity.social
                 .filter((s) => s.href.startsWith('http'))
                 .map((s) => (
                   <li key={s.label}>
@@ -154,7 +157,7 @@ export default function MobileMenu({
                 ))}
             </ul>
             <p className="label label--dim">
-              {site.city} / {site.country}
+              {identity.city} / {t.meta.country}
             </p>
           </motion.div>
         </motion.div>

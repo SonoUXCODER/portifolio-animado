@@ -3,7 +3,9 @@
 import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { projects, type Project } from '@/data/projects';
+import { fill, type Project } from '@/content';
+import { useConteudo, useHref } from './ContentProvider';
+import type { Content } from '@/content';
 import SectionIndex from './SectionIndex';
 import Statement from './Statement';
 import LivePreview from './LivePreview';
@@ -65,10 +67,7 @@ import { cn } from '@/lib/utils';
    Duas, e só duas. Uma a cada dois projetos é ritmo; uma entre cada par é
    refrão, e refrão cansa antes do terceiro.
    ------------------------------------------------------------------------- */
-const declaracoes: Record<number, { lines: string[]; align: 'left' | 'right' }> = {
-  1: { lines: ['Design with', 'intention.'], align: 'left' },
-  3: { lines: ['Build with', 'precision.'], align: 'right' },
-};
+const POSICOES = [1, 3];
 
 /* ---------- a folha 3D ----------
    Envolve o capítulo inteiro e o inclina conforme ele atravessa a tela. */
@@ -103,15 +102,17 @@ function Folha({ children }: { children: React.ReactNode }) {
 }
 
 /* ---------- a ficha ---------- */
-function Ficha({ project, aoVer }: { project: Project; aoVer: () => void }) {
+function Ficha({ project, aoVer, t }: { project: Project; aoVer: () => void; t: Content }) {
+  const href = useHref();
+
   return (
     <>
       <h3 className="display-lg">
         <TransitionLink
-          href={`/work/${project.slug}`}
+          href={href(`/work/${project.slug}`)}
           className="hit inline-block transition-colors duration-[var(--duration-normal)] group-hover:text-[var(--accent)]"
           cursor="case"
-          aria-label={`Open the ${project.title} case study`}
+          aria-label={fill(t.work.openCase, project.title)}
         >
           {project.title}
         </TransitionLink>
@@ -145,19 +146,19 @@ function Ficha({ project, aoVer }: { project: Project; aoVer: () => void }) {
       {/* ---- ficha técnica ---- */}
       <dl className="mt-[var(--space-6)] grid grid-cols-2 gap-[var(--space-5)] sm:grid-cols-3">
         <div>
-          <dt className="label label--dim">Role</dt>
+          <dt className="label label--dim">{t.work.roleLabel}</dt>
           <dd className="body-sm mt-[var(--space-2)]" style={{ color: 'var(--text-primary)' }}>
             {project.role.slice(0, 3).join(', ')}
           </dd>
         </div>
         <div>
-          <dt className="label label--dim">Stack</dt>
+          <dt className="label label--dim">{t.work.stackLabel}</dt>
           <dd className="body-sm mt-[var(--space-2)]" style={{ color: 'var(--text-primary)' }}>
             {project.stack.join(', ')}
           </dd>
         </div>
         <div>
-          <dt className="label label--dim">Year</dt>
+          <dt className="label label--dim">{t.work.yearLabel}</dt>
           <dd className="body-sm mt-[var(--space-2)]" style={{ color: 'var(--text-primary)' }}>
             {project.year} <span className="index-line__sep">/</span> {project.badge}
           </dd>
@@ -168,18 +169,18 @@ function Ficha({ project, aoVer }: { project: Project; aoVer: () => void }) {
         {project.live && (
           <Magnetic>
             <button type="button" onClick={aoVer} className="btn" data-cursor="open">
-              See it live
+              {t.work.seeLive}
             </button>
           </Magnetic>
         )}
         <Magnetic>
           <TransitionLink
-            href={`/work/${project.slug}`}
+            href={href(`/work/${project.slug}`)}
             className="btn btn--ghost"
             cursor="case"
-            aria-label={`Read the ${project.title} case study`}
+            aria-label={fill(t.work.readCase, project.title)}
           >
-            Case study <span aria-hidden="true">↗</span>
+            {t.work.caseStudy} <span aria-hidden="true">↗</span>
           </TransitionLink>
         </Magnetic>
       </div>
@@ -204,9 +205,11 @@ function Chapa({
   priority?: boolean;
   sizes: string;
 }) {
+  const href = useHref();
+
   return (
     <TransitionLink
-      href={`/work/${project.slug}`}
+      href={href(`/work/${project.slug}`)}
       className="block"
       cursor="case"
       tabIndex={-1}
@@ -233,10 +236,12 @@ function Capitulo({
   project,
   index,
   aoVer,
+  t,
 }: {
   project: Project;
   index: number;
   aoVer: () => void;
+  t: Content;
 }) {
   const primeira = index === 0;
   const capa = project.cover;
@@ -255,7 +260,7 @@ function Capitulo({
           />
         </div>
         <div className="col-span-12 md:col-span-7">
-          <Ficha project={project} aoVer={aoVer} />
+          <Ficha project={project} aoVer={aoVer} t={t} />
         </div>
       </div>
     ),
@@ -263,7 +268,7 @@ function Capitulo({
     offset: (
       <div className="grid-12 items-center gap-y-[var(--space-7)]">
         <div className="col-span-12 md:col-span-5">
-          <Ficha project={project} aoVer={aoVer} />
+          <Ficha project={project} aoVer={aoVer} t={t} />
         </div>
         <div className="col-span-12 md:col-span-6 md:col-start-7">
           <Chapa
@@ -287,7 +292,7 @@ function Capitulo({
           />
         </div>
         <div className="col-span-12 md:col-span-7 md:col-start-6">
-          <Ficha project={project} aoVer={aoVer} />
+          <Ficha project={project} aoVer={aoVer} t={t} />
         </div>
       </div>
     ),
@@ -313,7 +318,7 @@ function Capitulo({
           </div>
         )}
         <div className="col-span-12 md:col-span-7">
-          <Ficha project={project} aoVer={aoVer} />
+          <Ficha project={project} aoVer={aoVer} t={t} />
         </div>
       </div>
     ),
@@ -338,6 +343,7 @@ function Capitulo({
 }
 
 export default function Work() {
+  const { t, projects } = useConteudo();
   /* qual projeto está aberto no visualizador; null = nenhum */
   const [aoVivo, setAoVivo] = useState<Project | null>(null);
 
@@ -351,18 +357,16 @@ export default function Work() {
 
       <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-6)]">
         <div className="col-span-12 lg:col-span-7">
-          <Lines lines={['Selected', 'work.']} as="h2" className="display-xl" />
+          <Lines lines={t.work.lines} as="h2" className="display-xl" />
           <span id="work-title" className="sr-only">
-            Selected work
+            {t.sections.work.name}
           </span>
         </div>
 
         <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
           <Reveal delay={0.1}>
             <p className="body">
-              Five products, each one carried from the first conversation to the day someone who is
-              not me opened it. Every one of them can be opened right here, running, without
-              leaving this page.
+              {t.work.intro}
             </p>
           </Reveal>
         </div>
@@ -373,13 +377,16 @@ export default function Work() {
           animações independentes que por acaso são parecidas. */}
       <div className="mt-[var(--space-10)] flex flex-col gap-[var(--space-10)]" style={{ perspective: 1600 }}>
         {projects.map((p, i) => {
-          const declaracao = declaracoes[i];
+          /* a declaração que entra depois deste projeto, se houver */
+          const decl = t.work.statements[POSICOES.indexOf(i)];
           return (
             <div key={p.slug} className="flex flex-col gap-[var(--space-10)]">
               <Folha>
-                <Capitulo project={p} index={i} aoVer={() => setAoVivo(p)} />
+                <Capitulo project={p} index={i} aoVer={() => setAoVivo(p)} t={t} />
               </Folha>
-              {declaracao && <Statement lines={declaracao.lines} align={declaracao.align} />}
+              {POSICOES.includes(i) && decl && (
+                <Statement lines={decl.lines} align={decl.align} />
+              )}
             </div>
           );
         })}

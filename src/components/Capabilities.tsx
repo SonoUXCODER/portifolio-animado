@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { capabilities } from '@/data/capabilities';
+import { useConteudo } from './ContentProvider';
 import SectionIndex from './SectionIndex';
 import Visual from './Visual';
 import { Lines, Reveal } from './Reveal';
@@ -41,6 +41,7 @@ import { duration, easeStandard } from '@/lib/motion';
    ------------------------------------------------------------------------- */
 
 export default function Capabilities() {
+  const { t, capabilities } = useConteudo();
   const reduzido = useReducedMotion();
   const [aberto, setAberto] = useState<string>(capabilities[0].id);
   const [sobre, setSobre] = useState<string | null>(null);
@@ -56,17 +57,16 @@ export default function Capabilities() {
 
       <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-6)]">
         <div className="col-span-12 lg:col-span-6">
-          <Lines lines={['What', 'I do.']} as="h2" className="display-xl" />
+          <Lines lines={t.capabilities.lines} as="h2" className="display-xl" />
           <span id="capabilities-title" className="sr-only">
-            Capabilities
+            {t.sections.capabilities.name}
           </span>
         </div>
 
         <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
           <Reveal delay={0.1}>
             <p className="body">
-              Six things, and only six. A services page with eleven items does not say “I do
-              everything”. It says nobody decided what this is.
+              {t.capabilities.intro}
             </p>
           </Reveal>
         </div>
@@ -146,7 +146,7 @@ export default function Capabilities() {
                       </div>
 
                       <div className="col-span-12 md:col-span-5 md:col-start-8">
-                        <p className="label label--dim">What you get</p>
+                        <p className="label label--dim">{t.capabilities.deliverablesLabel}</p>
                         <ul className="mt-[var(--space-4)] flex flex-col">
                           {c.deliverables.map((d, j) => (
                             <motion.li

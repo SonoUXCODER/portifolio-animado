@@ -2,7 +2,8 @@
 
 import { useRef, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { experience, type Entry } from '@/data/experience';
+import type { Entry } from '@/content';
+import { useConteudo, useHref, useT } from './ContentProvider';
 import SectionIndex from './SectionIndex';
 import { TransitionLink } from './PageTransition';
 import { Lines, Reveal, ScrollLine } from './Reveal';
@@ -27,6 +28,8 @@ import { easeStandard } from '@/lib/motion';
    ------------------------------------------------------------------------- */
 
 function Entrada({ entry, index }: { entry: Entry; index: number }) {
+  const t = useT();
+  const href = useHref();
   const [aberto, setAberto] = useState(false);
   const reduzido = useReducedMotion();
   const painelId = `journey-${index}`;
@@ -54,7 +57,9 @@ function Entrada({ entry, index }: { entry: Entry; index: number }) {
           <p className="label" style={{ color: entry.milestone ? 'var(--accent)' : 'var(--text-primary)' }}>
             {entry.period}
           </p>
-          {entry.milestone && <p className="label label--dim mt-[var(--space-2)]">Turning point</p>}
+          {entry.milestone && (
+            <p className="label label--dim mt-[var(--space-2)]">{t.journey.turningPoint}</p>
+          )}
         </div>
 
         {/* ---- conteúdo ---- */}
@@ -62,7 +67,7 @@ function Entrada({ entry, index }: { entry: Entry; index: number }) {
           <h3 className="display-md">
             {entry.slug ? (
               <TransitionLink
-                href={`/work/${entry.slug}`}
+                href={href(`/work/${entry.slug}`)}
                 className="hit inline-block transition-colors duration-[var(--duration-fast)] hover:text-[var(--accent)]"
                 cursor="case"
               >
@@ -93,7 +98,7 @@ function Entrada({ entry, index }: { entry: Entry; index: number }) {
             style={{ color: 'var(--text-primary)' }}
             data-cursor={aberto ? 'close' : 'open'}
           >
-            {aberto ? 'Less' : 'Detail'}
+            {aberto ? t.journey.less : t.journey.detail}
             <span
               aria-hidden="true"
               className="inline-block transition-transform duration-[var(--duration-normal)] ease-[var(--ease-standard)]"
@@ -136,6 +141,7 @@ function Entrada({ entry, index }: { entry: Entry; index: number }) {
 }
 
 export default function Journey() {
+  const { t, experience } = useConteudo();
   /* a régua mede o bloco da lista, não a seção inteira: senão ela começaria
      a encher enquanto o título ainda está sozinho na tela */
   const lista = useRef<HTMLDivElement>(null);
@@ -150,17 +156,16 @@ export default function Journey() {
 
       <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-6)]">
         <div className="col-span-12 lg:col-span-6">
-          <Lines lines={['The', 'journey.']} as="h2" className="display-xl" />
+          <Lines lines={t.journey.lines} as="h2" className="display-xl" />
           <span id="experience-title" className="sr-only">
-            Experience
+            {t.sections.experience.name}
           </span>
         </div>
 
         <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
           <Reveal delay={0.1}>
             <p className="body">
-              From the first client to my own product, most recent first. Open any entry for the
-              decision that made it worth listing.
+              {t.journey.intro}
             </p>
           </Reveal>
         </div>

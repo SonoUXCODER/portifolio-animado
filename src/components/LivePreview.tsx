@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { easeEmphasis, easeStandard } from '@/lib/motion';
+import { fill } from '@/content';
+import { useT } from './ContentProvider';
 
 /* -------------------------------------------------------------------------
    VISUALIZADOR AO VIVO.
@@ -55,6 +57,7 @@ export default function LivePreview({
   embeddable: boolean;
   aoFechar: () => void;
 }) {
+  const t = useT();
   const reduzido = useReducedMotion();
   const painel = useRef<HTMLDivElement>(null);
   const palco = useRef<HTMLDivElement>(null);
@@ -136,7 +139,7 @@ export default function LivePreview({
         ref={painel}
         role="dialog"
         aria-modal="true"
-        aria-label={`${title} live preview`}
+        aria-label={fill(t.livePreview.label, title)}
         className="fixed inset-0 z-[96] flex flex-col"
         style={{ background: 'var(--background)' }}
         initial={reduzido ? { opacity: 0 } : { y: '100%' }}
@@ -158,7 +161,11 @@ export default function LivePreview({
             {/* alternador de dispositivo: dois botões, sem ícone de celular
                 genérico. O rótulo diz a largura real, que é a informação. */}
             {embeddable && (
-              <div className="hidden items-center gap-[var(--space-1)] sm:flex" role="group" aria-label="Viewport">
+              <div
+                className="hidden items-center gap-[var(--space-1)] sm:flex"
+                role="group"
+                aria-label={t.livePreview.viewport}
+              >
                 {(Object.keys(LARGURAS) as Dispositivo[]).map((d) => (
                   <button
                     key={d}
@@ -183,7 +190,7 @@ export default function LivePreview({
               className="label hit link"
               style={{ color: 'var(--text-primary)' }}
             >
-              Open in new tab <span aria-hidden="true">↗</span>
+              {t.livePreview.openInNewTab} <span aria-hidden="true">↗</span>
             </a>
 
             <button
@@ -192,7 +199,7 @@ export default function LivePreview({
               className="label hit flex items-center gap-[var(--space-3)]"
               style={{ color: 'var(--text-primary)' }}
             >
-              Close
+              {t.livePreview.close}
               <span aria-hidden="true" className="relative block h-[11px] w-[11px]">
                 <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 rotate-45 bg-current" />
                 <span className="absolute left-0 top-1/2 h-px w-full -translate-y-1/2 -rotate-45 bg-current" />
@@ -222,7 +229,7 @@ export default function LivePreview({
               >
                 <iframe
                   src={url}
-                  title={`${title} live site`}
+                  title={fill(t.livePreview.liveSite, title)}
                   className="h-full w-full border-0"
                   loading="eager"
                   onLoad={() => setCarregando(false)}
@@ -238,7 +245,7 @@ export default function LivePreview({
                   className="label absolute inset-0 flex items-center justify-center"
                   role="status"
                 >
-                  Loading the live site…
+                  {t.livePreview.loading}
                 </p>
               )}
             </>
@@ -246,14 +253,13 @@ export default function LivePreview({
             /* ---- o site recusa ser embutido ---- */
             <div className="flex h-full items-center justify-center px-[var(--gutter)]">
               <div className="max-w-[52ch] text-center">
-                <p className="display-md">This one refuses to be framed.</p>
+                <p className="display-md">{t.livePreview.blockedTitle}</p>
                 <p className="body mt-[var(--space-5)] mx-auto">
-                  Its security policy blocks embedding, which is the correct setting for a product
-                  that handles accounts and payments. I set it that way myself.
+                  {t.livePreview.blockedText}
                 </p>
                 <p className="mt-[var(--space-7)]">
                   <a href={url} target="_blank" rel="noopener noreferrer" className="btn">
-                    Open it in a new tab <span aria-hidden="true">↗</span>
+                    {t.livePreview.blockedCta} <span aria-hidden="true">↗</span>
                   </a>
                 </p>
               </div>

@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
-import { site } from '@/data/site';
+import { identity } from '@/content';
+import { useT } from './ContentProvider';
 import { basePath } from '@/lib/base';
 import { duration, easeStandard, enter } from '@/lib/motion';
 import { Lines } from './Reveal';
@@ -42,7 +43,7 @@ function useHoraLocal() {
 
   useEffect(() => {
     const fmt = new Intl.DateTimeFormat('en-GB', {
-      timeZone: site.timezone,
+      timeZone: identity.timezone,
       hour: '2-digit',
       minute: '2-digit',
       hour12: false,
@@ -58,6 +59,7 @@ function useHoraLocal() {
 }
 
 export default function Hero() {
+  const t = useT();
   const reduzido = useReducedMotion();
   const fino = usePonteiroFino();
   const largo = useMedia('(min-width: 768px)');
@@ -146,7 +148,7 @@ export default function Hero() {
       <div className="shell relative w-full py-[var(--space-8)]">
         <motion.div style={fino && !reduzido ? { x, y } : undefined}>
           <h1 id="hero-title" className="sr-only">
-            {site.name}, {site.role}
+            {identity.name}, {t.meta.role}
           </h1>
 
           {/* A quebra é composição, não acidente de largura: as três linhas
@@ -154,7 +156,7 @@ export default function Hero() {
               grade. Deixar o navegador quebrar daria três formas diferentes
               em três telas. */}
           <Lines
-            lines={['I build', 'digital', 'experiences.']}
+            lines={t.hero.lines}
             as="p"
             className="display-hero"
             immediate
@@ -170,19 +172,18 @@ export default function Hero() {
             className="col-span-12 md:col-span-6 lg:col-span-5 lg:col-start-7"
           >
             <p className="lead">
-              Full-Stack Developer &amp; UX/UI Designer creating digital products where design and
-              technology work as one system.
+              {t.hero.lead}
             </p>
 
             <div className="mt-[var(--space-6)] flex flex-wrap items-center gap-[var(--space-4)]">
               <Magnetic>
                 <a href="#work" className="btn" data-cursor="view">
-                  Selected work
+                  {t.hero.ctaWork}
                 </a>
               </Magnetic>
               <Magnetic>
                 <a href="#contact" className="btn btn--ghost" data-cursor="open">
-                  Start a conversation <span aria-hidden="true">↗</span>
+                  {t.hero.ctaContact} <span aria-hidden="true">↗</span>
                 </a>
               </Magnetic>
             </div>
@@ -202,10 +203,10 @@ export default function Hero() {
           style={{ borderColor: 'var(--line)' }}
         >
           {[
-            ['Based in', `${site.city}, ${site.country}`],
-            ['Local time', hora ?? '--:--'],
-            ['Disciplines', 'Design · Engineering'],
-            ['Languages', 'EN · DE · PT'],
+            [t.hero.basedIn, `${identity.city}, ${t.meta.country}`],
+            [t.hero.localTime, hora ?? '--:--'],
+            [t.hero.disciplines, t.hero.disciplinesValue],
+            [t.hero.languages, t.hero.languagesValue],
           ].map(([rotulo, valor]) => (
             <div key={rotulo}>
               <dt className="label label--dim">{rotulo}</dt>
@@ -215,7 +216,7 @@ export default function Hero() {
         </dl>
 
         <div className="mt-[var(--space-5)] flex items-baseline justify-between gap-[var(--space-4)]">
-          <span className="label label--dim">Scroll to begin</span>
+          <span className="label label--dim">{t.hero.scroll}</span>
           <motion.span
             aria-hidden="true"
             className="label"

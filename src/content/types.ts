@@ -139,8 +139,9 @@ export type Content = {
     yearLabel: string;
     seeLive: string;
     caseStudy: string;
-    openCase: (t: string) => string;
-    readCase: (t: string) => string;
+    /** {title} é trocado pelo nome do projeto */
+    openCase: string;
+    readCase: string;
     statements: { lines: string[]; align: 'left' | 'right' }[];
   };
 
@@ -208,9 +209,10 @@ export type Content = {
     blockedTitle: string;
     blockedText: string;
     blockedCta: string;
-    screenshots: (t: string) => string;
-    liveSite: (t: string) => string;
-    label: (t: string) => string;
+    /** {title} é trocado pelo nome do projeto */
+    screenshots: string;
+    liveSite: string;
+    label: string;
   };
 
   project: {
@@ -250,4 +252,7 @@ export type Content = {
     text: string;
     cta: string;
   };
+
+  /** a prosa de cada projeto, pelo slug de shared.ts */
+  projects: Record<string, ProjectCopy>;
 };

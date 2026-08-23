@@ -1,108 +1,26 @@
+import type { ProjectCopy } from './types';
+
 /* -------------------------------------------------------------------------
-   Os projetos. Nada de conteúdo preso em componente: a home, as páginas
-   /work/[slug], o sitemap e a metadata leem tudo daqui.
+   OS ESTUDOS DE CASO, EM INGLÊS.
 
-   A ordem do array é a ordem da seção, e o número de cada projeto sai do
-   índice — não existe campo `num`. Inserir um projeto no meio renumera os
-   outros sozinho.
+   Separados de en.ts porque são dois terços do texto do site inteiro, e um
+   arquivo de setecentas linhas onde a metade de cima é interface e a de
+   baixo é reportagem não se edita bem.
 
-   >>> SOBRE O `system` <<<
-   As paletas não são inventadas: cada hex foi lido do CSS que está no ar
-   naquele domínio. Um estudo de caso que mostra uma cor que o site não usa
-   é a primeira coisa que um contratante confere e a única que ele precisa
-   conferir. Ao trocar um projeto, leia os valores do projeto — não escolha
-   valores que combinem com esta página.
+   A estrutura (slug, URL, hex, dimensão de imagem) mora em shared.ts. Aqui
+   é só prosa. Dois arrays são casados **por índice** com os de lá:
 
-   `layout` decide a composição na listagem, e é ele que impede a seção de
-   virar grade — nenhuma entrada tem a proporção da anterior:
-     wide    -> chapa larga, sangrando, texto embaixo
-     offset  -> texto à esquerda, chapa menor deslocada à direita
-     tall    -> print vertical comprido, texto ao lado
-     split   -> duas chapas montadas em alturas diferentes
+     system.palette  <->  paletteHex
+     system.type     <->  typeFamilies
+
+   Tirar uma cor num lugar sem tirar no outro produz amostra sem legenda. A
+   conferência em content/index.ts estoura no build se isso acontecer.
    ------------------------------------------------------------------------- */
 
-export type ProjectLayout = 'wide' | 'offset' | 'tall' | 'split';
-
-export type Media = {
-  src: string;
-  alt: string;
-  width: number;
-  height: number;
-  /** legenda curta, ao lado da imagem */
-  caption?: string;
-};
-
-export type ApproachStep = {
-  /** o nome da etapa como ela aparece no estudo — Research, UI Design… */
-  step: string;
-  title: string;
-  text: string;
-};
-
-export type DesignSystem = {
-  palette: { name: string; hex: string }[];
-  type: { role: string; family: string; note: string }[];
-  components: string[];
-  grid: string;
-  spacing: string;
-};
-
-export type Project = {
-  title: string;
-  slug: string;
-  /** o que a coisa é — vira `DIGITAL PRODUCT / 2026` no topo do estudo */
-  kind: string;
-  year: string;
-  /** uma linha, na listagem */
-  summary: string;
-  /** parágrafo de abertura do estudo de caso */
-  intro: string;
-  /** as frentes que couberam a mim — `UX/UI — FRONTEND — FULL-STACK` */
-  disciplines: string[];
-  role: string[];
-  stack: string[];
-  cover: Media;
-  gallery: Media[];
-  /** o endereço no ar, quando existe */
-  live: string | null;
-  /**
-   * Se o site aceita ser aberto dentro do portfólio, num iframe.
-   *
-   * Não é preferência: é o que o servidor daquele domínio responde. Um
-   * `X-Frame-Options` ou um `frame-ancestors` no CSP faz o navegador
-   * recusar o documento, e não existe jeito de descobrir isso pelo JS —
-   * o evento `load` dispara igual. Então o valor é conferido na mão:
-   *
-   *     curl -sSI <url> | grep -i "x-frame-options|content-security"
-   *
-   * Com `false`, o visualizador mostra o motivo em vez de um quadro branco.
-   */
-  embeddable: boolean;
-  github: string | null;
-  /** carimbo curto: client work, own product */
-  badge: string;
-  layout: ProjectLayout;
-  /**
-   * A observação em minúscula que aparece junto da entrada.
-   *
-   * Não é resumo nem argumento de venda — para isso já existem `summary` e
-   * `challenge`. É a coisa que só quem construiu saberia dizer: o que quase
-   * deu errado, o que mudou de ideia no meio. Uma linha, sempre. É o que
-   * impede a listagem de virar catálogo.
-   */
-  note: string;
-  challenge: string;
-  approach: ApproachStep[];
-  system: DesignSystem;
-  outcome: string[];
-};
-
-export const projects: Project[] = [
-  {
+export const enProjects: Record<string, ProjectCopy> = {
+  phobiacori: {
     title: 'PHOBIACORI',
-    slug: 'phobiacori',
     kind: 'E-commerce / Digital Product',
-    year: '2026',
     badge: 'Client work',
     summary: 'A store for an ink illustrator. Small runs, no warehouse, no checkout account.',
     intro:
@@ -110,33 +28,6 @@ export const projects: Project[] = [
     note: 'the cart lives in the visitor’s browser. no account, no sign-up, no database.',
     disciplines: ['ART DIRECTION', 'UX/UI', 'FRONTEND'],
     role: ['Art direction', 'UI design', 'Frontend', 'Content architecture', 'Deployment'],
-    stack: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Static Export'],
-    layout: 'wide',
-    cover: {
-      src: '/assets/projetos/phobia-cover.webp',
-      alt: 'PHOBIACORI home page, with ink drawings taped to a paper background',
-      width: 3150,
-      height: 1969,
-    },
-    gallery: [
-      {
-        src: '/assets/projetos/phobia-long.webp',
-        alt: 'Full PHOBIACORI page, from the cover down to the footer, store and archive together',
-        width: 1400,
-        height: 4400,
-        caption: 'Store and archive on the same page',
-      },
-      {
-        src: '/assets/projetos/phobia-cover.webp',
-        alt: 'Detail of the store header, with the menu and the cart counter',
-        width: 3150,
-        height: 1969,
-        caption: 'Ink, xerox and stubbornness',
-      },
-    ],
-    live: 'https://sonouxcoder.github.io/phobiacore/',
-    embeddable: true,
-    github: null,
     challenge:
       'Selling art in small runs has nothing to do with running a generic shop. The catalogue changes every week, half the pieces are one of a kind, and a marketplace layout made her work look like factory stock. On top of that: no budget for a backend, and no appetite for a platform that takes a cut of every sale.',
     approach: [
@@ -148,7 +39,7 @@ export const projects: Project[] = [
       {
         step: 'UX Strategy',
         title: 'A catalogue, not a shop window',
-        text: 'Each piece became a record card: the drawing large, the text next to it, availability stated in plain language. Buying is three taps and never asks who you are: the cart lives in local storage and the order leaves as a written message.',
+        text: 'Each piece became a record card: the drawing large, the text next to it, availability stated in plain language. Buying is three taps and never asks who you are. The cart lives in local storage and the order leaves as a written message.',
       },
       {
         step: 'Wireframes',
@@ -167,17 +58,11 @@ export const projects: Project[] = [
       },
     ],
     system: {
-      palette: [
-        { name: 'Ink', hex: '#0B0A09' },
-        { name: 'Paper', hex: '#F4F0E6' },
-        { name: 'Newsprint', hex: '#E6E0D2' },
-        { name: 'Alert red', hex: '#B8352A' },
-        { name: 'Ochre', hex: '#D9A520' },
-      ],
+      palette: ['Ink', 'Paper', 'Newsprint', 'Alert red', 'Ochre'],
       type: [
-        { role: 'Display', family: 'Archivo Black', note: 'Poster weight, used at three sizes only' },
-        { role: 'Technical', family: 'Space Mono', note: 'Prices, stock state, order numbers' },
-        { role: 'Text', family: 'Inter', note: 'Descriptions and shipping copy' },
+        { role: 'Display', note: 'Poster weight, used at three sizes only' },
+        { role: 'Technical', note: 'Prices, stock state, order numbers' },
+        { role: 'Text', note: 'Descriptions and shipping copy' },
       ],
       components: ['Piece card', 'Cart drawer', 'Availability tag', 'Taped figure', 'Order composer'],
       grid: '12 columns, 24px gutter, 1180px max. Pieces break the grid by design',
@@ -188,13 +73,22 @@ export const projects: Project[] = [
       'Sold-out work leaves the shelf on its own',
       'Zero running cost: no server, no platform fee',
     ],
+    coverAlt: 'PHOBIACORI home page, with ink drawings taped to a paper background',
+    gallery: [
+      {
+        alt: 'Full PHOBIACORI page, from the cover down to the footer, store and archive together',
+        caption: 'Store and archive on the same page',
+      },
+      {
+        alt: 'Detail of the store header, with the menu and the cart counter',
+        caption: 'Ink, xerox and stubbornness',
+      },
+    ],
   },
 
-  {
+  'knifes-me': {
     title: 'knifes.me',
-    slug: 'knifes-me',
     kind: 'SaaS / Own Product',
-    year: '2026',
     badge: 'Own product',
     summary: 'My product: a link-in-bio where the page actually belongs to the person.',
     intro:
@@ -202,34 +96,6 @@ export const projects: Project[] = [
     note: 'the hard part was never building. it was deciding what not to build.',
     disciplines: ['PRODUCT', 'UX/UI', 'FULL-STACK'],
     role: ['Product', 'UI design', 'Frontend', 'Backend', 'Database', 'Subscriptions'],
-    stack: ['Next.js', 'TypeScript', 'Supabase', 'PostgreSQL', 'Tailwind CSS', 'Stripe'],
-    layout: 'tall',
-    cover: {
-      src: '/assets/projetos/knifes-long.webp',
-      alt: 'A knifes.me profile page, top to bottom',
-      width: 1400,
-      height: 4400,
-    },
-    gallery: [
-      {
-        src: '/assets/projetos/knifes-cover.webp',
-        alt: 'knifes.me editor screen, with the live preview beside the controls',
-        width: 3150,
-        height: 1969,
-        caption: 'Change it here, see it immediately',
-      },
-      {
-        src: '/assets/projetos/knifes-long.webp',
-        alt: 'A complete profile generated by knifes.me',
-        width: 1400,
-        height: 4400,
-        caption: 'knifes.me/yourname',
-      },
-    ],
-    live: 'https://knifes.me/',
-    /* CSP com frame-ancestors 'none' — é produto com conta e pagamento */
-    embeddable: false,
-    github: 'https://github.com/SonoUXCODER',
     challenge:
       'Real customisation is expensive in performance: every new theme becomes more CSS shipped to someone who only wanted to tap a link. The product had to let people change almost everything without making the public page slower for the visitor who changes nothing.',
     approach: [
@@ -260,17 +126,11 @@ export const projects: Project[] = [
       },
     ],
     system: {
-      palette: [
-        { name: 'Void', hex: '#050507' },
-        { name: 'Plum', hex: '#1B0A33' },
-        { name: 'Signal violet', hex: '#A94DFF' },
-        { name: 'Deep violet', hex: '#7300FF' },
-        { name: 'White', hex: '#FFFFFF' },
-      ],
+      palette: ['Void', 'Plum', 'Signal violet', 'Deep violet', 'White'],
       type: [
-        { role: 'Display', family: 'Inter Tight', note: 'Tight tracking, used for profile names' },
-        { role: 'Interface', family: 'Inter', note: 'Editor labels, forms, dashboard' },
-        { role: 'Technical', family: 'System mono', note: 'Slugs, keys, analytics figures' },
+        { role: 'Display', note: 'Tight tracking, used for profile names' },
+        { role: 'Interface', note: 'Editor labels, forms, dashboard' },
+        { role: 'Technical', note: 'Slugs, keys, analytics figures' },
       ],
       components: [
         'Link block',
@@ -288,13 +148,19 @@ export const projects: Project[] = [
       'Themes editable without touching code',
       'Accounts, ranking and Stripe subscriptions in production',
     ],
+    coverAlt: 'A knifes.me profile page, top to bottom',
+    gallery: [
+      {
+        alt: 'knifes.me editor screen, with the live preview beside the controls',
+        caption: 'Change it here, see it immediately',
+      },
+      { alt: 'A complete profile generated by knifes.me', caption: 'knifes.me/yourname' },
+    ],
   },
 
-  {
+  'sandra-hair-salon': {
     title: 'Sandra Hair Salon',
-    slug: 'sandra-hair-salon',
     kind: 'Brand Site / Multilingual',
-    year: '2025',
     badge: 'Client work',
     summary: 'A Swiss salon in three languages, with CHF pricing and booking from the phone.',
     intro:
@@ -302,33 +168,6 @@ export const projects: Project[] = [
     note: 'this is where I stopped treating translation as a layer and started treating it as architecture.',
     disciplines: ['UX/UI', 'FRONTEND', 'I18N'],
     role: ['UI design', 'Frontend', 'i18n architecture', 'Deployment'],
-    stack: ['HTML', 'CSS', 'JavaScript', 'i18n', 'WhatsApp API'],
-    layout: 'split',
-    cover: {
-      src: '/assets/projetos/sandra-cover.webp',
-      alt: 'Sandra Hair Salon home page, in gold on near-black',
-      width: 3150,
-      height: 1969,
-    },
-    gallery: [
-      {
-        src: '/assets/projetos/sandra-long.webp',
-        alt: 'The full salon page, with the service table and the booking block',
-        width: 1400,
-        height: 4400,
-        caption: 'Prices in CHF, no small print',
-      },
-      {
-        src: '/assets/projetos/sandra-cover.webp',
-        alt: 'Detail of the salon site header with the language switch',
-        width: 3150,
-        height: 1969,
-        caption: 'DE / EN / PT behind one control',
-      },
-    ],
-    live: 'https://sandrahairsalon.ch/',
-    embeddable: true,
-    github: null,
     challenge:
       'The neighbourhood is trilingual. Translating afterwards, as a layer on top, always breaks something: a price renders wrong, a button overflows, someone lands on half a page in German. And the salon needed to change its own prices without opening a code editor.',
     approach: [
@@ -359,17 +198,11 @@ export const projects: Project[] = [
       },
     ],
     system: {
-      palette: [
-        { name: 'Espresso', hex: '#120C09' },
-        { name: 'Gold', hex: '#C9A15B' },
-        { name: 'Bronze', hex: '#B4883E' },
-        { name: 'Champagne', hex: '#E8CE96' },
-        { name: 'Cream', hex: '#FFF7E4' },
-      ],
+      palette: ['Espresso', 'Gold', 'Bronze', 'Champagne', 'Cream'],
       type: [
-        { role: 'Display', family: 'Serif display', note: 'Salon name and section titles' },
-        { role: 'Text', family: 'Humanist sans', note: 'Service copy in three languages' },
-        { role: 'Technical', family: 'Tabular sans', note: 'CHF prices and durations, aligned' },
+        { role: 'Display', note: 'Salon name and section titles' },
+        { role: 'Text', note: 'Service copy in three languages' },
+        { role: 'Technical', note: 'CHF prices and durations, aligned' },
       ],
       components: ['Language switch', 'Service row', 'Price tag', 'Booking composer', 'Opening-hours block'],
       grid: '12 columns, 20px gutter, 1140px max. Single column below 720px',
@@ -380,13 +213,22 @@ export const projects: Project[] = [
       'Service table the salon updates on its own',
       'Booking requests arrive already written, from the phone',
     ],
+    coverAlt: 'Sandra Hair Salon home page, in gold on near-black',
+    gallery: [
+      {
+        alt: 'The full salon page, with the service table and the booking block',
+        caption: 'Prices in CHF, no small print',
+      },
+      {
+        alt: 'Detail of the salon site header with the language switch',
+        caption: 'DE / EN / PT behind one control',
+      },
+    ],
   },
 
-  {
+  'thayse-marques': {
     title: 'Dra. Thayse Marques',
-    slug: 'thayse-marques',
     kind: 'Brand Site / Lead Routing',
-    year: '2025',
     badge: 'Client work',
     summary: 'A law firm site where the form reads the case and routes it to the right practice.',
     intro:
@@ -394,33 +236,6 @@ export const projects: Project[] = [
     note: 'eight pages instead of one was a content decision. the search ranking came along for free.',
     disciplines: ['CONTENT STRATEGY', 'UX/UI', 'FRONTEND'],
     role: ['Research and content', 'UI design', 'Frontend', 'Technical SEO', 'Deployment'],
-    stack: ['HTML', 'CSS', 'JavaScript', 'Structured data', 'WhatsApp API'],
-    layout: 'offset',
-    cover: {
-      src: '/assets/projetos/thayse-cover.webp',
-      alt: 'Dra. Thayse Marques home page, with a portrait and the practice-area menu',
-      width: 3150,
-      height: 1969,
-    },
-    gallery: [
-      {
-        src: '/assets/projetos/thayse-long.webp',
-        alt: 'The whole law firm page, top to bottom',
-        width: 1400,
-        height: 4400,
-        caption: 'The full page, top to bottom',
-      },
-      {
-        src: '/assets/projetos/thayse-cover.webp',
-        alt: 'Detail of the law firm site header',
-        width: 3150,
-        height: 1969,
-        caption: 'Where the first minute is decided',
-      },
-    ],
-    live: 'https://drathaysemarques.adv.br/',
-    embeddable: true,
-    github: null,
     challenge:
       'Everything arrived through one channel with no context. The lawyer spent the first half hour of every conversation working out what the case was even about, and a good share of those cases were not hers to take.',
     approach: [
@@ -451,17 +266,11 @@ export const projects: Project[] = [
       },
     ],
     system: {
-      palette: [
-        { name: 'Near-black', hex: '#120E0D' },
-        { name: 'Bone', hex: '#F3EFE7' },
-        { name: 'Sand', hex: '#E9E1D3' },
-        { name: 'Muted rose', hex: '#E88A96' },
-        { name: 'White', hex: '#FCFAF6' },
-      ],
+      palette: ['Near-black', 'Bone', 'Sand', 'Muted rose', 'White'],
       type: [
-        { role: 'Display', family: 'Transitional serif', note: 'Practice names and headlines' },
-        { role: 'Text', family: 'Neutral sans', note: 'Long-form legal copy, 62ch measure' },
-        { role: 'Technical', family: 'Tabular sans', note: 'Deadlines, article numbers, dates' },
+        { role: 'Display', note: 'Practice names and headlines' },
+        { role: 'Text', note: 'Long-form legal copy, 62ch measure' },
+        { role: 'Technical', note: 'Deadlines, article numbers, dates' },
       ],
       components: ['Practice card', 'Case form', 'Message composer', 'Credential block', 'FAQ row'],
       grid: '12 columns, 24px gutter, 1120px max',
@@ -472,13 +281,16 @@ export const projects: Project[] = [
       'Eight indexed pages instead of one',
       'Scheduling without the back-and-forth',
     ],
+    coverAlt: 'Dra. Thayse Marques home page, with a portrait and the practice-area menu',
+    gallery: [
+      { alt: 'The whole law firm page, top to bottom', caption: 'The full page, top to bottom' },
+      { alt: 'Detail of the law firm site header', caption: 'Where the first minute is decided' },
+    ],
   },
 
-  {
+  'truffle-nb': {
     title: 'Truffle N.B.',
-    slug: 'truffle-nb',
     kind: 'Catalogue / Seasonal Product',
-    year: '2025',
     badge: 'Client work',
     summary: 'A catalogue of fresh Italian truffle, delivered across Switzerland.',
     intro:
@@ -486,33 +298,6 @@ export const projects: Project[] = [
     note: 'designing for content that ages by itself changed how I think about shelf life.',
     disciplines: ['UX/UI', 'FRONTEND'],
     role: ['UI design', 'Frontend in React', 'Content integration', 'Deployment'],
-    stack: ['React', 'Vite', 'TypeScript', 'CSS Modules'],
-    layout: 'offset',
-    cover: {
-      src: '/assets/projetos/fg-cover.webp',
-      alt: 'Truffle N.B. Tricolore home page',
-      width: 3150,
-      height: 1969,
-    },
-    gallery: [
-      {
-        src: '/assets/projetos/fg-cover.webp',
-        alt: 'Top of the Truffle N.B. site',
-        width: 3150,
-        height: 1969,
-        caption: 'Rust, earth and one breath of space',
-      },
-      {
-        src: '/assets/projetos/fg-long.webp',
-        alt: 'The full Truffle N.B. Tricolore page',
-        width: 1400,
-        height: 4400,
-        caption: 'Only what the season actually has',
-      },
-    ],
-    live: 'https://kyso1.github.io/fg-systems/',
-    embeddable: true,
-    github: 'https://github.com/kyso1/fg-systems',
     challenge:
       'Seasonal produce ages on screen. A static page still advertising a truffle that ran out three weeks ago is worse than having no page at all. It costs trust, and trust is the entire product when someone is spending CHF 200 on something they cannot see.',
     approach: [
@@ -543,17 +328,11 @@ export const projects: Project[] = [
       },
     ],
     system: {
-      palette: [
-        { name: 'Rust', hex: '#8C3227' },
-        { name: 'Gold', hex: '#C89B4B' },
-        { name: 'Wheat', hex: '#E8C87E' },
-        { name: 'Linen', hex: '#F7F1E3' },
-        { name: 'Off-white', hex: '#FFFDF7' },
-      ],
+      palette: ['Rust', 'Gold', 'Wheat', 'Linen', 'Off-white'],
       type: [
-        { role: 'Display', family: 'Didone serif', note: 'Product names, large and sparse' },
-        { role: 'Text', family: 'Grotesque sans', note: 'Origin, weight, delivery windows' },
-        { role: 'Technical', family: 'Tabular sans', note: 'Prices per gram and lead times' },
+        { role: 'Display', note: 'Product names, large and sparse' },
+        { role: 'Text', note: 'Origin, weight, delivery windows' },
+        { role: 'Technical', note: 'Prices per gram and lead times' },
       ],
       components: ['Product card', 'Season badge', 'Delivery estimator', 'Origin note', 'Order composer'],
       grid: '12 columns, 32px gutter, 1240px max',
@@ -564,15 +343,10 @@ export const projects: Project[] = [
       'Under one second to first paint on 4G',
       'The client updates it without calling me',
     ],
+    coverAlt: 'Truffle N.B. Tricolore home page',
+    gallery: [
+      { alt: 'Top of the Truffle N.B. site', caption: 'Rust, earth and one breath of space' },
+      { alt: 'The full Truffle N.B. Tricolore page', caption: 'Only what the season actually has' },
+    ],
   },
-];
-
-export const getProject = (slug: string) => projects.find((p) => p.slug === slug);
-
-/** o número de exibição sai da posição na lista, não de um campo */
-export const projectNumber = (slug: string) => {
-  const i = projects.findIndex((p) => p.slug === slug);
-  return String(i + 1).padStart(2, '0');
 };
-
-export const projectTotal = String(projects.length).padStart(2, '0');

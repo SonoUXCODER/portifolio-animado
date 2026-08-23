@@ -1,6 +1,7 @@
 'use client';
 
-import { site } from '@/data/site';
+import { identity } from '@/content';
+import { useT } from './ContentProvider';
 import SectionIndex from './SectionIndex';
 import Magnetic from './Magnetic';
 import { Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
@@ -20,7 +21,8 @@ import { Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
    ------------------------------------------------------------------------- */
 
 export default function Contact() {
-  const canais = site.social.filter((s) => s.href.startsWith('http'));
+  const t = useT();
+  const canais = identity.social.filter((s) => s.href.startsWith('http'));
 
   return (
     <section
@@ -33,36 +35,36 @@ export default function Contact() {
       {/* ================= a chamada ================= */}
       <div className="py-[var(--space-8)]">
         <Lines
-          lines={['Let’s build', 'something', 'that matters.']}
+          lines={t.contact.lines}
           as="h2"
           className="display-hero"
         />
         <span id="contact-title" className="sr-only">
-          Contact
+          {t.sections.contact.name}
         </span>
 
         <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-7)]">
           <div className="col-span-12 lg:col-span-5">
             <Reveal delay={0.1}>
               <p className="lead">
-                Available for freelance, product collaborations and creative digital projects.
+                {t.contact.lead}
               </p>
 
               <p className="mt-[var(--space-7)]">
                 <Magnetic strength={12}>
                   <a
-                    href={`mailto:${site.email}?subject=${encodeURIComponent('Project enquiry')}`}
+                    href={`mailto:${identity.email}?subject=${encodeURIComponent(t.contact.emailSubject)}`}
                     className="btn"
                     data-cursor="open"
                   >
-                    Start a conversation <span aria-hidden="true">↗</span>
+                    {t.contact.cta} <span aria-hidden="true">↗</span>
                   </a>
                 </Magnetic>
               </p>
 
               <p className="mt-[var(--space-5)]">
-                <a href={`mailto:${site.email}`} className="link hit title-sm" data-cursor="open">
-                  {site.email}
+                <a href={`mailto:${identity.email}`} className="link hit title-sm" data-cursor="open">
+                  {identity.email}
                 </a>
               </p>
             </Reveal>
@@ -104,10 +106,10 @@ export default function Contact() {
           style={{ borderColor: 'var(--line)' }}
         >
           {[
-            ['Based in', `${site.city}, ${site.country}`],
-            ['Coordinates', site.coordinates],
-            ['Response time', 'Within two days'],
-            ['Working', 'Remote or on site'],
+            [t.contact.basedIn, `${identity.city}, ${t.meta.country}`],
+            [t.contact.coordinates, identity.coordinates],
+            [t.contact.responseTime, t.contact.responseValue],
+            [t.contact.working, t.contact.workingValue],
           ].map(([rotulo, valor]) => (
             <div key={rotulo}>
               <dt className="label label--dim">{rotulo}</dt>

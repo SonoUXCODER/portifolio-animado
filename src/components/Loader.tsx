@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { site } from '@/data/site';
+import { identity } from '@/content';
 import { easeEmphasis, easeStandard } from '@/lib/motion';
 
 /* -------------------------------------------------------------------------
@@ -126,7 +126,7 @@ export default function Loader() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 0.4 } }}
           >
-            {site.wordmark}
+            {identity.wordmark}
           </motion.p>
 
           <div className="flex items-end justify-between gap-[var(--space-5)]">
@@ -135,7 +135,7 @@ export default function Loader() {
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0, transition: { duration: 0.8, ease: easeStandard, delay: 0.1 } }}
             >
-              {site.name}
+              {identity.name}
             </motion.p>
             <p className="figure text-[clamp(2rem,6vw,4rem)]" style={{ color: 'var(--text-secondary)' }}>
               {String(pct).padStart(3, '0')}

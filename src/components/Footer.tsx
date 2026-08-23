@@ -1,6 +1,7 @@
 'use client';
 
-import { currentYear, site } from '@/data/site';
+import { identity } from '@/content';
+import { useT } from './ContentProvider';
 import { Reveal } from './Reveal';
 
 /* -------------------------------------------------------------------------
@@ -19,7 +20,8 @@ import { Reveal } from './Reveal';
    ------------------------------------------------------------------------- */
 
 export default function Footer() {
-  const canais = site.social.filter((s) => s.href.startsWith('http'));
+  const t = useT();
+  const canais = identity.social.filter((s) => s.href.startsWith('http'));
 
   return (
     <footer className="shell pb-[var(--space-7)] pt-[var(--space-9)]">
@@ -34,7 +36,7 @@ export default function Footer() {
             color: 'var(--text-primary)',
           }}
         >
-          {site.name}
+          {identity.name}
         </p>
       </Reveal>
 
@@ -44,10 +46,10 @@ export default function Footer() {
         style={{ borderColor: 'var(--line)' }}
       >
         <p className="label" style={{ color: 'var(--text-primary)' }}>
-          Full-Stack Developer <span className="index-line__sep">/</span> UX·UI
+          {t.footer.role} <span className="index-line__sep">/</span> UX·UI
         </p>
 
-        <nav aria-label="Social links">
+        <nav aria-label={t.footer.socialLinks}>
           <ul className="flex flex-wrap gap-x-[var(--space-6)] gap-y-[var(--space-3)]">
             {canais.map((s) => (
               <li key={s.label}>
@@ -66,15 +68,15 @@ export default function Footer() {
         </nav>
 
         <p className="label" style={{ color: 'var(--text-primary)' }}>
-          {site.city} <span className="index-line__sep">/</span> {site.country}
+          {identity.city} <span className="index-line__sep">/</span> {t.meta.country}
         </p>
       </div>
 
       <div className="mt-[var(--space-5)] flex flex-wrap items-baseline justify-between gap-[var(--space-4)]">
         <p className="label label--dim">
-          © {currentYear()} {site.name}
+          © {new Date().getFullYear()} {identity.name}
         </p>
-        <p className="label label--dim">{site.colophon}</p>
+        <p className="label label--dim">{t.meta.colophon}</p>
       </div>
     </footer>
   );

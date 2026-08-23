@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { type Project } from '@/data/projects';
+import { fill, type Project } from '@/content';
+import { useHref, useT } from './ContentProvider';
 import { TransitionLink } from './PageTransition';
 import LivePreview from './LivePreview';
 import Magnetic from './Magnetic';
@@ -44,6 +45,8 @@ function Rotulo({ children }: { children: React.ReactNode }) {
 }
 
 export default function ProjectPage({ p, proximo }: { p: Project; proximo: Project }) {
+  const t = useT();
+  const href = useHref();
   const [aoVivo, setAoVivo] = useState(false);
 
   return (
@@ -55,11 +58,11 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
         <div>
           <p className="index-line">
             <TransitionLink
-              href="/#work"
+              href={href('/#work')}
               className="hit inline-flex items-center gap-[var(--space-2)] transition-transform duration-[var(--duration-normal)] hover:-translate-x-[3px]"
               cursor="back"
             >
-              <span aria-hidden="true">←</span> Work
+              <span aria-hidden="true">←</span> {t.project.back}
             </TransitionLink>
             <span className="index-line__rule" aria-hidden="true" />
             <span className="hidden sm:inline">{p.badge}</span>
@@ -95,20 +98,22 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
             style={{ borderColor: 'var(--line)' }}
           >
             <div>
-              <dt className="label label--dim">Year</dt>
+              <dt className="label label--dim">{t.project.year}</dt>
               <dd className="mt-[var(--space-2)] text-[0.95rem]">{p.year}</dd>
             </div>
             <div>
-              <dt className="label label--dim">Role</dt>
+              <dt className="label label--dim">{t.project.role}</dt>
               <dd className="mt-[var(--space-2)] text-[0.95rem]">{p.role.join(', ')}</dd>
             </div>
             <div>
-              <dt className="label label--dim">Disciplines</dt>
+              <dt className="label label--dim">{t.project.disciplines}</dt>
               <dd className="mt-[var(--space-2)] text-[0.95rem]">{p.disciplines.join(' / ')}</dd>
             </div>
             <div>
-              <dt className="label label--dim">Status</dt>
-              <dd className="mt-[var(--space-2)] text-[0.95rem]">{p.live ? 'Live' : 'Archived'}</dd>
+              <dt className="label label--dim">{t.project.status}</dt>
+              <dd className="mt-[var(--space-2)] text-[0.95rem]">
+                {p.live ? t.project.live : t.project.archived}
+              </dd>
             </div>
           </dl>
         </Reveal>
@@ -140,8 +145,8 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
         <div className="grid-12 gap-y-[var(--space-6)]">
           <div className="col-span-12 lg:col-span-5">
             <Reveal>
-              <Rotulo>The challenge</Rotulo>
-              <Lines lines={['What was', 'broken.']} as="h2" className="display-lg" />
+              <Rotulo>{t.project.challengeLabel}</Rotulo>
+              <Lines lines={t.project.challengeLines} as="h2" className="display-lg" />
             </Reveal>
           </div>
           <div className="col-span-12 lg:col-span-6 lg:col-start-7">
@@ -157,8 +162,8 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
           ================================================================ */}
       <section className="shell mt-[var(--space-10)]">
         <Reveal>
-          <Rotulo>The approach</Rotulo>
-          <Lines lines={['How it', 'was made.']} as="h2" className="display-lg" />
+          <Rotulo>{t.project.approachLabel}</Rotulo>
+          <Lines lines={t.project.approachLines} as="h2" className="display-lg" />
         </Reveal>
 
         <RevealGroup as="ol" className="mt-[var(--space-8)] flex flex-col">
@@ -188,8 +193,8 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
           ================================================================ */}
       <section className="shell mt-[var(--space-10)]">
         <Reveal>
-          <Rotulo>Design system</Rotulo>
-          <Lines lines={['The rules', 'behind it.']} as="h2" className="display-lg" />
+          <Rotulo>{t.project.systemLabel}</Rotulo>
+          <Lines lines={t.project.systemLines} as="h2" className="display-lg" />
         </Reveal>
 
         {/* ---- cor ----
@@ -199,7 +204,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
              julgada, que é o que uma paleta é. */}
         <div className="mt-[var(--space-8)]">
           <Reveal>
-            <p className="label label--dim">Palette</p>
+            <p className="label label--dim">{t.project.palette}</p>
           </Reveal>
           <RevealGroup
             as="ul"
@@ -224,7 +229,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
         {/* ---- tipografia ---- */}
         <div className="mt-[var(--space-9)]">
           <Reveal>
-            <p className="label label--dim">Typography</p>
+            <p className="label label--dim">{t.project.typography}</p>
           </Reveal>
           <RevealGroup as="ul" className="mt-[var(--space-4)] flex flex-col">
             {p.system.type.map((t) => (
@@ -246,7 +251,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
         <div className="grid-12 mt-[var(--space-9)] gap-y-[var(--space-7)]">
           <div className="col-span-12 md:col-span-5">
             <Reveal>
-              <p className="label label--dim">Components</p>
+              <p className="label label--dim">{t.project.components}</p>
               <ul className="mt-[var(--space-4)] flex flex-wrap gap-[var(--space-2)]">
                 {p.system.components.map((c) => (
                   <li
@@ -264,13 +269,13 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
           <div className="col-span-12 md:col-span-6 md:col-start-7">
             <Reveal delay={0.08}>
               <div className="border-t py-[var(--space-4)]" style={{ borderColor: 'var(--line)' }}>
-                <p className="label label--dim">Grid</p>
+                <p className="label label--dim">{t.project.grid}</p>
                 <p className="body mt-[var(--space-2)]" style={{ color: 'var(--text-primary)' }}>
                   {p.system.grid}
                 </p>
               </div>
               <div className="border-t py-[var(--space-4)]" style={{ borderColor: 'var(--line)' }}>
-                <p className="label label--dim">Spacing</p>
+                <p className="label label--dim">{t.project.spacing}</p>
                 <p className="body mt-[var(--space-2)]" style={{ color: 'var(--text-primary)' }}>
                   {p.system.spacing}
                 </p>
@@ -287,8 +292,8 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
         <div className="grid-12 gap-y-[var(--space-6)]">
           <div className="col-span-12 lg:col-span-5">
             <Reveal>
-              <Rotulo>Development</Rotulo>
-              <Lines lines={['What it', 'runs on.']} as="h2" className="display-lg" />
+              <Rotulo>{t.project.developmentLabel}</Rotulo>
+              <Lines lines={t.project.developmentLines} as="h2" className="display-lg" />
             </Reveal>
           </div>
 
@@ -312,7 +317,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
         <div className="grid-12 mt-[var(--space-9)] gap-y-[var(--space-6)]">
           <div className="col-span-12 md:col-span-3">
             <Reveal>
-              <p className="label label--dim">Outcome</p>
+              <p className="label label--dim">{t.project.outcome}</p>
             </Reveal>
           </div>
           <RevealGroup as="ol" className="col-span-12 md:col-span-8 md:col-start-5 flex flex-col">
@@ -343,10 +348,10 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
       <section className="mt-[var(--space-10)]">
         <div className="shell">
           <Reveal>
-            <Rotulo>Final experience</Rotulo>
-            <Lines lines={['See it', 'running.']} as="h2" className="display-lg" />
+            <Rotulo>{t.project.experienceLabel}</Rotulo>
+            <Lines lines={t.project.experienceLines} as="h2" className="display-lg" />
             <p className="body-sm mt-[var(--space-5)]">
-              Drag, scroll or use the arrow keys.
+              {t.project.galleryHint}
             </p>
           </Reveal>
         </div>
@@ -360,7 +365,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
             padrão WCAG 2.1.1 trata a rolagem como funcionalidade. */}
         <div
           role="region"
-          aria-label={`${p.title} screenshots`}
+          aria-label={fill(t.livePreview.screenshots, p.title)}
           tabIndex={0}
           className="mt-[var(--space-8)] flex snap-x snap-mandatory gap-[var(--space-5)] overflow-x-auto pb-[var(--space-5)] pl-[var(--gutter)] pr-[var(--gutter)]"
           style={{ scrollbarWidth: 'thin' }}
@@ -399,7 +404,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
                   {/* abre o site aqui dentro, não numa aba nova: quem sai
                       pra outra aba quase nunca volta pro estudo de caso */}
                   <button type="button" onClick={() => setAoVivo(true)} className="btn" data-cursor="open">
-                    Visit live project
+                    {t.project.visitLive}
                   </button>
                 </Magnetic>
               )}
@@ -412,11 +417,11 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
                     className="btn btn--ghost"
                     data-cursor="open"
                   >
-                    Source <span aria-hidden="true">↗</span>
+                    {t.project.source} <span aria-hidden="true">↗</span>
                   </a>
                 </Magnetic>
               ) : (
-                <p className="body-sm">Repository is private. The code belongs to the client.</p>
+                <p className="body-sm">{t.project.privateRepo}</p>
               )}
             </div>
           </Reveal>
@@ -430,9 +435,9 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
         className="mt-[var(--space-10)] border-t pt-[var(--space-8)]"
         style={{ borderColor: 'var(--line)' }}
       >
-        <TransitionLink href={`/work/${proximo.slug}`} className="group block" cursor="case">
+        <TransitionLink href={href(`/work/${proximo.slug}`)} className="group block" cursor="case">
           <div className="shell">
-            <p className="label label--dim mb-[var(--space-4)]">Next project</p>
+            <p className="label label--dim mb-[var(--space-4)]">{t.project.nextProject}</p>
             <Reveal direction="none">
               <h2 className="display-xl inline-flex items-baseline gap-[var(--space-5)] transition-[color,transform] duration-[var(--duration-slow)] ease-[var(--ease-standard)] group-hover:translate-x-[var(--space-4)] group-hover:text-[var(--accent)]">
                 {proximo.title}
