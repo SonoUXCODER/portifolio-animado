@@ -4,23 +4,31 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { site } from '@/data/site';
 
 /* -------------------------------------------------------------------------
-   Transição entre páginas.
+   TRANSIÇÃO ENTRE PÁGINAS.
 
-   Ordem: tela preta sobe -> textura passa por cima -> rota troca -> a tela
-   desce e devolve o conteúdo. ~560ms no total, dentro da janela de 400–700ms.
+   Ordem: a cortina sobe -> a rota troca -> a cortina sai por cima e devolve
+   o conteúdo. ~840ms no total.
 
    Não é enfeite gratuito: as páginas de projeto são pesadas de imagem, e a
-   cortina esconde o instante feio em que o navegador troca de documento.
+   cortina esconde o instante feio em que o navegador troca de documento —
+   aquele meio segundo de layout meio montado.
+
+   A cortina é da cor do fundo, não branca. Num site claro o corte em preto
+   é o gesto óbvio; aqui o inverso (um flash de bone em tela cheia) seria
+   uma pancada de luz na cara de quem está lendo no escuro. Como preto sobre
+   preto seria invisível, quem marca o movimento é o filete em acento na
+   borda de ataque — que é, literalmente, um corte de cinema.
    ------------------------------------------------------------------------- */
 
 type Ctx = { irPara: (href: string) => void };
 const TransicaoCtx = createContext<Ctx>({ irPara: () => {} });
 export const useTransicao = () => useContext(TransicaoCtx);
 
-const DURACAO_COBRE = 0.34;
-const DURACAO_ABRE = 0.5;
+const DURACAO_COBRE = 0.42;
+const DURACAO_ABRE = 0.56;
 
 export function ProvedorDeTransicao({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -36,6 +44,9 @@ export function ProvedorDeTransicao({ children }: { children: ReactNode }) {
       primeiroPath.current = pathname;
       destino.current = null;
       setCobrindo(false);
+      /* a rota nova começa do topo. Sem isto, sair de um projeto no meio da
+         página abre o próximo na mesma altura de rolagem. */
+      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     }
   }, [pathname]);
 
@@ -69,7 +80,7 @@ export function ProvedorDeTransicao({ children }: { children: ReactNode }) {
         {cobrindo && (
           <motion.div
             key="cortina"
-            className="pointer-events-none fixed inset-0 z-[95]"
+            className="pointer-events-none fixed inset-0 z-[95] flex items-end justify-between px-[var(--gutter)] pb-[var(--space-7)]"
             initial={{ y: '100%' }}
             animate={{ y: '0%', transition: { duration: DURACAO_COBRE, ease: [0.76, 0, 0.24, 1] } }}
             exit={{ y: '-100%', transition: { duration: DURACAO_ABRE, ease: [0.76, 0, 0.24, 1] } }}
@@ -80,29 +91,32 @@ export function ProvedorDeTransicao({ children }: { children: ReactNode }) {
                 destino.current = null;
               }
             }}
-            style={{ background: 'var(--text-primary)' }}
+            style={{ background: 'var(--background)' }}
           >
-            {/* a textura entra meio passo depois do preto: é ela que dá o
-                cheiro de fotocópia no meio da troca */}
-            <motion.div
-              className="absolute inset-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              transition={{ delay: 0.12, duration: 0.2 }}
-              style={{
-                backgroundImage:
-                  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='t'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23t)' opacity='0.55'/%3E%3C/svg%3E\")",
-                mixBlendMode: 'screen',
-              }}
+            {/* o filete na borda de ataque: é ele que torna o movimento
+                visível numa cortina da cor do fundo */}
+            <span
+              aria-hidden="true"
+              className="absolute inset-x-0 top-0 h-px"
+              style={{ background: 'var(--accent)' }}
             />
+
             <motion.span
-              className="mono absolute bottom-8 right-8 text-[11px] tracking-[0.3em]"
-              style={{ color: 'var(--surface)' }}
+              className="label"
+              style={{ color: 'var(--text-primary)' }}
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.75 }}
-              transition={{ delay: 0.14, duration: 0.18 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.14, duration: 0.2 }}
             >
-              VIRANDO A PÁGINA
+              {site.wordmark}
+            </motion.span>
+            <motion.span
+              className="label label--dim"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.18, duration: 0.2 }}
+            >
+              Loading
             </motion.span>
           </motion.div>
         )}

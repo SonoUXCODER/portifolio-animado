@@ -1,37 +1,40 @@
 /* -------------------------------------------------------------------------
-   As seções do arquivo, na ordem em que são lidas.
+   Os capítulos, na ordem em que são lidos.
 
-   Fonte única: a navegação, o indicador de seção ativa, o kicker no topo de
+   Fonte única: a navegação, o indicador de seção ativa, o índice no topo de
    cada cena e o menu mobile leem tudo daqui. O número é a posição no array —
    inserir uma seção no meio renumera o resto sozinho.
 
-   `kicker` é a linha que abre a seção. Não é um rótulo montado a partir do
-   nome: é uma frase escrita pra aquela cena, e é ela que muda o tom de um
-   capítulo pro outro. Se duas seções pudessem trocar de kicker sem ninguém
-   perceber, os dois estão genéricos demais.
+   São cinco, e cinco é o limite. Uma navegação de oito itens não é uma
+   navegação, é um sumário: ninguém a lê, todo mundo rola. As peças que não
+   estão aqui (filosofia, faixas de declaração, esculturas) são intervalos
+   entre capítulos — existem pra trocar o fundo e marcar a virada, não pra
+   serem visitadas por link.
+
+   `note` é a linha que abre a seção, ao lado do número. Não é rótulo montado
+   a partir do nome: é uma frase escrita pra aquela cena. Se duas seções
+   pudessem trocar de `note` sem ninguém perceber, as duas estão genéricas.
    ------------------------------------------------------------------------- */
 
 export type Section = {
   id: string;
-  /** nome no kicker e no menu */
+  /** nome no índice da seção */
   name: string;
-  /** a linha de abertura da seção, em caixa alta */
-  kicker: string;
-  /** rótulo curto pra navegação do topo */
-  nav?: string;
+  /** a linha de abertura da seção */
+  note: string;
+  /** rótulo curto na navegação do topo */
+  nav: string;
 };
 
 export const sections: Section[] = [
-  { id: 'sobre', name: 'Sobre', kicker: 'Uma pessoa, duas metades', nav: 'Sobre' },
-  { id: 'stack', name: 'Stack', kicker: 'O que está rodando agora', nav: 'Stack' },
-  { id: 'arquivo', name: 'Arquivo', kicker: 'Cinco entradas, de 2025 pra cá', nav: 'Arquivo' },
-  { id: 'processo', name: 'Processo', kicker: 'Da ideia até o deploy', nav: 'Processo' },
-  { id: 'experiencia', name: 'Experiência', kicker: 'Em ordem inversa', nav: 'Trajeto' },
-  { id: 'laboratorio', name: 'Laboratório', kicker: 'Sem cliente e sem prazo', nav: 'Lab' },
-  { id: 'contato', name: 'Contato', kicker: 'O fim do arquivo', nav: 'Contato' },
+  { id: 'about', name: 'About', note: 'One person, two disciplines', nav: 'About' },
+  { id: 'work', name: 'Selected Work', note: 'Five products, start to ship', nav: 'Work' },
+  { id: 'capabilities', name: 'Capabilities', note: 'From interface to infrastructure', nav: 'Skills' },
+  { id: 'experience', name: 'Experience', note: 'In reverse order', nav: 'Experience' },
+  { id: 'contact', name: 'Contact', note: 'Where this ends and something starts', nav: 'Contact' },
 ];
 
-/** índice formatado, base 1 — usado no kicker de cada seção */
+/** índice formatado, base 1 — usado na linha de abertura de cada seção */
 export const sectionIndex = (id: string) => {
   const i = sections.findIndex((s) => s.id === id);
   return String(i + 1).padStart(2, '0');

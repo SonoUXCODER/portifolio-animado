@@ -1,25 +1,46 @@
 /* -------------------------------------------------------------------------
    Tudo que é "identidade" mora aqui. Trocar uma linha aqui muda o site
    inteiro: nav, footer, contato, metadata, JSON-LD.
+
+   O site é escrito em inglês. Não é preferência estética: o trabalho é
+   procurado por gente que contrata produto digital na Europa, e essa
+   conversa acontece em inglês mesmo quando ninguém ali é nativo.
    ------------------------------------------------------------------------- */
 
 export const site = {
   name: 'SONO',
-  handle: 'sonoUXcoder',
-  tagline: 'desenvolvedor full-stack e designer de produto',
+  /* a marca como ela aparece na navegação — o ® é parte do desenho */
+  wordmark: 'sono®',
+  handle: 'sonouxcoder',
+  role: 'Full-Stack Developer & UX·UI Designer',
+  tagline: 'I design experiences. I engineer systems.',
   /* URL de produção. Trocar aqui muda canonical, og:image e sitemap.
      Vem do ambiente pra que uma futura mudança de domínio não precise de
      commit — basta a variável no build. */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonouxcoder.github.io/portifolio-animado',
   email: 'alissonvpt1@gmail.com',
+
+  /* ---- localização ----
+     A coordenada aparece no hero e no rodapé. É de Berna, e é real: um
+     número inventado é a primeira coisa que alguém confere. */
+  city: 'Bern',
+  country: 'Switzerland',
+  coordinates: '46.9480° N / 7.4474° E',
+  timezone: 'Europe/Zurich',
+
+  /* estado de disponibilidade, no hero e no contato */
+  availability: 'Available for selected projects',
+
   /* linha de crédito, no fim do rodapé */
-  colofao: 'Composto em Fraunces e Instrument Sans. Escrito à mão em Next.js e TypeScript.',
+  colophon: 'Set in Archivo and Instrument Sans. Hand-written in Next.js and TypeScript.',
+
   social: [
-    { label: 'GITHUB', href: 'https://github.com/SonoUXCODER' },
-    { label: 'INSTAGRAM', href: 'https://instagram.com/somnifobias' },
-    /* TODO: trocar pelo perfil real */
-    { label: 'LINKEDIN', href: 'https://www.linkedin.com/in/sonouxcoder' },
-    { label: 'E-MAIL', href: 'mailto:alissonvpt1@gmail.com' },
+    { label: 'GitHub', href: 'https://github.com/SonoUXCODER' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/sonouxcoder' },
+    { label: 'Instagram', href: 'https://instagram.com/somnifobias' },
+    { label: 'Email', href: 'mailto:alissonvpt1@gmail.com' },
   ],
 };
 
+/** ano corrente, usado no hero e no rodapé */
+export const currentYear = () => new Date().getFullYear();

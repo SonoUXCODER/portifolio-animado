@@ -1,165 +1,121 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
 import { site } from '@/data/site';
-import Kicker from './Kicker';
-import { Reveal, WordsUp } from './Reveal';
+import SectionIndex from './SectionIndex';
+import Magnetic from './Magnetic';
+import { Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
 
 /* -------------------------------------------------------------------------
-   CONTATO.
+   CONTATO — a última tela.
 
-   O formulário não tem servidor de propósito: monta um `mailto:` e entrega
-   pro programa de e-mail de quem escreveu. Sem backend, sem banco e sem
-   chave de API pra vazar — e continua funcionando numa hospedagem que só
-   serve arquivo estático, que é o caso aqui.
+   Ocupa a altura inteira e não tem formulário. Foi uma escolha, não um
+   esquecimento: um formulário aqui pediria três campos e um clique antes de
+   qualquer coisa acontecer, e a essa altura da página quem chegou já
+   decidiu. Um endereço de e-mail escrito grande é mais rápido, funciona no
+   celular, e não depende de JavaScript nenhum.
 
-   O aviso disso fica escrito ao lado do botão. Alguém que espera um envio
-   com servidor precisa saber antes de clicar, não depois de o cliente de
-   e-mail abrir do nada.
+   Os canais são uma lista de linhas com filete, não ícones. Ícone de rede
+   social num site preto é o detalhe que empurra a página inteira de volta
+   pro genérico — e o nome escrito diz a mesma coisa em menos pixels.
    ------------------------------------------------------------------------- */
 
 export default function Contact() {
-  const [enviado, setEnviado] = useState(false);
-
-  function enviar(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const dados = new FormData(e.currentTarget);
-    const nome = String(dados.get('nome') ?? '').trim();
-    const email = String(dados.get('email') ?? '').trim();
-    const mensagem = String(dados.get('mensagem') ?? '').trim();
-
-    const assunto = `Contato do portfólio — ${nome || 'sem nome'}`;
-    const corpo = `${mensagem}\n\n—\n${nome}\n${email}`;
-
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
-      assunto,
-    )}&body=${encodeURIComponent(corpo)}`;
-    setEnviado(true);
-  }
+  const canais = site.social.filter((s) => s.href.startsWith('http'));
 
   return (
     <section
-      id="contato"
-      aria-labelledby="contato-titulo"
-      className="shell scroll-mt-[var(--header-h)] py-[var(--space-10)]"
+      id="contact"
+      aria-labelledby="contact-title"
+      className="shell flex min-h-[100svh] scroll-mt-[var(--header-h)] flex-col justify-between py-[var(--space-9)]"
     >
-      <Kicker id="contato" />
+      <SectionIndex id="contact" />
 
-      <div className="mt-[var(--space-8)] max-w-[18ch]">
-        <WordsUp as="h2" text="Me conta o que você precisa." className="display-lg" />
-        <span id="contato-titulo" className="sr-only">
-          Contato
+      {/* ================= a chamada ================= */}
+      <div className="py-[var(--space-8)]">
+        <Lines
+          lines={['Let’s build', 'something', 'that matters.']}
+          as="h2"
+          className="display-hero"
+        />
+        <span id="contact-title" className="sr-only">
+          Contact
         </span>
-      </div>
 
-      <div className="grid-12 mt-[var(--space-9)] gap-y-[var(--space-8)]">
-        {/* ---- canais ---- */}
-        <div className="col-span-12 lg:col-span-5">
-          <Reveal>
-            <p className="lead max-w-[34ch]">
-              Projeto novo, freela, ou uma ideia que ainda não tem forma. Respondo todas — inclusive
-              a que começa com &ldquo;será que dá pra fazer?&rdquo;.
-            </p>
-          </Reveal>
-
-          <Reveal delay={0.08}>
-            <ul className="mt-[var(--space-7)] flex flex-col">
-              {site.social.map((s) => {
-                const externo = s.href.startsWith('http');
-                return (
-                  <li key={s.label} className="border-t last:border-b" style={{ borderColor: 'var(--border)' }}>
-                    <a
-                      href={s.href}
-                      target={externo ? '_blank' : undefined}
-                      rel={externo ? 'noopener noreferrer' : undefined}
-                      data-cursor="abrir"
-                      className="group flex items-center justify-between gap-[var(--space-4)] py-[var(--space-4)]"
-                    >
-                      <span className="title-sm transition-transform duration-[var(--duration-normal)] ease-[var(--ease-standard)] group-hover:translate-x-[var(--space-2)]">
-                        {s.label}
-                      </span>
-                      <span
-                        aria-hidden="true"
-                        className="label transition-transform duration-[var(--duration-normal)] ease-[var(--ease-standard)] group-hover:-translate-y-[2px] group-hover:translate-x-[2px]"
-                      >
-                        ↗
-                      </span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </Reveal>
-        </div>
-
-        {/* ---- formulário ---- */}
-        <div className="col-span-12 lg:col-span-6 lg:col-start-7">
-          <Reveal direction="left">
-            <form onSubmit={enviar} className="panel p-[var(--space-6)]">
-              <div className="flex flex-col gap-[var(--space-5)]">
-                <div>
-                  <label htmlFor="nome" className="label">
-                    Seu nome
-                  </label>
-                  <input
-                    id="nome"
-                    name="nome"
-                    type="text"
-                    required
-                    autoComplete="name"
-                    className="field mt-[var(--space-2)]"
-                    placeholder="Como te chamo?"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="label">
-                    Seu e-mail
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    autoComplete="email"
-                    className="field mt-[var(--space-2)]"
-                    placeholder="Para onde eu respondo?"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="mensagem" className="label">
-                    Mensagem
-                  </label>
-                  <textarea
-                    id="mensagem"
-                    name="mensagem"
-                    required
-                    rows={5}
-                    className="field mt-[var(--space-2)] resize-y"
-                    placeholder="A ideia em duas linhas já basta."
-                  />
-                </div>
-              </div>
-
-              <div className="mt-[var(--space-6)] flex flex-wrap items-center gap-[var(--space-4)]">
-                <button type="submit" className="btn">
-                  Enviar
-                </button>
-                <p className="body-sm max-w-[28ch]">
-                  Abre no seu programa de e-mail. Nada fica guardado aqui.
-                </p>
-              </div>
-
-              {/* aria-live: quem usa leitor de tela precisa saber que algo
-                  aconteceu — a janela do e-mail abre fora da página */}
-              <p role="status" aria-live="polite" className="body-sm mt-[var(--space-4)]">
-                {enviado ? 'Abri o e-mail já preenchido — é só mandar.' : ''}
+        <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-7)]">
+          <div className="col-span-12 lg:col-span-5">
+            <Reveal delay={0.1}>
+              <p className="lead">
+                Available for freelance, product collaborations and creative digital projects.
               </p>
-            </form>
-          </Reveal>
+
+              <p className="mt-[var(--space-7)]">
+                <Magnetic strength={12}>
+                  <a
+                    href={`mailto:${site.email}?subject=${encodeURIComponent('Project enquiry')}`}
+                    className="btn"
+                    data-cursor="open"
+                  >
+                    Start a conversation <span aria-hidden="true">↗</span>
+                  </a>
+                </Magnetic>
+              </p>
+
+              <p className="mt-[var(--space-5)]">
+                <a href={`mailto:${site.email}`} className="link hit title-sm" data-cursor="open">
+                  {site.email}
+                </a>
+              </p>
+            </Reveal>
+          </div>
+
+          {/* ---- canais ---- */}
+          <div className="col-span-12 lg:col-span-6 lg:col-start-7">
+            <RevealGroup as="ul" className="flex flex-col" delay={0.12}>
+              {canais.map((s) => (
+                <RevealItem as="li" key={s.label} className="border-t" style={{ borderColor: 'var(--line)' }}>
+                  <a
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor="open"
+                    className="group flex items-center justify-between gap-[var(--space-4)] py-[var(--space-5)]"
+                  >
+                    <span className="display-md transition-transform duration-[var(--duration-normal)] ease-[var(--ease-standard)] group-hover:translate-x-[var(--space-3)]">
+                      {s.label}
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="label transition-transform duration-[var(--duration-normal)] ease-[var(--ease-standard)] group-hover:-translate-y-[3px] group-hover:translate-x-[3px]"
+                    >
+                      ↗
+                    </span>
+                  </a>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </div>
         </div>
       </div>
+
+      {/* ================= a régua final ================= */}
+      <Reveal direction="none">
+        <dl
+          className="grid grid-cols-2 gap-x-[var(--space-5)] gap-y-[var(--space-5)] border-t pt-[var(--space-4)] sm:grid-cols-4"
+          style={{ borderColor: 'var(--line)' }}
+        >
+          {[
+            ['Based in', `${site.city}, ${site.country}`],
+            ['Coordinates', site.coordinates],
+            ['Response time', 'Within two days'],
+            ['Working', 'Remote or on site'],
+          ].map(([rotulo, valor]) => (
+            <div key={rotulo}>
+              <dt className="label label--dim">{rotulo}</dt>
+              <dd className="mt-[var(--space-2)] text-[clamp(0.85rem,1vw,1rem)]">{valor}</dd>
+            </div>
+          ))}
+        </dl>
+      </Reveal>
     </section>
   );
 }

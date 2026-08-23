@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: site.url, lastModified: agora, changeFrequency: 'monthly', priority: 1 },
     ...projects.map((p) => ({
-      url: `${site.url}/projetos/${p.slug}`,
+      url: `${site.url}/work/${p.slug}`,
       lastModified: agora,
       changeFrequency: 'yearly' as const,
       priority: 0.8,

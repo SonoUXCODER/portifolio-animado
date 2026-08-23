@@ -5,25 +5,35 @@ import { AnimatePresence, motion, useMotionValue, useReducedMotion, useSpring } 
 import { usePonteiroFino } from '@/hooks/useMedia';
 
 /* -------------------------------------------------------------------------
-   Cursor.
-   Um círculo pequeno que engorda e ganha palavra quando passa por cima de
-   algo marcado com data-cursor. Só existe onde há ponteiro fino: no dedo
-   ele não faz sentido nenhum e some junto com a regra `cursor:none`.
+   CURSOR.
+
+   Um círculo pequeno que engorda e ganha uma palavra quando passa por cima
+   de algo marcado com data-cursor. Só existe onde há ponteiro fino de
+   verdade: no dedo não faz sentido nenhum, e some junto com a regra
+   `cursor: none`.
+
+   A palavra importa mais do que a bolha. Um cursor que só cresce é efeito;
+   um que diz "CASE" em cima de um projeto e "OPEN" em cima de um link
+   externo é interface — ele responde, antes do clique, o que vai acontecer.
 
    Marcação, em qualquer lugar do site:
-     data-cursor="ver"    -> projeto
-     data-cursor="abrir"  -> link externo
-     data-cursor="olhar"  -> imagem / desenho
-     data-cursor="trocar" -> botão de edição
+     data-cursor="case"  -> estudo de caso
+     data-cursor="open"  -> link externo / e-mail
+     data-cursor="look"  -> imagem
+     data-cursor="close" -> fecha o que está aberto
+     data-cursor="back"  -> volta
+     data-cursor="home"  -> assinatura
    ------------------------------------------------------------------------- */
 
 const palavras: Record<string, string> = {
-  ver: 'VER',
-  abrir: 'ABRIR',
-  olhar: 'OLHAR',
-  fechar: 'FECHAR',
-  arrastar: 'ARRASTAR',
-  trocar: 'TROCAR',
+  case: 'CASE',
+  view: 'VIEW',
+  open: 'OPEN',
+  look: 'LOOK',
+  close: 'CLOSE',
+  back: 'BACK',
+  home: 'HOME',
+  drag: 'DRAG',
 };
 
 export default function CustomCursor() {
@@ -106,7 +116,7 @@ export default function CustomCursor() {
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.14 }}
               className="mono text-[10px] font-semibold tracking-[0.2em]"
-              style={{ color: 'var(--surface)' }}
+              style={{ color: 'var(--background)' }}
             >
               {palavra}
             </motion.span>

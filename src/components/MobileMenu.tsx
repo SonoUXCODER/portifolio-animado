@@ -5,17 +5,20 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { sections, sectionIndex } from '@/data/sections';
 import { site } from '@/data/site';
 import { duration, easeEmphasis, easeStandard } from '@/lib/motion';
-import { ThemeToggle } from './Theme';
 
 /* -------------------------------------------------------------------------
-   MENU MOBILE.
+   MENU MOBILE — fullscreen, editorial.
 
-   Pensado pra tela pequena, não reduzido dela: o alvo de toque é a linha
-   inteira, o número da seção ancora a leitura, e o contato fica ao alcance
-   do polegar, na base.
+   Pensado pra tela pequena, não reduzido do desktop: cada capítulo ocupa
+   uma linha inteira em tipografia de display, o número ancora a leitura, e
+   o contato fica ao alcance do polegar, na base.
 
-   Diálogo de verdade: foco entra ao abrir, volta ao fechar, Esc fecha,
-   Tab circula dentro e a rolagem do fundo trava.
+   A entrada é uma cortina que desce e as linhas sobem atrás dela, uma a
+   uma — o mesmo gesto do hero. Um menu que só faz fade seria a única peça
+   do site fora da linguagem.
+
+   Diálogo de verdade: foco entra ao abrir, volta ao fechar, Esc fecha, Tab
+   circula dentro e a rolagem do fundo trava.
    ------------------------------------------------------------------------- */
 
 export default function MobileMenu({
@@ -81,41 +84,49 @@ export default function MobileMenu({
           id="menu-mobile"
           role="dialog"
           aria-modal="true"
-          aria-label="Navegação"
-          className="fixed inset-0 z-[80] flex flex-col justify-between overflow-y-auto px-[var(--gutter)] pb-[var(--space-7)] pt-[calc(var(--header-h)+var(--space-6))] lg:hidden"
+          aria-label="Navigation"
+          className="fixed inset-0 z-[80] flex flex-col justify-between overflow-y-auto px-[var(--gutter)] pb-[var(--space-7)] pt-[calc(var(--header-h)+var(--space-7))] lg:hidden"
           style={{ background: 'var(--background)' }}
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -12 }}
-          transition={{ duration: duration.normal, ease: easeEmphasis }}
+          initial={{ y: '-100%' }}
+          animate={{ y: '0%' }}
+          exit={{ y: '-100%' }}
+          transition={{ duration: 0.62, ease: easeEmphasis }}
         >
-          <nav aria-label="Seções">
+          <nav aria-label="Sections">
             <ul className="flex flex-col">
               {sections.map((s, i) => {
                 const atual = ativa === s.id;
                 return (
-                  <motion.li
-                    key={s.id}
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.06 + i * 0.04, duration: duration.normal, ease: easeStandard }}
-                    className="border-b"
-                    style={{ borderColor: 'var(--border)' }}
-                  >
+                  <li key={s.id} className="border-b" style={{ borderColor: 'var(--line)' }}>
                     <a
                       href={`#${s.id}`}
                       onClick={fechar}
                       aria-current={atual ? 'true' : undefined}
-                      className="flex min-h-[56px] items-center gap-[var(--space-4)] py-[var(--space-3)]"
+                      className="flex min-h-[68px] items-baseline gap-[var(--space-4)] py-[var(--space-4)]"
                     >
-                      <span className="label w-6 shrink-0" style={{ color: atual ? 'var(--accent)' : undefined }}>
+                      <span
+                        className="label w-6 shrink-0"
+                        style={{ color: atual ? 'var(--accent)' : 'var(--text-tertiary)' }}
+                      >
                         {sectionIndex(s.id)}
                       </span>
-                      <span className="display-md" style={{ color: atual ? 'var(--accent)' : undefined }}>
-                        {s.name}
+                      <span className="overflow-hidden pt-[0.12em] [margin-top:-0.12em]">
+                        <motion.span
+                          className="display-lg block"
+                          style={{ color: atual ? 'var(--accent)' : undefined }}
+                          initial={{ y: '106%' }}
+                          animate={{ y: '0%' }}
+                          transition={{
+                            delay: 0.18 + i * 0.055,
+                            duration: 0.7,
+                            ease: easeStandard,
+                          }}
+                        >
+                          {s.name}
+                        </motion.span>
                       </span>
                     </a>
-                  </motion.li>
+                  </li>
                 );
               })}
             </ul>
@@ -124,25 +135,27 @@ export default function MobileMenu({
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: duration.normal }}
-            className="mt-[var(--space-8)] flex flex-col gap-[var(--space-5)] border-t pt-[var(--space-5)]"
-            style={{ borderColor: 'var(--border)' }}
+            transition={{ delay: 0.45, duration: duration.normal }}
+            className="mt-[var(--space-8)] flex flex-col gap-[var(--space-4)] border-t pt-[var(--space-5)]"
+            style={{ borderColor: 'var(--line)' }}
           >
-            <ThemeToggle className="flex min-h-[44px] w-fit items-center gap-[var(--space-3)]" />
+            <a href={`mailto:${site.email}`} className="title-sm link w-fit">
+              {site.email}
+            </a>
             <ul className="flex flex-wrap gap-x-[var(--space-5)] gap-y-[var(--space-3)]">
-              {site.social.map((s) => (
-                <li key={s.label}>
-                  <a
-                    href={s.href}
-                    target={s.href.startsWith('http') ? '_blank' : undefined}
-                    rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    className="hit label link"
-                  >
-                    {s.label}
-                  </a>
-                </li>
-              ))}
+              {site.social
+                .filter((s) => s.href.startsWith('http'))
+                .map((s) => (
+                  <li key={s.label}>
+                    <a href={s.href} target="_blank" rel="noopener noreferrer" className="hit label link">
+                      {s.label} <span aria-hidden="true">↗</span>
+                    </a>
+                  </li>
+                ))}
             </ul>
+            <p className="label label--dim">
+              {site.city} / {site.country}
+            </p>
           </motion.div>
         </motion.div>
       )}

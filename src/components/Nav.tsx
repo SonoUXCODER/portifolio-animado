@@ -7,7 +7,6 @@ import { sections, spyIds } from '@/data/sections';
 import { site } from '@/data/site';
 import { useSectionSpy } from '@/hooks/useSectionSpy';
 import { TransitionLink } from './PageTransition';
-import { ThemeToggle } from './Theme';
 import MobileMenu from './MobileMenu';
 import { duration, easeStandard } from '@/lib/motion';
 import { cn } from '@/lib/utils';
@@ -20,7 +19,8 @@ import { cn } from '@/lib/utils';
    com layoutId, em vez de acender e apagar borda em cada link.
 
    Os itens saem de data/sections.ts, então a navegação nunca desencontra do
-   conteúdo. Em página de projeto o indicador some: não há seção pra apontar.
+   conteúdo. Em página de projeto o indicador some: não há seção pra apontar,
+   e a assinatura passa a dizer em que tipo de página a pessoa está.
    ------------------------------------------------------------------------- */
 
 export default function Nav() {
@@ -40,10 +40,10 @@ export default function Nav() {
   return (
     <>
       <a
-        href="#conteudo"
+        href="#content"
         className="btn sr-only fixed left-[var(--space-4)] top-[var(--space-4)] z-[95] focus:not-sr-only focus:inline-flex"
       >
-        Pular para o conteúdo
+        Skip to content
       </a>
 
       {/* com o menu aberto a faixa sobe acima do painel: o header cria
@@ -51,74 +51,98 @@ export default function Nav() {
       <header className={cn('fixed inset-x-0 top-0', aberto ? 'z-[85]' : 'z-[70]')}>
         <div
           className={cn(
-            'transition-[background-color,border-color,backdrop-filter] duration-[var(--duration-normal)]',
-            ancorada && !aberto
-              ? 'border-b bg-[var(--background)]/80 backdrop-blur-xl'
-              : 'border-b border-transparent',
+            'border-b transition-[background-color,border-color,backdrop-filter] duration-[var(--duration-normal)]',
+            ancorada && !aberto ? 'bg-[var(--background)]/72 backdrop-blur-xl' : 'backdrop-blur-none',
           )}
-          style={{ borderColor: ancorada && !aberto ? 'var(--border)' : 'transparent' }}
+          style={{ borderColor: ancorada && !aberto ? 'var(--line)' : 'transparent' }}
         >
           <div className="shell flex h-[var(--header-h)] items-center justify-between gap-[var(--space-5)]">
-            {/* assinatura */}
-            <TransitionLink href="/" className="hit group flex items-baseline gap-[var(--space-2)]" cursor="ver">
-              <span className="text-[0.95rem] font-semibold tracking-[-0.02em]">{site.name}</span>
-              <span className="label hidden sm:inline">
-                {naHome ? 'Full-stack · Design' : 'Estudo de caso'}
+            {/* ---- assinatura ---- */}
+            <TransitionLink href="/" className="hit group flex items-baseline gap-[var(--space-3)]" cursor="home">
+              <span
+                className="text-[1rem] font-semibold tracking-[-0.02em]"
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                {site.wordmark}
+              </span>
+              <span className="label label--dim hidden sm:inline">
+                {naHome ? 'Full-stack · UX·UI' : 'Case study'}
               </span>
             </TransitionLink>
 
-            {/* seções — só desktop */}
+            {/* ---- capítulos — só desktop ---- */}
             {naHome && (
-              <nav aria-label="Seções" className="hidden lg:block">
+              <nav aria-label="Sections" className="hidden lg:block">
                 <ul className="flex items-center gap-[var(--space-1)]">
-                  {sections
-                    .filter((s) => s.nav)
-                    .map((s) => {
-                      const atual = ativa === s.id;
-                      return (
-                        <li key={s.id} className="relative">
-                          <a
-                            href={`#${s.id}`}
-                            aria-current={atual ? 'true' : undefined}
-                            className="label relative block px-[var(--space-3)] py-[var(--space-3)] transition-colors duration-[var(--duration-fast)]"
-                            style={{ color: atual ? 'var(--text-primary)' : undefined }}
-                          >
-                            {s.nav}
-                          </a>
-                          {atual && (
-                            <motion.span
-                              layoutId="nav-ativa"
-                              aria-hidden="true"
-                              className="absolute inset-x-[var(--space-3)] bottom-[6px] h-[1.5px]"
-                              style={{ background: 'var(--accent)' }}
-                              transition={{ duration: duration.normal, ease: easeStandard }}
-                            />
-                          )}
-                        </li>
-                      );
-                    })}
+                  {sections.map((s) => {
+                    const atual = ativa === s.id;
+                    return (
+                      <li key={s.id} className="relative">
+                        <a
+                          href={`#${s.id}`}
+                          aria-current={atual ? 'true' : undefined}
+                          className="label relative block px-[var(--space-4)] py-[var(--space-4)] transition-colors duration-[var(--duration-fast)]"
+                          style={{ color: atual ? 'var(--text-primary)' : undefined }}
+                        >
+                          {s.nav}
+                        </a>
+                        {atual && (
+                          <motion.span
+                            layoutId="nav-ativa"
+                            aria-hidden="true"
+                            className="absolute inset-x-[var(--space-4)] bottom-[14px] h-[1.5px]"
+                            style={{ background: 'var(--accent)' }}
+                            transition={{ duration: duration.normal, ease: easeStandard }}
+                          />
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </nav>
             )}
 
-            <div className="flex items-center gap-[var(--space-2)]">
-              <ThemeToggle className="hit flex items-center gap-[var(--space-2)] px-[var(--space-2)] py-[var(--space-2)] transition-opacity hover:opacity-70" />
+            <div className="flex items-center gap-[var(--space-5)]">
+              {/* ---- estado ao vivo ----
+                   O único elemento da faixa que não é navegação. Ele está
+                   aqui porque é a informação que decide se a pessoa vai até
+                   o fim da página: se dá pra contratar agora. */}
+              <span className="label hidden items-center gap-[var(--space-2)] md:inline-flex">
+                <span
+                  aria-hidden="true"
+                  className="block h-[6px] w-[6px] rounded-full"
+                  style={{ background: 'var(--accent)' }}
+                />
+                Available
+              </span>
 
               <button
                 type="button"
                 onClick={() => setAberto((v) => !v)}
                 aria-expanded={aberto}
                 aria-controls="menu-mobile"
-                className="label relative z-[85] -mr-[var(--space-2)] flex min-h-[44px] min-w-[44px] items-center justify-end gap-[var(--space-2)] lg:hidden"
+                className="label relative z-[85] -mr-[var(--space-2)] flex min-h-[44px] min-w-[44px] items-center justify-end gap-[var(--space-3)] lg:hidden"
+                style={{ color: 'var(--text-primary)' }}
               >
-                {aberto ? 'Fechar' : 'Menu'}
+                {aberto ? 'Close' : 'Menu'}
                 <span aria-hidden="true" className="flex w-4 flex-col gap-[4px]">
                   <span
-                    className={cn('block h-px w-full bg-current transition-transform duration-[var(--duration-normal)]', aberto && 'translate-y-[5px] rotate-45')}
+                    className={cn(
+                      'block h-px w-full bg-current transition-transform duration-[var(--duration-normal)]',
+                      aberto && 'translate-y-[5px] rotate-45',
+                    )}
                   />
-                  <span className={cn('block h-px w-full bg-current transition-opacity duration-[var(--duration-fast)]', aberto && 'opacity-0')} />
                   <span
-                    className={cn('block h-px w-full bg-current transition-transform duration-[var(--duration-normal)]', aberto && '-translate-y-[5px] -rotate-45')}
+                    className={cn(
+                      'block h-px w-full bg-current transition-opacity duration-[var(--duration-fast)]',
+                      aberto && 'opacity-0',
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      'block h-px w-full bg-current transition-transform duration-[var(--duration-normal)]',
+                      aberto && '-translate-y-[5px] -rotate-45',
+                    )}
                   />
                 </span>
               </button>

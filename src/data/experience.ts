@@ -1,79 +1,136 @@
 /* -------------------------------------------------------------------------
-   A linha do tempo.
+   A TRAJETÓRIA.
 
    Montada a partir do trabalho que existe de verdade em projects.ts — nada
-   de cargo ou empresa inventados. Cada entrada aponta pro slug do projeto
-   quando há um estudo de caso, e a timeline vira mais um caminho pra dentro
-   do portfólio em vez de um currículo solto.
+   de cargo ou empresa inventados pra encher currículo. Cada entrada aponta
+   pro slug do estudo de caso quando há um, e a linha do tempo vira mais um
+   caminho pra dentro do portfólio em vez de um anexo morto.
 
-   Pra acrescentar um emprego formal depois, é só somar uma entrada com
-   `org` preenchido e sem `slug`.
+   `details` é o que se abre no clique. A regra: se o detalhe pudesse estar
+   no resumo sem incomodar, ele não é detalhe — é resumo mal escrito. O que
+   vai aqui é a decisão técnica, o número, a coisa específica.
+
+   `milestone` marca virada de fase. Dois numa lista de sete: se todos
+   fossem marco, nenhum seria.
    ------------------------------------------------------------------------- */
 
 export type Entry = {
-  year: string;
+  /** o período como ele aparece, em caixa alta: `2026 — NOW` */
+  period: string;
   title: string;
   /** cliente, produto próprio, ou o nome da empresa quando houver */
   org: string;
-  /** o que esse trabalho exigiu que os outros não exigiram */
   summary: string;
-  /** as frentes que couberam a ele nesse projeto */
+  /** o que se abre no clique */
+  details: string[];
+  /** as frentes que couberam a mim */
   roles: string[];
   /** liga a entrada ao estudo de caso, quando existe */
   slug?: string;
-  /** marco de virada na trajetória */
+  /** virada de fase */
   milestone?: boolean;
 };
 
 export const experience: Entry[] = [
   {
-    year: '2026',
-    title: 'PHOBIACORI',
-    org: 'Cliente · artista independente',
+    period: '2026 — Now',
+    title: 'Full-Stack Developer & Product Designer',
+    org: 'Independent · Bern, Switzerland',
     summary:
-      'Primeira loja que montei do zero. O desafio não era vender: era fazer catálogo de tiragem pequena não parecer estoque de fábrica.',
-    roles: ['Direção de arte', 'Front-end', 'Arquitetura de conteúdo'],
-    slug: 'phobiacori',
+      'Designing and building digital products end to end, for clients across Switzerland and Brazil — and for myself.',
+    details: [
+      'Working in three languages: German, English and Portuguese.',
+      'Every project runs from research through design, build and deployment with one person accountable for all of it.',
+      'Available for selected freelance work and product collaborations.',
+    ],
+    roles: ['Product', 'UX/UI', 'Full-stack', 'Deployment'],
+    milestone: true,
   },
   {
-    year: '2026',
+    period: '2026',
     title: 'knifes.me',
-    org: 'Produto próprio',
+    org: 'Own product · SaaS',
     summary:
-      'Saí de front-end para produto inteiro: banco, contas, assinatura e a decisão de o que não construir. O que mais aprendi foi a segunda parte.',
-    roles: ['Produto', 'Full-stack', 'Banco de dados', 'Assinaturas'],
+      'Moved from frontend to an entire product: database, accounts, subscriptions, and the decision about what not to build.',
+    details: [
+      'Theme engine built on CSS custom properties stored as database rows — new themes cost bytes, not bundle size.',
+      'Stripe subscriptions with webhook reconciliation running in production.',
+      'The hardest work was scope: three features were cut after being built.',
+    ],
+    roles: ['Product', 'Full-stack', 'Database', 'Subscriptions'],
     slug: 'knifes-me',
     milestone: true,
   },
   {
-    year: '2025',
-    title: 'Truffle N.B. Tricolore',
-    org: 'Cliente · Suíça',
+    period: '2026',
+    title: 'PHOBIACORI',
+    org: 'Client · Independent artist',
     summary:
-      'Produto sazonal me obrigou a projetar para conteúdo que envelhece sozinho — o catálogo tinha que se desatualizar sem quebrar.',
-    roles: ['Design', 'Front-end em React', 'Integração de conteúdo'],
+      'The first store I built from nothing. The problem was never selling — it was making a small-run catalogue not look like factory stock.',
+    details: [
+      'Cart state lives entirely in the browser: no accounts, no database, no running cost.',
+      'The product list is a typed data file the artist edits herself.',
+      'Static export on GitHub Pages — nothing to go down, nothing to renew.',
+    ],
+    roles: ['Art direction', 'UI design', 'Frontend', 'Content architecture'],
+    slug: 'phobiacori',
+  },
+  {
+    period: '2025',
+    title: 'Truffle N.B. Tricolore',
+    org: 'Client · Switzerland',
+    summary:
+      'A seasonal product forced me to design for content that ages by itself — the catalogue had to go out of date without breaking.',
+    details: [
+      'Availability drives the layout: what is out of season becomes information, not a dead end.',
+      'React and Vite, first paint under one second on 4G.',
+      'The client edits the season file; the delivery copy follows it automatically.',
+    ],
+    roles: ['UI design', 'React frontend', 'Content integration'],
     slug: 'truffle-nb',
   },
   {
-    year: '2025',
+    period: '2025',
     title: 'Sandra Hair Salon',
-    org: 'Cliente · Buchs SG',
+    org: 'Client · Buchs SG',
     summary:
-      'Três idiomas no mesmo balcão. Foi aqui que parei de tratar tradução como camada e passei a tratar como arquitetura.',
-    roles: ['Design', 'Front-end', 'Arquitetura de i18n'],
+      'Three languages across the same counter. This is where I stopped treating translation as a layer and started treating it as architecture.',
+    details: [
+      'Language is state, not a route: switching keeps scroll position and rewrites currency, hours and date format.',
+      'One dictionary file, no build step, no CMS.',
+      'Booking composes a pre-written message in the language currently selected.',
+    ],
+    roles: ['UI design', 'Frontend', 'i18n architecture'],
     slug: 'sandra-hair-salon',
   },
   {
-    year: '2025',
+    period: '2025',
     title: 'Dra. Thayse Marques',
-    org: 'Cliente · Rio de Janeiro',
+    org: 'Client · Rio de Janeiro',
     summary:
-      'O primeiro projeto em que o trabalho de conteúdo pesou mais que o de interface: oito áreas do direito, cada uma com texto e busca próprios.',
-    roles: ['Pesquisa e conteúdo', 'Design', 'Front-end', 'SEO técnico'],
+      'The first project where content work outweighed interface work: eight practice areas, each with its own copy and its own search intent.',
+    details: [
+      'A year of incoming enquiries was clustered by need, and those clusters became the site architecture.',
+      'The form composes a message already classified by practice area.',
+      'Eight indexed pages replaced a single one — the ranking followed the content, not the other way round.',
+    ],
+    roles: ['Research and content', 'UI design', 'Frontend', 'Technical SEO'],
     slug: 'thayse-marques',
-    milestone: true,
+  },
+  {
+    period: '2021 — 2024',
+    title: 'Learning both halves at once',
+    org: 'Self-taught',
+    summary:
+      'I learned design and engineering in the same period, because there was nobody to hand the other half to.',
+    details: [
+      'Started with HTML, CSS and Figma in 2021; React in 2022; TypeScript and Next.js in 2023.',
+      'Databases and authentication came in 2024, when a personal project stopped fitting in the browser.',
+      'What was once a limitation is now the argument: no handoff, no telephone game.',
+    ],
+    roles: ['Foundations', 'Self-directed practice'],
   },
 ];
 
-/** os anos distintos, do mais novo pro mais velho */
-export const years = [...new Set(experience.map((e) => e.year))];
+/** o primeiro ano em que existe trabalho registrado — usado nas estatísticas */
+export const startYear = 2021;

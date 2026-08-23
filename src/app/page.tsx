@@ -1,45 +1,44 @@
 import Hero from '@/components/Hero';
-import About from '@/components/About';
-import Stack from '@/components/Stack';
-import Statement from '@/components/Statement';
-import Archive from '@/components/Archive';
-import Processo from '@/components/Processo';
-import Experience from '@/components/Experience';
-import Lab from '@/components/Lab';
+import Manifesto from '@/components/Manifesto';
+import Work from '@/components/Work';
+import Capabilities from '@/components/Capabilities';
+import TechStack from '@/components/TechStack';
+import Journey from '@/components/Journey';
+import Philosophy from '@/components/Philosophy';
 import Contact from '@/components/Contact';
-import Marquee from '@/components/Marquee';
-import Encarte3D from '@/components/Encarte3D';
-import { estampas } from '@/data/estampas';
-import { projects } from '@/data/projects';
+import Interlude from '@/components/Interlude';
+import { interludes } from '@/data/interludes';
 
 /* -------------------------------------------------------------------------
-   O arquivo, na ordem em que é lido.
+   A PÁGINA, NA ORDEM EM QUE É LIDA.
 
-   A ordem das seções nomeadas é a mesma de data/sections.ts — é o que faz a
-   navegação, o número de cada kicker e o indicador de seção ativa nunca
+   Cinco capítulos numerados, e entre eles as peças que não são capítulo.
+   A ordem dos numerados é a mesma de data/sections.ts — é o que faz a
+   navegação, o número de cada índice e o indicador de seção ativa nunca
    desencontrarem do conteúdo. Mexer lá reordena tudo; mexer só aqui quebra.
 
-   Entre elas entram as peças que **não** são seção, e cada uma existe por um
-   motivo estrutural: sem elas a leitura vira uma pilha de sete blocos com o
-   mesmo ritmo. Todas trocam o fundo, a altura ou a densidade da tela, e é
-   essa troca que marca a virada de um ato pro outro.
+   As peças entre capítulos existem por um motivo estrutural, não decorativo.
+   Sem elas a página vira uma pilha de sete blocos com o mesmo ritmo, e
+   ritmo constante é exatamente o que faz um site parecer gerado:
 
-     faixa corrida   duas, nas duas emendas mais importantes: logo depois do
-                     hero (o que tem no arquivo) e antes do contato (o que
-                     está aberto agora). Cada uma carrega informação que não
-                     aparece em nenhum outro lugar da página.
+     escultura    três, nas viradas da narrativa — depois de dizer quem
+                  assina, depois de mostrar o trabalho, e depois de mostrar
+                  as ferramentas. Cada uma toma a tela inteira e não pede
+                  nada em troca. É a pausa.
 
-     declaração      uma, entre a stack e o arquivo: o fundo inverte por
-                     inteiro e a página faz a única afirmação direta que ela
-                     se permite.
+     stack        não é capítulo numerado: é a segunda metade de
+                  CAPABILITIES. Separar "o que eu faço" de "com o que eu
+                  faço" em dois números daria dois capítulos pro mesmo
+                  assunto.
 
-     escultura       três, nas viradas da narrativa — depois de dizer quem
-                     assina, depois de mostrar o trabalho, e depois dos
-                     estudos, logo antes do convite.
+     filosofia    a única tela clara do site, logo antes do contato. Depois
+                  de sete cenas numa sala escura, inverter a página por uma
+                  tela é mais forte do que qualquer animação — e é o último
+                  respiro antes do convite.
 
-   A primeira faixa lista os projetos pelo nome antes de o leitor chegar no
-   arquivo. É de propósito: ela cria a expectativa que faz a pessoa continuar
-   rolando, que é a única coisa que uma faixa corrida sabe fazer bem.
+   As declarações ("design with intention", "build with precision") vivem
+   dentro de <Work/>, entre os projetos, porque é lá que elas fazem sentido:
+   separam um capítulo do outro sem tirar o leitor da seção.
    ------------------------------------------------------------------------- */
 
 export default function Home() {
@@ -47,35 +46,19 @@ export default function Home() {
     <>
       <Hero />
 
-      <Marquee itens={projects.map((p) => p.title)} velocidade={52} separador="—" />
+      <Manifesto />
+      <Interlude peca={interludes[0]} indice={0} />
 
-      <About />
-      <Encarte3D estampa={estampas[0]} indice={0} />
+      <Work />
+      <Interlude peca={interludes[1]} indice={1} />
 
-      <Stack />
+      <Capabilities />
+      <TechStack />
+      <Interlude peca={interludes[2]} indice={2} />
 
-      <Statement kicker="O trabalho" text="Decidido, desenhado e publicado pela mesma pessoa." />
+      <Journey />
 
-      <Archive />
-      <Encarte3D estampa={estampas[1]} indice={1} />
-
-      <Processo />
-      <Experience />
-      <Lab />
-      <Encarte3D estampa={estampas[2]} indice={2} />
-
-      <Marquee
-        itens={[
-          'Disponível para projetos',
-          'Respondo em até dois dias',
-          'Trabalho remoto, da Suíça',
-          'Projeto inteiro ou só o front',
-        ]}
-        velocidade={44}
-        reverso
-        separador="—"
-      />
-
+      <Philosophy />
       <Contact />
     </>
   );

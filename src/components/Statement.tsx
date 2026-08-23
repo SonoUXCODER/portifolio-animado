@@ -2,54 +2,56 @@
 
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { WordsUp } from './Reveal';
+import { Lines } from './Reveal';
 
 /* -------------------------------------------------------------------------
    FAIXA DE DECLARAÇÃO.
 
-   Uma frase, ocupando a largura inteira, em cor invertida. Existe pra
-   resolver o problema de a página parecer uma pilha de seções: entre um ato
-   e o outro o fundo troca por completo, e a troca é o que marca a virada —
-   não um espaço maior nem um filete.
+   Duas ou três palavras ocupando a largura inteira, entre um projeto e o
+   seguinte. Existe pra resolver o problema de a seção de trabalho parecer
+   uma pilha: entre um capítulo e o outro a página para de mostrar e faz uma
+   afirmação, e é essa troca de registro que marca a virada.
 
-   Aqui ficou no lugar de um letreiro rolando com os cargos. O letreiro
-   animava pra sempre e não dizia nada que o hero já não dissesse; esta
-   faixa não anima sozinha e carrega uma afirmação. Um elemento a menos, uma
-   informação a mais.
+   Não tem imagem, não tem fundo próprio, não tem borda. O efeito inteiro é
+   escala: depois de uma sequência de chapas e parágrafos, uma frase em
+   8rem no vazio lê como silêncio.
 
-   O único movimento é a frase subir devagar enquanto a faixa atravessa a
-   tela — deslocamento total de 40px, ligado ao progresso da rolagem, e
-   desligado inteiro no prefers-reduced-motion.
+   O único movimento é a frase atravessar a tela um pouco mais devagar que
+   a rolagem — 60px no total da passagem. Desligado inteiro no
+   prefers-reduced-motion.
    ------------------------------------------------------------------------- */
 
 export default function Statement({
-  text,
-  kicker,
-}: {
-  text: string;
+  lines,
   /** rótulo curto acima da frase, quando ajuda a situar */
-  kicker?: string;
+  label,
+  /** alinha a frase à direita — usado pra alternar entre duas declarações */
+  align = 'left',
+}: {
+  lines: string[];
+  label?: string;
+  align?: 'left' | 'right';
 }) {
   const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
+  const reduzido = useReducedMotion();
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], [20, -20]);
+  const y = useTransform(scrollYProgress, [0, 1], [30, -30]);
 
   return (
     <section
       ref={ref}
-      aria-label={kicker ?? 'Declaração'}
-      className="my-[var(--space-9)] w-full overflow-clip py-[var(--space-10)]"
-      style={{ background: 'var(--text-primary)', color: 'var(--background)' }}
+      aria-label={lines.join(' ')}
+      /* sem `shell`: ela é usada dentro da seção de trabalho, que já tem a
+         margem. Repetir o contêiner daria o dobro do recuo lateral. */
+      className="w-full overflow-clip py-[var(--space-8)]"
     >
-      <motion.div className="shell" style={reduced ? undefined : { y }}>
-        {kicker && (
-          <p className="label mb-[var(--space-5)]" style={{ color: 'var(--background)', opacity: 0.6 }}>
-            {kicker}
-          </p>
-        )}
-        <WordsUp as="p" text={text} className="display-lg max-w-[20ch]" />
+      <motion.div
+        className={align === 'right' ? 'flex flex-col items-end text-right' : ''}
+        style={reduzido ? undefined : { y }}
+      >
+        {label && <p className="label label--dim mb-[var(--space-6)]">{label}</p>}
+        <Lines lines={lines} as="p" className="display-xl" />
       </motion.div>
     </section>
   );

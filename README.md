@@ -1,19 +1,22 @@
 # portifolio-animado
 
 Portfólio de um desenvolvedor full-stack e designer de produto, montado como
-**arquivo**: cada projeto é uma entrada numerada, com ano, categoria, estado e
-uma nota escrita à mão sobre o que aconteceu ali.
+**experiência de rolagem**: cinco capítulos numerados, tipografia de display
+gigante, e três esculturas de mármore girando no escuro entre um ato e o outro.
 
-A direção é editorial — grade firme, uma serifa com caráter no display, uma
-cor de acento só, e nenhuma animação que não responda "por que isso existe?".
-A diferença entre um arquivo e uma landing page está no ritmo: aqui as seções
-têm formas diferentes, e entre elas entram peças que não são seção (faixas
-corridas, uma declaração em fundo invertido, três esculturas) justamente pra
-que a leitura não vire uma pilha de blocos iguais.
+A direção é sala escura — arquitetura contemporânea, editorial suíço, hotel de
+luxo. Um tema só (escuro), uma cor de acento só, e nenhuma animação que não
+responda "por que isso existe?". O que separa isto de uma landing page é o
+ritmo: cada seção tem uma forma diferente, e entre elas entram peças que não
+são seção (esculturas, declarações em display, uma tela invertida) justamente
+pra que a leitura não vire uma pilha de blocos iguais.
 
-Next.js 15 (App Router) + React 19 + TypeScript + Tailwind v4 + Framer Motion.
-Export estático: o build gera HTML pronto pras 6 rotas e o GitHub Pages só
-serve os arquivos.
+O site é escrito **em inglês**. Não é preferência estética: quem contrata
+produto digital na Europa conversa em inglês mesmo quando ninguém ali é nativo.
+
+Next.js 15 (App Router) + React 19 + TypeScript + Tailwind v4 + Framer Motion +
+Lenis + three.js. Export estático: o build gera HTML pronto pras rotas e o
+GitHub Pages só serve arquivo.
 
 No ar: https://sonouxcoder.github.io/portifolio-animado
 
@@ -33,66 +36,36 @@ Nenhum texto de conteúdo mora dentro de componente. Tudo em `src/data`:
 
 | arquivo | o que controla |
 | --- | --- |
-| `src/data/sections.ts` | **a ordem das seções, seus números e seus kickers** |
-| `src/data/site.ts` | nome, e-mail, redes, e a linha de crédito do rodapé |
-| `src/data/projects.ts` | as entradas do arquivo: home, `/projetos/[slug]`, sitemap e metadata |
-| `src/data/process.ts` | as seis etapas, da ideia até o deploy |
+| `src/data/sections.ts` | **a ordem dos capítulos, seus números e suas linhas de abertura** |
+| `src/data/site.ts` | nome, cargo, e-mail, redes, cidade, coordenada, colofão |
+| `src/data/projects.ts` | os projetos: home, `/work/[slug]`, sitemap e metadata |
+| `src/data/capabilities.ts` | as seis frentes de trabalho e o visual de cada uma |
+| `src/data/stack.ts` | as cinco camadas da stack |
 | `src/data/experience.ts` | a linha do tempo |
-| `src/data/stack.ts` | as ferramentas, agrupadas por camada |
-| `src/data/experiments.ts` | os estudos do laboratório |
-| `src/data/estampas.ts` | as três esculturas 3D e suas legendas |
+| `src/data/interludes.ts` | as três esculturas |
 
-**A ordem das seções sai de `sections.ts`.** A navegação, o indicador de seção
-ativa, o número de cada kicker e o menu mobile leem tudo de lá. Reordenar
-aquele array reordena o site — mas `app/page.tsx` precisa acompanhar, porque é
-ele que decide onde entram as peças que **não** são seção (as duas faixas
-corridas, a declaração e as três esculturas).
+Duas regras que o resto do código assume:
 
-> O `kicker` de uma seção não pode repetir o título dela, e não pode servir
-> para outra seção. Se dois kickers pudessem trocar de lugar sem ninguém
-> perceber, os dois estão genéricos — o kicker é escrito, não montado a
-> partir do nome.
+1. **A ordem em `sections.ts` é a ordem da página.** O número de cada capítulo
+   é a posição no array. Inserir uma seção no meio renumera tudo sozinho — mas
+   `app/page.tsx` precisa ser reordenado junto, senão a navegação aponta pra
+   um lugar e o conteúdo está em outro.
+2. **Nenhum número é digitado à mão.** As estatísticas do manifesto, o total de
+   projetos e a contagem de ferramentas são calculados dos arquivos de dados.
+   Acrescentar um projeto atualiza a home, o rodapé e o sitemap de uma vez.
 
-### As peças entre as seções
+### As peças entre os capítulos
 
-São o que impede a página de virar uma pilha de sete blocos com o mesmo ritmo.
-Cada uma troca o fundo, a altura ou a densidade da tela:
-
-| peça | quantas | onde e por quê |
+| peça | onde | por quê |
 | --- | --- | --- |
-| faixa corrida | 2 | depois do hero (os nomes das entradas, pra criar a expectativa) e antes do contato (a disponibilidade). Cada uma carrega informação que não existe em outro lugar. |
-| declaração | 1 | entre a stack e o arquivo: o fundo inverte inteiro e a página faz a única afirmação direta que se permite. |
-| escultura 3D | 3 | nas viradas da narrativa — depois de dizer quem assina, depois de mostrar o trabalho, e antes do convite. |
+| escultura 3D | depois de About, de Work e da stack | a pausa. Toma a tela inteira e não pede nada |
+| declaração | dentro de Work, depois do 2º e do 4º projeto | separa capítulos sem tirar o leitor da seção |
+| stack | logo depois de Capabilities | é a segunda metade do mesmo assunto, por isso não tem número |
+| filosofia | antes do contato | a única tela clara do site |
 
-A regra pra qualquer uma delas: **se fosse removida e ninguém sentisse falta,
-não deveria estar ali.** Uma faixa corrida por seção viraria papel de parede
-animado; foi por isso que a versão anterior tinha um letreiro rolando cargos
-e ele acabou removido — animava pra sempre e não dizia nada que o hero já não
-dissesse.
-
-**Trocar o domínio:** só `site.url`. Canonical, Open Graph, JSON-LD e o
-`sitemap.xml` leem de lá.
-
-**LinkedIn:** `src/data/site.ts` está com uma URL chutada (`/in/sonouxcoder`).
-Troque pelo perfil real antes de divulgar.
-
-**Adicionar projeto:** um objeto novo em `projects.ts`. O `layout` escolhe a
-composição na home:
-
-- `full` — imagem larga, texto embaixo em duas colunas
-- `small-right` — texto à esquerda, imagem menor deslocada à direita
-- `vertical` — print comprido em coluna estreita, texto ao lado
-- `duo` — duas imagens montadas, uma mais alta que a outra
-
-É esse campo que impede a seção de virar grade de cards: nenhuma entrada tem a
-mesma proporção da anterior. A página `/projetos/[slug]` e a entrada no sitemap
-saem sozinhas.
-
-Todo projeto precisa de `categoria` e de `nota`. A `nota` é a linha em
-minúscula que aparece embaixo da descrição — não é resumo nem argumento de
-venda (`description` e `problema` já fazem isso), é a coisa que só quem
-construiu saberia dizer: o que quase deu errado, o que mudou no meio, o que
-saiu diferente do planejado. Uma linha, sempre.
+A filosofia inverte a página redefinindo os tokens de cor **no escopo da
+seção**. Tudo que está dentro (rótulo, filete, texto) acompanha sem saber que
+está invertido. É a razão de os tokens existirem.
 
 ---
 
@@ -100,120 +73,150 @@ saiu diferente do planejado. Uma linha, sempre.
 
 ```
 src/
-  app/          layout, home, /projetos/[slug], sitemap, robots, 404
-  components/   Nav, MobileMenu, Hero, About, Stack, Statement, Archive,
-                Processo, Experience, Lab, Contact, Footer, Kicker, Marquee,
-                Reveal, Encarte3D, Experimento, ProjectPage, CustomCursor,
-                PageTransition, Theme, PauseOffscreen
-  data/         todo o conteúdo
-  hooks/        useMedia (ponteiro fino), useSectionSpy (seção ativa)
-  lib/          base (basePath), imagemLoader, motion (tokens), utils
-public/assets/  capturas dos projetos e o retrato
-public/3d/      as três esculturas em .glb
+  app/
+    layout.tsx          fontes, metadata, JSON-LD, cascas fixas
+    page.tsx            a ordem da home
+    work/[slug]/        um estudo de caso por projeto, gerados no build
+    globals.css         o sistema inteiro
+  components/           uma peça por arquivo
+  data/                 todo o conteúdo
+  hooks/                useMedia, useSectionSpy
+  lib/                  basePath, tokens de movimento em JS, utils
+public/
+  3d/                   as três esculturas em .glb
+  video/hero.mp4        a textura do hero, 355 kB
+  assets/               imagens dos projetos
 ```
+
+---
 
 ## Sistema visual
 
-Tudo mora em tokens no topo de `globals.css`. Uma escala de espaço, três
-durações, três curvas, e um raio que é quase zero porque a linguagem é reta.
+Tema único, escuro. **Não há botão de tema**, e isso é decisão: a sala escura
+*é* a identidade, e uma versão clara desta página seria outro projeto.
 
-**O acento é vermelho** (`#c8102e`, e `#ff3b4e` no escuro — sobe de luminância
-senão some no fundo). Ocupa menos de 2% da área da tela: estado ativo, número
-de entrada, marco da timeline, o traço `↳` que abre cada nota, e o foco. Se um
-elemento não responde "por que isso existe?", ele não usa o acento.
+```
+--background   #0A0A0A    --text-primary    #F2F0EB
+--surface      #141414    --text-secondary  #8C8C8C
+--accent       #E2673F    --text-tertiary   #6F6F6F
+```
+
+O acento é cor de aço cor-ten — o material de fachada da arquitetura que a
+direção persegue. Ele ocupa menos de 1% da área da tela: estado ativo, número
+de capítulo, foco, seta de CTA. **Trocar aquela linha em `globals.css` troca o
+site inteiro**, e é pra isso que ela existe sozinha lá.
 
 ### Tipografia
 
-Duas famílias. Já foram **Archivo + IBM Plex Mono**, que é a dupla padrão de
-praticamente todo portfólio de desenvolvedor dos últimos anos — somada ao
-hábito de escrever todo rótulo em mono maiúsculo com tracking largo, ela
-entrega o mesmo desenho em qualquer site e nenhuma decisão de quem o fez.
+Duas famílias, e as duas trabalhando.
 
-**Fraunces** é a voz. Serifa variável, com três eixos além do peso:
+**Archivo** faz todo o display. O que importa nela não é o desenho da letra: é
+o eixo variável de largura (`wdth` 62..125). Quanto maior o título, mais
+estreita a letra — que é como manchete de jornal sempre foi composta. `I BUILD
+DIGITAL EXPERIENCES.` em 13rem só cabe na tela porque roda em `wdth: 84`. Sem
+esse eixo eu precisaria de uma segunda família condensada: mais um download, e
+duas famílias que nunca combinam de verdade.
 
-| eixo | faixa | o que faz aqui |
+| classe | uso | wdth |
 | --- | --- | --- |
-| `opsz` | 9–144 | tamanho óptico de verdade: a letra é **redesenhada**, não esticada. Cada degrau do display declara o seu. |
-| `SOFT` | 0–100 | arredonda os cantos. Fica em 0 no display e sobe pra 40 nas notas. |
-| `WONK` | 0–1 | terminações tortas, de eixo inclinado. Só nos dois degraus maiores, onde a letra é imagem. |
+| `.display-hero` | hero e contato, até 13rem | 84 |
+| `.display-xl` | título de capítulo | 88 |
+| `.display-lg` | subtítulo, item de lista grande | 92 |
+| `.display-md` | título de bloco | 100 |
+| `.numeral` | algarismo como desenho | 86 |
 
-**Instrument Sans** é o resto: texto corrido, interface, rótulo e número.
-Neutra o bastante pra sumir e deixar a serifa falar.
+Todo display é caixa alta. Não é enfeite: em caixa alta o bloco de texto vira
+retângulo, e retângulo é o que se compõe contra uma grade. Minúscula, com
+ascendente e descendente, deixa a borda serrilhada e a composição perde o fio.
 
-Não existe mais uma família monoespaçada baixada. Número usa a sans com
-`tabular-nums`; `.mono` sobrou para um único uso real — a onda de ASCII do
-laboratório, que só alinha em mono — e aponta pra fonte do sistema.
-
-**A nota é o dispositivo de voz.** A classe `.nota` é a única coisa em itálico
-no site inteiro: a observação em minúscula, precedida de `↳`, que aparece
-grudada num projeto, numa etapa do processo ou numa ferramenta. É onde o site
-soa como uma pessoa. A regra pra escrever uma: se ela pudesse estar em
-qualquer portfólio, ela está genérica — a nota tem que ser algo que só quem
-construiu aquilo saberia dizer.
+**Instrument Sans** é o resto: texto, rótulo, número. Neutra o suficiente pra
+sumir. **Não existe família mono baixada** — dado técnico usa a sans com
+`tabular-nums`, que alinha número sem trazer junto a estética de terminal que
+aparece em todo portfólio de dev. O único mono é o do sistema, e ele só desenha
+a onda de ASCII de um dos estudos.
 
 ### Contraste
 
-Medido no navegador contra `--background`, não estimado:
+Medido no navegador sobre `--background`, não estimado:
 
-| token | claro | escuro |
+| par | razão | AA |
 | --- | --- | --- |
-| `--text-primary` | 16.7:1 | 17.3:1 |
-| `--text-secondary` | 6.1:1 | 7.0:1 |
-| `--text-tertiary` | 4.7:1 | 4.8:1 |
-| `--accent` | 5.5:1 | 5.5:1 |
+| primary / background | 17,4:1 | ✅ |
+| secondary / background | 5,9:1 | ✅ |
+| tertiary / background | 4,6:1 | ✅ texto grande |
+| accent / background | 5,9:1 | ✅ |
 
-`--text-tertiary` no tema claro já foi `#82828c`, que media **3.52:1** e
-reprovava em AA. Como é a cor de `.label` — o rótulo que aparece 70+ vezes na
-página — a falha não era num canto: era em quase todo metadado do site.
-Qualquer mexida nessas cores precisa ser remedida, não estimada.
+`--text-tertiary` só aparece em metadado decorativo que já está escrito em
+texto em outro lugar.
 
-### Temas
-
-Duas paletas, trocadas pelo botão da navegação e guardadas no `localStorage`.
-A paleta escura aparece **duas vezes** em `globals.css` de propósito: um bloco
-para a escolha explícita do botão (`:root[data-theme='dark']`) e outro para a
-preferência do sistema de quem nunca clicou. Não dá pra fundir num seletor só —
-um depende de media query e o outro não. **Mudou num, muda no outro.**
-
-O tema é resolvido por um script inline no `<head>` (`themeBootScript`), antes
-da primeira pintura. Sem ele a página nasce clara e pisca pro escuro quando o
-React monta.
-
-Classe de componente vive dentro de `@layer components`. **Não escreva CSS fora
-de layer** — ele passaria na frente de qualquer utility do Tailwind e um
-`text-[14px]` no JSX pararia de funcionar sem explicação.
+---
 
 ## Movimento
 
-Os tokens existem em dois lugares porque o CSS e o Framer Motion precisam dos
-mesmos números em formatos diferentes: `globals.css` e `src/lib/motion.ts`.
-**Mudou num, muda no outro** — sem isso voltam os easings copiados à mão.
+Três durações e três curvas, e nada mais. Os mesmos números existem em CSS
+(`globals.css`) e em JS (`src/lib/motion.ts`) — o Framer precisa deles como
+número. **Mudou num, muda no outro.**
 
-`src/components/Reveal.tsx` concentra tudo que reage à rolagem, e é só isto:
+| token | valor | onde |
+| --- | --- | --- |
+| `fast` | 160 ms | hover |
+| `normal` | 400 ms | entrada, troca de estado |
+| `slow` | 800 ms | título, cortina |
 
-| peça | o que faz |
-| --- | --- |
-| `Reveal` / `RevealGroup` / `RevealItem` | um elemento entra, ou vários em cascata |
-| `Parallax` | desloca conforme a rolagem, com mola |
-| `ScrollLine` | traço que se desenha com o progresso (a timeline) |
-| `ScrollProgress` | a barra fina no topo da página |
-| `WordsUp` | título que sobe palavra por palavra |
+As peças de rolagem estão todas em `components/Reveal.tsx`: `Reveal`,
+`RevealGroup`, `Parallax`, `ScrollLine`, `Lines` e `Counter`. Nenhum componente
+implementa animação de entrada por conta própria.
 
-O deslocamento padrão é **24px**. Já foi 56px, e a diferença importa: acima de
-~30px o movimento deixa de parecer que o conteúdo assentou e passa a parecer
-que ele voou de algum lugar.
+**`Lines`** é a entrada assinatura: cada linha do display sobe de trás de uma
+máscara, 80 ms entre uma e outra. Ela recebe um **array de linhas**, não uma
+string — nesta tipografia a quebra é composição, não acidente de largura.
 
-Toda peça checa `prefers-reduced-motion` e, quando está ligado, entrega no
-máximo um fade curto — nada de deslocamento, nada de parallax, nada de giro.
+**Lenis** é a única dependência de animação além do Framer, e entrou porque faz
+algo que o Framer não faz: muda a sensação da página inteira. Ela é desligada
+por completo em `prefers-reduced-motion` (inércia é gatilho de enjoo, não
+detalhe de acessibilidade) e fica fora do toque, onde o sistema já tem inércia
+melhor. O clique em âncora passa a ser trabalho dele — daí `scroll-behavior:
+auto` no CSS: com o nativo ligado junto, os dois disputam a mesma rolagem.
+
+**A tela de carregamento** existe por motivo estrutural: o hero abre com um
+título que sobe de trás de uma máscara, e o gesto só funciona se a Archivo já
+estiver na tela. Teto de 1,4 s, uma vez por aba (`sessionStorage`), e some
+inteira em movimento reduzido. Ela **destrava a rolagem quando decide fechar**,
+não quando a animação de saída termina: rAF não roda em aba de fundo, e amarrar
+o destravamento ao fim da animação prendia a página de quem abre o site numa
+aba que ainda não olhou.
+
+---
+
+## O vídeo do hero
+
+`public/video/hero.mp4`, 355 kB. Entra a **12% de opacidade, em cinza, atrás da
+grade técnica** — nessa opacidade ninguém lê "pessoa digitando num laptop", que
+seria a imagem de banco mais batida que existe. O que fica é luz que se move.
+
+Ele não é baixado em tela menor que 768px nem em movimento reduzido, e como o
+`useMedia` só responde no cliente, nunca sai no HTML do servidor: o LCP continua
+sendo o título.
+
+Cortado do original de 154 MB com:
+
+```bash
+ffmpeg -ss 2 -t 11 -i entrada.MOV \
+  -vf "scale=1280:-2,hue=s=0,eq=contrast=1.18:brightness=-0.04" \
+  -an -c:v libx264 -crf 32 -preset slow -pix_fmt yuv420p -movflags +faststart \
+  public/video/hero.mp4
+```
+
+O cinza é queimado no arquivo de propósito: como ele nunca aparece colorido,
+gravar em cinza corta o bitrate quase pela metade.
+
+---
 
 ## As esculturas 3D
 
-Três peças encartadas entre as seções, em `src/data/estampas.ts`. Cada uma cai
-numa virada da narrativa; não são intervalo decorativo. Junto com a faixa de
-declaração, são o que impede a leitura de virar uma pilha de seis blocos com o
-mesmo ritmo: cada uma troca o fundo, a altura e a densidade da tela.
+Três peças em `src/data/interludes.ts`, cada uma numa virada da narrativa.
 
-`Encarte3D` é three.js na unha — sem react-three-fiber, que custaria uns 80 kB
+`Interlude` é three.js na unha — sem react-three-fiber, que custaria uns 80 kB
 pra reimplementar exatamente o mesmo. Três regras sustentam a performance:
 
 1. o three só é baixado quando a peça chega perto da tela (import dinâmico),
@@ -223,11 +226,16 @@ pra reimplementar exatamente o mesmo. Três regras sustentam a performance:
    na mão — três cenas vivas ao mesmo tempo estourariam o limite de contextos
    do navegador. Na prática nunca existe mais de uma.
 
+A luz é de museu, não de estúdio de produto: chave quente e alta pela direita,
+preenchimento frio e fraco pela esquerda, contraluz mínima pra a silhueta não
+colar no preto, e ambiente quase zero (`toneMappingExposure: 0.85`). O canvas é
+transparente, então a peça assenta direto no fundo da página, sem moldura.
+
 Os arquivos originais somavam **149 MB**. Foram pra **2,9 MB**:
 
 ```bash
 gltf-transform optimize in.glb a.glb --compress false --texture-compress false --simplify-ratio 0.06 --simplify-error 0.005
-gltf-transform meshopt b.glb final.glb --level high
+gltf-transform meshopt a.glb final.glb --level high
 ```
 
 As texturas são reencodadas pra webp 1024 com sharp entre os dois passos: o
@@ -235,65 +243,75 @@ As texturas são reencodadas pra webp 1024 com sharp entre os dois passos: o
 de colourspace). O Daphne veio em PLY ascii de 91 MB e foi convertido à parte,
 com rotação de Z-up pra Y-up.
 
-> ### ⚠️ Crédito pendente
->
-> Os três modelos são scans de escultura, e a legenda de cada um está no ar
-> hoje com o texto **"MODELO 3D — CRÉDITO A PREENCHER"**. Se vieram de acervo
-> de terceiros (Sketchfab, Scan the World, museu), a licença quase sempre é
-> CC-BY e **exige nome do autor e link**. Preencha o campo `credito` em
-> `estampas.ts` antes de divulgar o site.
+---
+
+## Os estudos de caso
+
+Cada projeto em `/work/[slug]` segue a mesma ordem de reportagem: manchete,
+chapa de abertura, **challenge**, **approach** (cinco etapas), **design
+system**, **development**, **final experience** em rolagem horizontal, e o
+próximo projeto.
+
+A regra que segura a estrutura: nenhuma dessas seções repete a anterior. Se
+`challenge` e `approach` pudessem trocar de lugar sem que o texto estranhasse,
+os dois estão descrevendo a mesma coisa e um deles sobra.
+
+> **As paletas do `design system` não são inventadas.** Cada hex foi lido do CSS
+> que está no ar naquele domínio. Um estudo de caso que mostra uma cor que o
+> site não usa é a primeira coisa que um contratante confere, e a única que ele
+> precisa conferir. Ao trocar um projeto, leia os valores do projeto — não
+> escolha valores que combinem com esta página.
+
+A faixa de screenshots sangra pra fora da margem de propósito: é o único
+elemento da página que atravessa o `shell`, e é isso que a marca como "outra
+coisa" antes de qualquer instrução. Ela é `role="region"` com `tabIndex={0}`
+porque um contêiner de rolagem que só responde ao mouse é inalcançável pelo
+teclado — WCAG 2.1.1 trata rolagem como funcionalidade.
+
+---
 
 ## Armadilhas que já custaram caro aqui
 
-1. **`overflow: clip`, nunca `hidden`, no `html`.** Vários elementos entram de
-   fora da tela. `hidden` conteria tudo igual, mas viraria contêiner de
-   rolagem e mataria todo `position: sticky` da página — que é o que sustenta
-   o trilho de projetos, os rótulos de camada da stack e as esculturas.
-2. **Acento maiúsculo some dentro de máscara de animação.** Com `line-height`
-   abaixo de 1, o `overflow: hidden` que faz o texto subir corta o til e o
-   agudo — "CÓDIGO" aparece na tela como "CODIGO" e ninguém entende por quê.
-   Por isso `WordsUp` devolve o espaço com `padding-top` e compensa no layout
-   com margem negativa.
-3. **`images.unoptimized` não aplica `basePath`.** No export estático parece a
-   saída óbvia, mas nesse modo o `src` sai cru e toda imagem daria 404 dentro
-   da subpasta do Pages. Por isso existe `src/lib/imagemLoader.ts`: um loader
-   custom é o único ponto por onde todo src passa.
-4. **Classe do Tailwind precisa existir escrita por extenso.** O Tailwind lê o
-   código-fonte pra decidir o que gerar; uma classe montada em template string
-   no runtime não sai no CSS. É por isso que `Lab.tsx` tem um mapa literal de
-   `md:col-span-*` em vez de interpolar o número.
-5. **Sem JavaScript, nada aparece.** O Framer Motion escreve `opacity: 0` no
-   HTML do servidor para tudo que entra por rolagem — 64 elementos na home. Um
-   `<noscript>` no `layout.tsx` devolve a opacidade; se você trocar a
-   biblioteca de animação, esse bloco precisa acompanhar.
+1. **`overflow: clip`, nunca `hidden`, no `html`.** `hidden` viraria contêiner
+   de rolagem e mataria todo `position: sticky` da página — que é o que sustenta
+   as esculturas e o trilho de leitura da seção de trabalho.
+
+2. **Estado no array de dependências de um efeito que ele mesmo escreve.** O
+   contador ficava travado em `00`: o efeito guardava "já contei" num estado e
+   ainda mantinha esse estado nas dependências, então ele reexecutava no mesmo
+   instante e a limpeza parava a animação no primeiro quadro. Quem garante a
+   execução única agora é o `once: true` do `useInView`.
+
+3. **`npm run build` com o dev aberto.** Sobrescreve o `.next` e o dev passa a
+   responder `__webpack_modules__[moduleId] is not a function`. Apague `.next`
+   e reinicie.
+
+4. **Classe do Tailwind montada em runtime não existe.** O Tailwind lê o
+   código-fonte pra decidir o que gerar; `` `md:col-span-${n}` `` sai vazio. Onde
+   isso é preciso, existe um mapa com as classes escritas por extenso.
+
+5. **Caminho absoluto em `metadata`.** O site mora numa subpasta; `/assets/x`
+   resolvido contra a `metadataBase` perde o prefixo e vai pra raiz do domínio.
+   Tudo que vai pro `<head>` é montado a partir de `site.url`.
+
+---
 
 ## Acessibilidade
 
-- Contraste medido e aprovado em AA nos dois temas (tabela acima).
-- `prefers-reduced-motion` corta parallax, deslocamento e giro em todo lugar.
-- Foco visível em tudo: anel de 2px em acento. Nos campos do formulário o
-  clique troca só a cor do filete, mas o teclado recebe o anel inteiro.
-- WCAG 2.2 pede 24×24 de área clicável. Vários links são linhas de texto de
-  14–17px, e aumentar padding empurraria a diagramação — a classe `.hit`
-  cresce a área por pseudo-elemento e o layout fica onde estava.
-- O menu mobile é diálogo de verdade: foco entra ao abrir, volta ao fechar,
-  Esc fecha, a rolagem do fundo trava, e o Tab circula **incluindo o botão de
-  fechar**, que mora no cabeçalho, fora do painel.
-- Cursor custom só existe em ponteiro fino, e some no dedo.
+- Foco visível em tudo, com `:focus-visible` e anel em acento.
+- Menu mobile é diálogo de verdade: foco entra ao abrir, volta ao fechar, Esc
+  fecha, Tab circula dentro (incluindo o botão que fecha, que mora fora do
+  painel) e a rolagem do fundo trava.
+- Alvos de toque de no mínimo 44px; onde a diagramação não permite padding, a
+  área cresce por pseudo-elemento (`.hit`).
+- `prefers-reduced-motion` desliga Lenis, parallax, contagem, loops e a tela de
+  carregamento. Sobra fade curto.
+- Sem JavaScript o conteúdo aparece: um `<style>` dentro de `<noscript>` anula
+  o `opacity: 0` que o Framer escreve no HTML do servidor.
+- Os visuais das capacidades e as esculturas são `aria-hidden` — o que eles
+  comunicam já está escrito ao lado, em texto.
 
-## Sem saída pro site do cliente
-
-Não existe botão de "ver ao vivo" em lugar nenhum. Quem chega vê o projeto por
-dentro deste portfólio — estudo de caso, galeria e ficha — e não numa aba nova.
-O campo `live` continua nos dados, mas como **informação** (o estado do
-projeto), nunca como link. É decisão de projeto, não esquecimento.
-
-## Contato
-
-O formulário não tem servidor: monta um `mailto:` e entrega pro programa de
-e-mail. Sem backend, sem chave pra vazar, funciona em hospedagem estática. O
-aviso disso fica escrito ao lado do botão — quem espera um envio com servidor
-precisa saber antes de clicar.
+---
 
 ## Publicação
 
@@ -312,7 +330,7 @@ vai pro ar.
 | `NEXT_PUBLIC_SITE_URL` | `https://sonouxcoder.github.io/portifolio-animado` |
 
 O `basePath` vale também no `npm run dev`: a home fica em
-`http://localhost:3000/portifolio-animado`. É de propósito — o dev mostra
+`http://localhost:3000/portifolio-animado/`. É de propósito — o dev mostra
 exatamente o que o Pages vai mostrar.
 
 ### Trocar por deploy automático (opcional)
@@ -324,10 +342,6 @@ Hoje o deploy é manual porque o token do `gh` nesta máquina não tem o escopo
 ```bash
 gh auth refresh -s workflow
 ```
-
-Depois disso dá pra commitar um workflow que roda `npm ci && npm run build` e
-publica `out/` com `actions/deploy-pages`, e trocar a origem do Pages de branch
-pra GitHub Actions.
 
 ---
 

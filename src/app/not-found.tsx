@@ -1,31 +1,28 @@
 import Link from 'next/link';
 
-export const metadata = { title: 'Página não encontrada' };
+export const metadata = { title: 'Page not found' };
 
 export default function NaoEncontrado() {
   return (
-    <section className="shell flex min-h-[70svh] flex-col justify-center py-[var(--space-10)]">
-      <p className="kicker">
-        <span className="kicker__n">404</span>
-        <span>Entrada não encontrada</span>
-      </p>
-
-      <h1 className="display-lg mt-[var(--space-7)] max-w-[14ch]">Esta página não existe.</h1>
-
-      <p className="nota mt-[var(--space-5)] flex max-w-[42ch] gap-[var(--space-3)]">
-        <span aria-hidden="true" style={{ color: 'var(--accent)' }}>
-          ↳
+    <section className="shell flex min-h-[80svh] flex-col justify-center py-[var(--space-10)]">
+      <p className="index-line">
+        <span className="index-line__n">404</span>
+        <span className="index-line__sep" aria-hidden="true">
+          /
         </span>
-        ou existiu e saiu do ar. as duas coisas acontecem.
+        <span style={{ color: 'var(--text-primary)' }}>Not found</span>
+        <span className="index-line__rule" aria-hidden="true" />
       </p>
 
-      <p className="lead mt-[var(--space-5)] max-w-[40ch]">
-        O caminho de volta é o mesmo nos dois casos.
+      <h1 className="display-xl mt-[var(--space-8)] max-w-[14ch]">This page does not exist.</h1>
+
+      <p className="lead mt-[var(--space-6)] max-w-[40ch]">
+        Or it did, and it went offline. The way back is the same either way.
       </p>
 
-      <p className="mt-[var(--space-7)]">
-        <Link href="/" className="btn" data-cursor="ver">
-          Voltar ao início
+      <p className="mt-[var(--space-8)]">
+        <Link href="/" className="btn" data-cursor="home">
+          Back to the start
         </Link>
       </p>
     </section>
