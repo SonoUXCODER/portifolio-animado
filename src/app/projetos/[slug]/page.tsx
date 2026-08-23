@@ -4,7 +4,8 @@ import { getProject, projects } from '@/data/projects';
 import { site } from '@/data/site';
 import ProjectPage from '@/components/ProjectPage';
 
-/* gera as quatro páginas no build — nada de renderizar sob demanda */
+/* uma página por projeto, geradas no build — nada de renderizar sob demanda.
+   Sem número escrito no comentário: já dizia "quatro" com cinco projetos. */
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }

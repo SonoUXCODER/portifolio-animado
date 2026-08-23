@@ -47,12 +47,16 @@ const abs = (caminho: string) => `${site.url}${caminho}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
+  /* O título e as descrições descreviam um impresso — "arquivo de trabalho",
+     "estampas", "feito à mão". É o texto que aparece no Google e no preview
+     de qualquer link compartilhado, então tinha de acompanhar a direção nova.
+     O título repete o que o h1 da home diz, de propósito. */
   title: {
-    default: `${site.name} — arquivo de trabalho`,
+    default: `${site.name} — desenvolvedor full-stack e designer de produto`,
     template: `%s · ${site.name}`,
   },
   description:
-    'Arquivo de trabalho de um desenvolvedor full-stack e designer de produto: cinco projetos, o processo inteiro e três estampas 3D. Feito à mão, em Next.js e TypeScript.',
+    'Portfólio de um desenvolvedor full-stack e designer de produto na Suíça: cinco projetos com o estudo de caso inteiro, a stack em produção e os estudos que rodam ao vivo.',
   applicationName: site.handle,
   authors: [{ name: site.name, url: site.url }],
   creator: site.name,
@@ -72,14 +76,15 @@ export const metadata: Metadata = {
     locale: 'pt_BR',
     url: site.url,
     siteName: site.handle,
-    title: `${site.name} — arquivo de trabalho`,
-    description: 'Cinco projetos, o processo inteiro e três estampas 3D. Feito à mão, mas com javascript.',
-    images: [{ url: abs('/assets/og.png'), width: 1200, height: 630, alt: `Arquivo de trabalho de ${site.name}` }],
+    title: `${site.name} — desenvolvedor full-stack e designer de produto`,
+    description:
+      'Cinco projetos com o estudo de caso inteiro: o problema que existia antes, a decisão, e o que ficou de pé.',
+    images: [{ url: abs('/assets/og.png'), width: 1200, height: 630, alt: `Portfólio de ${site.name}` }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${site.name} — arquivo de trabalho`,
-    description: 'Cinco projetos, o processo inteiro e três estampas 3D.',
+    title: `${site.name} — desenvolvedor full-stack e designer de produto`,
+    description: 'Cinco projetos com o estudo de caso inteiro, a stack em produção e os estudos ao vivo.',
     images: [abs('/assets/og.png')],
   },
   icons: {
