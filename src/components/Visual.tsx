@@ -49,10 +49,13 @@ function Grid() {
       el.style.setProperty('--mx', `${((e.clientX - r.left) / r.width) * 100}%`);
       el.style.setProperty('--my', `${((e.clientY - r.top) / r.height) * 100}%`);
     };
-    /* o listener fica na janela, não no elemento: o visual é um fundo com
-       pointer-events desligado, então ele nunca receberia o evento */
-    window.addEventListener('pointermove', mover, { passive: true });
-    return () => window.removeEventListener('pointermove', mover);
+    /* O listener é do próprio elemento, não da janela. Já foi da janela,
+       quando isto era fundo de seção inteira — e o resultado era a grade se
+       mexendo com o cursor do outro lado da página, que lia como defeito.
+       Agora o estudo é uma figura com moldura, e só reage quando o ponteiro
+       está dentro dela. */
+    el.addEventListener('pointermove', mover, { passive: true });
+    return () => el.removeEventListener('pointermove', mover);
   }, [ref, dentro, reduzido]);
 
   return (
@@ -64,9 +67,9 @@ function Grid() {
         ['--my' as string]: '50%',
         backgroundImage:
           'linear-gradient(var(--text-secondary) 1px, transparent 1px), linear-gradient(90deg, var(--text-secondary) 1px, transparent 1px)',
-        backgroundSize: '26px 26px',
-        maskImage: 'radial-gradient(circle 220px at var(--mx) var(--my), #000 0%, transparent 100%)',
-        WebkitMaskImage: 'radial-gradient(circle 220px at var(--mx) var(--my), #000 0%, transparent 100%)',
+        backgroundSize: '18px 18px',
+        maskImage: 'radial-gradient(circle 120px at var(--mx) var(--my), #000 0%, transparent 100%)',
+        WebkitMaskImage: 'radial-gradient(circle 120px at var(--mx) var(--my), #000 0%, transparent 100%)',
       }}
     />
   );
