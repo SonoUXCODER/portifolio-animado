@@ -1,31 +1,75 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { cadernos } from '@/data/arquivo';
-import { estampas } from '@/data/estampas';
+import { sections, sectionIndex } from '@/data/sections';
 import { site } from '@/data/site';
-import { TransitionLink } from './PageTransition';
-import { BotaoTema } from './Tema';
+import { duration, easeEmphasis, easeStandard } from '@/lib/motion';
+import { ThemeToggle } from './Theme';
 
 /* -------------------------------------------------------------------------
-   O índice do celular: a mesma lista do sumário, em tela cheia e em tinta
-   cheia. Nada de acordeão, nada de submenu — índice é lista.
+   MENU MOBILE.
+
+   Pensado pra tela pequena, não reduzido dela: o alvo de toque é a linha
+   inteira, o número da seção ancora a leitura, e o contato fica ao alcance
+   do polegar, na base.
+
+   Diálogo de verdade: foco entra ao abrir, volta ao fechar, Esc fecha,
+   Tab circula dentro e a rolagem do fundo trava.
    ------------------------------------------------------------------------- */
 
-export default function MobileMenu({ aberto, fechar }: { aberto: boolean; fechar: () => void }) {
-  /* trava a rolagem do fundo e devolve o Esc */
+export default function MobileMenu({
+  aberto,
+  fechar,
+  ativa,
+}: {
+  aberto: boolean;
+  fechar: () => void;
+  ativa: string;
+}) {
+  const painel = useRef<HTMLDivElement>(null);
+  const focoAnterior = useRef<HTMLElement | null>(null);
+
   useEffect(() => {
     if (!aberto) return;
-    const anterior = document.body.style.overflow;
+
+    focoAnterior.current = document.activeElement as HTMLElement | null;
+    const overflowAntes = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+
+    /* o primeiro link recebe o foco: quem navega por teclado entra no menu,
+       não continua tabulando atrás dele */
+    const primeiro = painel.current?.querySelector<HTMLElement>('a, button');
+    primeiro?.focus();
+
     const tecla = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') fechar();
+      if (e.key === 'Escape') return fechar();
+      if (e.key !== 'Tab') return;
+
+      /* O botão que fecha mora no cabeçalho, fora do painel. Preso só ao
+         painel, o ciclo de Tab nunca chegava nele: o controle estava na
+         tela, visível, e era inalcançável pelo teclado — sobrava o Esc.
+         Ele entra no fim da lista, que é onde a mão espera achar "fechar". */
+      const gatilho = document.querySelector<HTMLElement>('[aria-controls="menu-mobile"]');
+      const dentro = painel.current?.querySelectorAll<HTMLElement>('a[href], button');
+      const focaveis = [...(dentro ?? []), ...(gatilho ? [gatilho] : [])];
+      if (!focaveis.length) return;
+      const ini = focaveis[0];
+      const fim = focaveis[focaveis.length - 1];
+      if (e.shiftKey && document.activeElement === ini) {
+        e.preventDefault();
+        fim.focus();
+      } else if (!e.shiftKey && document.activeElement === fim) {
+        e.preventDefault();
+        ini.focus();
+      }
     };
+
     window.addEventListener('keydown', tecla);
     return () => {
-      document.body.style.overflow = anterior;
       window.removeEventListener('keydown', tecla);
+      document.body.style.overflow = overflowAntes;
+      focoAnterior.current?.focus?.();
     };
   }, [aberto, fechar]);
 
@@ -33,77 +77,72 @@ export default function MobileMenu({ aberto, fechar }: { aberto: boolean; fechar
     <AnimatePresence>
       {aberto && (
         <motion.div
+          ref={painel}
           id="menu-mobile"
-          className="invertido fixed inset-0 z-[80] flex flex-col justify-between overflow-y-auto px-5 pb-8 pt-20 lg:hidden"
-          initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-          animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-          exit={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-          transition={{ duration: 0.42, ease: [0.76, 0, 0.24, 1] }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navegação"
+          className="fixed inset-0 z-[80] flex flex-col justify-between overflow-y-auto px-[var(--gutter)] pb-[var(--space-7)] pt-[calc(var(--header-h)+var(--space-6))] lg:hidden"
+          style={{ background: 'var(--background)' }}
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
+          transition={{ duration: duration.normal, ease: easeEmphasis }}
         >
-          <nav aria-label="Navegação principal">
-            <p className="mono mb-4 text-[10px] tracking-[0.24em]" style={{ color: 'var(--tinta-3)' }}>
-              SUMÁRIO
-            </p>
+          <nav aria-label="Seções">
             <ul className="flex flex-col">
-              {cadernos.map((c, i) => (
-                <motion.li
-                  key={c.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.12 + i * 0.05, duration: 0.36, ease: [0.16, 1, 0.3, 1] }}
-                  className="border-b border-[var(--linha)]"
-                >
-                  <TransitionLink
-                    href={`/#${c.id}`}
-                    onClick={fechar}
-                    className="zine-titulo--medio flex items-baseline gap-3 py-2.5 text-[clamp(1.5rem,7vw,2.4rem)]"
+              {sections.map((s, i) => {
+                const atual = ativa === s.id;
+                return (
+                  <motion.li
+                    key={s.id}
+                    initial={{ opacity: 0, y: 14 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.06 + i * 0.04, duration: duration.normal, ease: easeStandard }}
+                    className="border-b"
+                    style={{ borderColor: 'var(--border)' }}
                   >
-                    <span className="mono text-[10px]" style={{ color: 'var(--tinta-3)' }}>
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    {c.titulo}
-                  </TransitionLink>
-                </motion.li>
-              ))}
-            </ul>
-
-            <p className="mono mb-2 mt-6 text-[10px] tracking-[0.24em]" style={{ color: 'var(--tinta-3)' }}>
-              ENCARTES
-            </p>
-            <ul className="flex flex-wrap gap-x-4 gap-y-2">
-              {estampas.map((e) => (
-                <li key={e.slug}>
-                  <TransitionLink href={`/#estampa-${e.slug}`} onClick={fechar} className="alvo zine-sub">
-                    {e.titulo}
-                  </TransitionLink>
-                </li>
-              ))}
+                    <a
+                      href={`#${s.id}`}
+                      onClick={fechar}
+                      aria-current={atual ? 'true' : undefined}
+                      className="flex min-h-[56px] items-center gap-[var(--space-4)] py-[var(--space-3)]"
+                    >
+                      <span className="label w-6 shrink-0" style={{ color: atual ? 'var(--accent)' : undefined }}>
+                        {sectionIndex(s.id)}
+                      </span>
+                      <span className="display-md" style={{ color: atual ? 'var(--accent)' : undefined }}>
+                        {s.name}
+                      </span>
+                    </a>
+                  </motion.li>
+                );
+              })}
             </ul>
           </nav>
 
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.42 }}
-            className="mt-10 flex flex-col gap-4 border-t border-[var(--linha)] pt-5"
+            transition={{ delay: 0.3, duration: duration.normal }}
+            className="mt-[var(--space-8)] flex flex-col gap-[var(--space-5)] border-t pt-[var(--space-5)]"
+            style={{ borderColor: 'var(--border)' }}
           >
-            <BotaoTema className="flex w-fit items-center gap-2 border border-[var(--linha-forte)] px-3 py-2" />
-            <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <ThemeToggle className="flex min-h-[44px] w-fit items-center gap-[var(--space-3)]" />
+            <ul className="flex flex-wrap gap-x-[var(--space-5)] gap-y-[var(--space-3)]">
               {site.social.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target={s.href.startsWith('http') ? '_blank' : undefined}
-                  rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="alvo zine-sub underline decoration-[var(--linha-forte)] underline-offset-4"
-                >
-                  {s.label}
-                </a>
+                <li key={s.label}>
+                  <a
+                    href={s.href}
+                    target={s.href.startsWith('http') ? '_blank' : undefined}
+                    rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    className="hit label link"
+                  >
+                    {s.label}
+                  </a>
+                </li>
               ))}
-            </div>
-            <p className="hand text-2xl" style={{ color: 'var(--tinta-2)' }}>
-              {site.frase}
-            </p>
+            </ul>
           </motion.div>
         </motion.div>
       )}

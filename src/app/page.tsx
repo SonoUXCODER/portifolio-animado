@@ -1,51 +1,55 @@
-import Capa from '@/components/Capa';
-import Marquee from '@/components/Marquee';
-import Sumario from '@/components/Sumario';
-import SobreSection from '@/components/SobreSection';
-import ProjectGrid from '@/components/ProjectGrid';
-import StackSection from '@/components/StackSection';
-import ProcessSection from '@/components/ProcessSection';
-import ExperimentsSection from '@/components/ExperimentsSection';
-import ContactSection from '@/components/ContactSection';
+import Hero from '@/components/Hero';
+import About from '@/components/About';
+import Stack from '@/components/Stack';
+import Statement from '@/components/Statement';
+import Work from '@/components/Work';
+import Experience from '@/components/Experience';
+import Lab from '@/components/Lab';
+import Contact from '@/components/Contact';
 import Encarte3D from '@/components/Encarte3D';
 import { estampas } from '@/data/estampas';
 
 /* -------------------------------------------------------------------------
-   O arquivo, na ordem em que é folheado.
+   A página, na ordem em que é lida.
 
-   Capa, sumário, e daí em diante os cadernos com as estampas encartadas
-   entre eles. As três chapas 3D não são intervalo decorativo: cada uma cai
-   numa virada da narrativa — depois de dizer quem assina, depois de mostrar
-   o trabalho, e depois de explicar o método.
+   A ordem das seções nomeadas é a mesma de data/sections.ts — é o que faz a
+   navegação, o número de cada marcador e o indicador de seção ativa nunca
+   desencontrarem do conteúdo. Mexer lá reordena tudo; mexer só aqui quebra.
 
-   A ordem dos cadernos e os números de página vêm de data/arquivo.ts.
+   Entre as seções entram três peças que não são seção: as esculturas e uma
+   faixa de declaração. Elas existem por um motivo estrutural — sem elas a
+   leitura vira uma pilha de seis blocos com o mesmo ritmo. Cada uma troca o
+   fundo, a altura e a densidade da tela, e é essa troca que marca a virada
+   de um ato pro outro.
+
+   As esculturas caem em viradas da narrativa, não em intervalos regulares:
+   depois de dizer quem assina, depois de mostrar o trabalho, e depois dos
+   estudos — logo antes do convite.
    ------------------------------------------------------------------------- */
 
 export default function Home() {
   return (
     <>
-      <Capa />
+      <Hero />
 
-      <Marquee
-        itens={['DESENVOLVEDOR', 'DESIGNER', 'FULL-STACK', 'UX · UI', 'FEITO À MÃO']}
-        velocidade={34}
-        separador="·"
-      />
-
-      <Sumario />
-
-      <SobreSection />
+      <About />
       <Encarte3D estampa={estampas[0]} indice={0} />
 
-      <ProjectGrid />
+      <Stack />
+
+      <Statement
+        kicker="O trabalho"
+        text="Decidido, desenhado e publicado pela mesma pessoa."
+      />
+
+      <Work />
       <Encarte3D estampa={estampas[1]} indice={1} />
 
-      <StackSection />
-      <ProcessSection />
+      <Experience />
+      <Lab />
       <Encarte3D estampa={estampas[2]} indice={2} />
 
-      <ExperimentsSection />
-      <ContactSection />
+      <Contact />
     </>
   );
 }

@@ -41,8 +41,8 @@ export default function CustomCursor() {
 
   useEffect(() => {
     if (!fino) return;
-    document.body.classList.add('tem-cursor');
-    return () => document.body.classList.remove('tem-cursor');
+    document.body.classList.add('has-cursor');
+    return () => document.body.classList.remove('has-cursor');
   }, [fino]);
 
   useEffect(() => {
@@ -89,8 +89,8 @@ export default function CustomCursor() {
         animate={{
           width: grande ? 76 : 14,
           height: grande ? 76 : 14,
-          backgroundColor: grande ? 'var(--tinta)' : 'transparent',
-          borderColor: 'var(--tinta)',
+          backgroundColor: grande ? 'var(--text-primary)' : 'transparent',
+          borderColor: 'var(--text-primary)',
           borderWidth: grande ? 0 : 2,
           scale: pressionado ? 0.82 : 1,
           rotate: grande ? -6 : 0,
@@ -106,7 +106,7 @@ export default function CustomCursor() {
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.14 }}
               className="mono text-[10px] font-semibold tracking-[0.2em]"
-              style={{ color: 'var(--papel)' }}
+              style={{ color: 'var(--surface)' }}
             >
               {palavra}
             </motion.span>

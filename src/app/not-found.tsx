@@ -1,26 +1,27 @@
 import Link from 'next/link';
 
+export const metadata = { title: 'Página não encontrada' };
+
 export default function NaoEncontrado() {
   return (
-    <section className="envelope flex min-h-[70vh] flex-col justify-center py-28">
-      <div className="cabeco">
-        <span>PÁGINA ARRANCADA</span>
-        <span className="hidden sm:inline" style={{ color: 'var(--tinta-3)' }}>
-          ERRO 404
-        </span>
+    <section className="shell flex min-h-[70svh] flex-col justify-center py-[var(--space-10)]">
+      <div className="section-mark">
+        <span className="section-mark__index">404</span>
+        <span className="section-mark__name">Não encontrado</span>
       </div>
 
-      <h1 className="zine-titulo mb-6">
-        ESSA PÁGINA
-        <br />
-        NÃO EXISTE
-      </h1>
-      <p className="olho mb-8 max-w-[34ch] text-[clamp(1rem,1.5vw,1.25rem)]">
-        Alguém arrancou esta folha do arquivo — ou o endereço foi inventado. Acontece.
+      <h1 className="display-lg mt-[var(--space-7)] max-w-[16ch]">Esta página não existe.</h1>
+
+      <p className="lead mt-[var(--space-5)] max-w-[42ch]">
+        O endereço está errado, ou a página saiu do ar. As duas coisas acontecem — o caminho de
+        volta é o mesmo.
       </p>
-      <Link href="/" className="botao self-start" data-cursor="ver">
-        VOLTAR PRA CAPA <span aria-hidden="true">→</span>
-      </Link>
+
+      <p className="mt-[var(--space-7)]">
+        <Link href="/" className="btn" data-cursor="ver">
+          Voltar ao início
+        </Link>
+      </p>
     </section>
   );
 }

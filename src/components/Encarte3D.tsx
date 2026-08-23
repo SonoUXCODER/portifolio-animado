@@ -21,9 +21,11 @@ import { basePath } from '@/lib/base';
       destruídos na mão. Sem isso, três estampas numa página estouram o
       limite de contextos do navegador.
 
-   O modelo é renderizado em cor e a folha o converte pra cinza no CSS, com
-   a retícula por cima: o resultado lê como chapa impressa, não como um
-   visualizador 3D embutido numa página.
+   O modelo entra na cor que o scan tem — pedra, quase neutra. Antes havia um
+   filtro de cinza e uma retícula por cima, pra fazer o render parecer chapa
+   impressa; era coerente enquanto a página inteira era um impresso, e virou
+   fantasia assim que ela deixou de ser. O canvas é transparente (`alpha`),
+   então a escultura assenta sobre o fundo da seção e acompanha o tema.
    ------------------------------------------------------------------------- */
 
 type Recursos = {
@@ -278,53 +280,57 @@ export default function Encarte3D({ estampa, indice }: { estampa: Estampa; indic
       ref={secao}
       id={`estampa-${estampa.slug}`}
       aria-labelledby={`estampa-${estampa.slug}-titulo`}
-      className="relative h-[200vh] md:h-[240vh]"
+      className="relative h-[170vh] md:h-[200vh]"
     >
       <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden">
-        {/* ---- cabeçalho da chapa ---- */}
-        <div className="envelope pointer-events-none pt-[72px]">
-          <div className="flex items-start justify-between gap-6 border-b border-[var(--linha)] pb-2">
-            <p className="zine-sub">ESTAMPA {romano}</p>
-            <p className="zine-sub text-right" style={{ color: 'var(--tinta-3)' }}>
-              {estampa.tecnica}
+        {/* ---- cabeçalho ---- */}
+        <div className="shell pointer-events-none pt-[calc(var(--header-h)+var(--space-4))]">
+          <div
+            className="flex items-start justify-between gap-[var(--space-5)] border-b pb-[var(--space-3)]"
+            style={{ borderColor: 'var(--border)' }}
+          >
+            <p className="label">
+              <span style={{ color: 'var(--accent)' }}>{romano}</span> — intervalo
             </p>
+            <p className="label text-right">{estampa.tecnica}</p>
           </div>
         </div>
 
         {/* ---- o palco ----
              flex-1 + min-h-0 em vez de altura fixa: com svh fixo a legenda
-             cavalgava a chapa nas telas baixas. Aqui a chapa fica com o que
-             sobra entre o cabeço e a legenda, sempre. */}
-        <div className="envelope min-h-0 flex-1 py-[clamp(10px,2vh,24px)]">
-          <div className="relative h-full w-full border border-[var(--linha)] bg-[var(--papel-2)]">
-            <div ref={palco} className="chapa-3d absolute inset-0" aria-hidden="true" />
-            {/* a retícula por cima transforma o render em chapa impressa */}
-            <span className="reticula" aria-hidden="true" style={{ color: 'var(--tinta)' }} />
+             cavalgava o modelo nas telas baixas. Aqui a peça fica com o que
+             sobra entre o cabeçalho e a legenda, sempre. */}
+        <div className="shell min-h-0 flex-1 py-[var(--space-4)]">
+          <div
+            className="relative h-full w-full border"
+            style={{ borderColor: 'var(--border)', background: 'var(--surface)' }}
+          >
+            <div ref={palco} className="absolute inset-0" aria-hidden="true" />
 
             {estado !== 'pronto' && (
               <p
-                className="mono absolute inset-0 flex items-center justify-center text-[11px] tracking-[0.24em]"
-                style={{ color: 'var(--tinta-3)' }}
+                className="label absolute inset-0 flex items-center justify-center"
                 role="status"
               >
-                {estado === 'erro' ? 'ESTAMPA INDISPONÍVEL' : 'REVELANDO…'}
+                {estado === 'erro' ? 'modelo indisponível' : 'carregando…'}
               </p>
             )}
           </div>
         </div>
 
-        {/* ---- legenda da chapa ---- */}
-        <div className="envelope pb-[clamp(18px,4vh,44px)]">
-          <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-3 border-t border-[var(--linha)] pt-3">
+        {/* ---- legenda ---- */}
+        <div className="shell pb-[var(--space-7)]">
+          <div
+            className="flex flex-wrap items-end justify-between gap-x-[var(--space-7)] gap-y-[var(--space-3)] border-t pt-[var(--space-4)]"
+            style={{ borderColor: 'var(--border)' }}
+          >
             <div>
-              <h2 id={`estampa-${estampa.slug}-titulo`} className="zine-titulo--medio text-[clamp(1.5rem,4vw,3rem)]">
+              <h2 id={`estampa-${estampa.slug}-titulo`} className="display-md">
                 {estampa.titulo}
               </h2>
-              <p className="corpo mt-2 max-w-[46ch] text-[clamp(0.82rem,1.15vw,0.98rem)]">{estampa.legenda}</p>
+              <p className="body-sm mt-[var(--space-2)] max-w-[52ch]">{estampa.legenda}</p>
             </div>
-            <p className="mono text-[10px] tracking-[0.22em]" style={{ color: 'var(--tinta-3)' }}>
-              {estampa.credito}
-            </p>
+            <p className="label">{estampa.credito}</p>
           </div>
         </div>
       </div>

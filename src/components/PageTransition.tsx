@@ -80,7 +80,7 @@ export function ProvedorDeTransicao({ children }: { children: ReactNode }) {
                 destino.current = null;
               }
             }}
-            style={{ background: 'var(--tinta-base)' }}
+            style={{ background: 'var(--text-primary)' }}
           >
             {/* a textura entra meio passo depois do preto: é ela que dá o
                 cheiro de fotocópia no meio da troca */}
@@ -97,7 +97,7 @@ export function ProvedorDeTransicao({ children }: { children: ReactNode }) {
             />
             <motion.span
               className="mono absolute bottom-8 right-8 text-[11px] tracking-[0.3em]"
-              style={{ color: 'var(--papel-base)' }}
+              style={{ color: 'var(--surface)' }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.75 }}
               transition={{ delay: 0.14, duration: 0.18 }}

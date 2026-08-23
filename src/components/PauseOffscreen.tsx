@@ -12,21 +12,21 @@ import { useEffect } from 'react';
    navegador não pausa animação CSS por conta própria.
 
    A alternativa seria um observer por componente. Um só, escutando todo
-   mundo que se marca com `data-pausa`, custa quase nada e não obriga cada
+   mundo que se marca com `data-pause`, custa quase nada e não obriga cada
    peça a saber de performance.
 
    O trabalho pesado é do CSS: este componente só escreve um atributo.
    ------------------------------------------------------------------------- */
 
-export default function PausaForaDaTela() {
+export default function PauseOffscreen() {
   useEffect(() => {
-    const alvos = document.querySelectorAll<HTMLElement>('[data-pausa]');
+    const alvos = document.querySelectorAll<HTMLElement>('[data-pause]');
     if (!alvos.length) return;
 
     const obs = new IntersectionObserver(
       (entradas) => {
         for (const e of entradas) {
-          (e.target as HTMLElement).dataset.visivel = e.isIntersecting ? '1' : '0';
+          (e.target as HTMLElement).dataset.visible = e.isIntersecting ? '1' : '0';
         }
       },
       /* uma folga generosa: a animação já está rodando quando a peça
@@ -35,20 +35,20 @@ export default function PausaForaDaTela() {
     );
 
     for (const el of alvos) {
-      el.dataset.visivel = '0';
+      el.dataset.visible = '0';
       obs.observe(el);
     }
 
     /* aba escondida: o navegador congela o rAF mas não a animação CSS */
-    const aoTrocarDeAba = () => {
-      document.documentElement.dataset.abaOculta = document.hidden ? '1' : '0';
+    const onTabChange = () => {
+      document.documentElement.dataset.tabHidden = document.hidden ? '1' : '0';
     };
-    aoTrocarDeAba();
-    document.addEventListener('visibilitychange', aoTrocarDeAba);
+    onTabChange();
+    document.addEventListener('visibilitychange', onTabChange);
 
     return () => {
       obs.disconnect();
-      document.removeEventListener('visibilitychange', aoTrocarDeAba);
+      document.removeEventListener('visibilitychange', onTabChange);
     };
   }, []);
 

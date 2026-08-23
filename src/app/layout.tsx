@@ -1,22 +1,28 @@
 import type { Metadata, Viewport } from 'next';
-import { Archivo, Caveat, IBM_Plex_Mono } from 'next/font/google';
+import { Archivo, IBM_Plex_Mono } from 'next/font/google';
 import { site } from '@/data/site';
 import { basePath } from '@/lib/base';
-import Navbar from '@/components/Navbar';
+import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import CustomCursor from '@/components/CustomCursor';
 import { ProvedorDeTransicao } from '@/components/PageTransition';
-import { ProvedorDeTema, scriptAntiPiscada } from '@/components/Tema';
-import { BarraDeProgresso } from '@/components/ScrollReveal';
-import { FiltrosSVG } from '@/components/Doodles';
-import PausaForaDaTela from '@/components/PausaForaDaTela';
+import { ThemeProvider, themeBootScript } from '@/components/Theme';
+import { ScrollProgress } from '@/components/Reveal';
+import PauseOffscreen from '@/components/PauseOffscreen';
 import './globals.css';
 
 /* -------------------------------------------------------------------------
-   Fontes.
+   Fontes. Duas, e nada mais.
+
    O Archivo entra com o eixo de largura (wdth): é ele que deixa o título
-   gigante estreito o bastante pra caber na linha sem virar imagem.
-   Todas com display:swap — texto na tela antes da fonte chegar.
+   gigante estreito o bastante pra caber na linha sem virar imagem. O Plex
+   Mono carrega todo dado técnico — rótulo, número, ano.
+
+   Havia uma terceira, o Caveat, para as legendas manuscritas do impresso.
+   Saiu junto com elas: era uma família inteira baixada para meia dúzia de
+   linhas, e nada na direção atual pede letra de mão.
+
+   Ambas com display:swap — texto na tela antes de a fonte chegar.
    ------------------------------------------------------------------------- */
 
 const archivo = Archivo({
@@ -31,13 +37,6 @@ const plex = IBM_Plex_Mono({
   weight: ['400', '500', '600'],
   display: 'swap',
   variable: '--fonte-mono',
-});
-
-const caveat = Caveat({
-  subsets: ['latin'],
-  weight: ['600', '700'],
-  display: 'swap',
-  variable: '--fonte-hand',
 });
 
 /* O site mora numa subpasta no Pages. Um caminho com barra na frente,
@@ -94,10 +93,11 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  /* uma cor por edição: a barra do navegador acompanha o tema */
+  /* os mesmos --background dos dois temas em globals.css: a barra do
+     navegador encosta na página em vez de fazer degrau */
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#e3e3e1' },
-    { media: '(prefers-color-scheme: dark)', color: '#060606' },
+    { media: '(prefers-color-scheme: light)', color: '#f7f6f4' },
+    { media: '(prefers-color-scheme: dark)', color: '#0d0d0f' },
   ],
 };
 
@@ -114,52 +114,47 @@ const jsonLd = {
   sameAs: site.social.filter((s) => s.href.startsWith('http')).map((s) => s.href),
 };
 
-/** as quatro marcas de corte da folha */
-function MarcasDeCorte() {
-  return (
-    <>
-      {(['no', 'ne', 'so', 'se'] as const).map((canto) => (
-        <span key={canto} className="marca-corte" data-canto={canto} aria-hidden="true" />
-      ))}
-    </>
-  );
-}
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    /* suppressHydrationWarning: o script de anti-piscada mexe no <html>
-       antes do React chegar, então servidor e cliente divergem de propósito */
+    /* suppressHydrationWarning: o script de tema mexe no <html> antes de o
+       React chegar, então servidor e cliente divergem de propósito */
     <html
       lang="pt-BR"
-      className={`${archivo.variable} ${plex.variable} ${caveat.variable}`}
+      className={`${archivo.variable} ${plex.variable}`}
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: scriptAntiPiscada }} />
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+
+        {/* Sem JavaScript, nada aparece.
+
+            O Framer Motion escreve o estado inicial no HTML do servidor, e o
+            estado inicial de tudo que entra por rolagem é `opacity: 0` — são
+            64 elementos na home. Com o script bloqueado, a animação que os
+            revelaria nunca roda e a página fica com o hero e mais nada.
+
+            O seletor pega o atributo style em vez de uma classe porque é o
+            próprio Framer quem escreve esse atributo; não há classe nossa
+            onde ancorar. Só entra dentro de <noscript>, então não custa nada
+            a quem tem JS ligado. */}
+        <noscript>
+          <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
       </head>
       <body>
-        <ProvedorDeTema>
+        <ThemeProvider>
           <ProvedorDeTransicao>
-            <BarraDeProgresso />
-            <Navbar />
+            <ScrollProgress />
+            <Nav />
 
-            {/* a folha: tudo que é conteúdo mora em cima dela */}
-            <div className="folha">
-              <MarcasDeCorte />
-              <main id="conteudo" className="relative">
-                {children}
-              </main>
-              <Footer />
-            </div>
+            <main id="conteudo">{children}</main>
+            <Footer />
           </ProvedorDeTransicao>
 
           <CustomCursor />
-        </ProvedorDeTema>
+        </ThemeProvider>
 
-        {/* o grão fica por cima da folha inteira, sem capturar clique */}
-        <div className="grao" aria-hidden="true" />
-        <FiltrosSVG />
-        <PausaForaDaTela />
+        <PauseOffscreen />
 
         <script
           type="application/ld+json"

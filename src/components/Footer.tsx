@@ -1,122 +1,104 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
 import { site } from '@/data/site';
-import { cadernos } from '@/data/arquivo';
-import { estampas } from '@/data/estampas';
 import { projects } from '@/data/projects';
-import Marquee from './Marquee';
-import { Asterisco, Doodle, Rabisco } from './Doodles';
+import { stack } from '@/data/stack';
+import { experience } from '@/data/experience';
+import { Reveal } from './Reveal';
 
 /* -------------------------------------------------------------------------
-   O COLOFÃO — a última página do impresso.
+   RODAPÉ.
 
-   Num livro é onde ficam as informações de produção: em que tipo foi
-   composto, como foi impresso, quantos exemplares, quando. Aqui é a mesma
-   coisa, só que a gráfica é um export estático.
+   Fecha com a ficha técnica: o que o site tem dentro, contado dos próprios
+   arquivos de dados. Nenhum número é digitado à mão — acrescentar um projeto
+   atualiza o rodapé sozinho, que é o contrário do que costuma acontecer com
+   rodapé de portfólio.
 
-   Impresso em tinta cheia pra fechar o objeto com uma virada de página.
+   A assinatura grande no fim existe pra dar um ponto final visual ao scroll:
+   depois dela não há mais nada, e o tamanho é o que comunica isso.
    ------------------------------------------------------------------------- */
 
-export default function Colofao() {
-  const reduzido = useReducedMotion();
+export default function Footer() {
   const ano = new Date().getFullYear();
 
+  const ficha: Array<[string, string]> = [
+    ['Projetos', String(projects.length).padStart(2, '0')],
+    ['Ferramentas', String(stack.length).padStart(2, '0')],
+    ['Entradas', String(experience.length).padStart(2, '0')],
+    ['Edição', String(ano)],
+  ];
+
   return (
-    <footer className="invertido relative overflow-hidden pt-[clamp(44px,6vw,80px)]">
-      <span aria-hidden="true" className="rasgo absolute inset-x-0 top-0 rotate-180" style={{ color: 'var(--papel-base)' }} />
-
-      <Marquee
-        itens={['FIM DO ARQUIVO', 'VAMOS FAZER ALGUMA COISA', 'DISPONÍVEL PRA PROJETO']}
-        velocidade={28}
-        separador="·"
-        compacto
-        className="mb-[clamp(36px,5vw,72px)]"
-      />
-
-      <div className="envelope relative">
-        <div className="cabeco">
-          <span>COLOFÃO</span>
-          <span className="hidden sm:inline">FIM · EDIÇÃO 01</span>
-        </div>
-
-        <Doodle nome="estrela" cor="var(--tinta)" tamanho={34} className="flutua absolute right-[5%] top-14 hidden opacity-70 lg:block" data-pausa />
-
-        <div className="grid grid-cols-12 items-end gap-y-8">
-          <div className="col-span-12 lg:col-span-8">
-            <motion.p
-              initial={reduzido ? { opacity: 0 } : { opacity: 0, y: 26 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="zine-titulo"
-              style={{ fontSize: 'clamp(3.4rem,17vw,17rem)' }}
-            >
-              {site.name}
-            </motion.p>
+    <footer className="shell pb-[var(--space-8)] pt-[var(--space-10)]">
+      <div className="border-t pt-[var(--space-7)]" style={{ borderColor: 'var(--border)' }}>
+        <div className="grid-12 gap-y-[var(--space-8)]">
+          {/* ---- chamada ---- */}
+          <div className="col-span-12 lg:col-span-5">
+            <p className="display-md max-w-[16ch]">Disponível para projetos.</p>
+            <p className="mt-[var(--space-5)]">
+              <a href={`mailto:${site.email}`} className="link hit title-sm" data-cursor="abrir">
+                {site.email}
+              </a>
+            </p>
           </div>
 
-          <ul className="col-span-12 flex flex-row flex-wrap gap-x-6 gap-y-1 lg:col-span-4 lg:flex-col lg:items-end lg:pb-5">
-            {site.roles.map((r) => (
-              <li key={r} className="zine-sub">
-                {r}
-              </li>
+          {/* ---- ficha técnica ---- */}
+          <dl className="col-span-12 grid grid-cols-2 gap-[var(--space-5)] sm:grid-cols-4 lg:col-span-6 lg:col-start-7">
+            {ficha.map(([rotulo, valor]) => (
+              <div key={rotulo}>
+                <dt className="label">{rotulo}</dt>
+                <dd className="figure mt-[var(--space-2)] text-[1.1rem]">{valor}</dd>
+              </div>
             ))}
-          </ul>
+          </dl>
         </div>
 
-        <hr className="linha-fina my-7" />
-
-        {/* ---------- ficha técnica da edição ---------- */}
-        <dl className="grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-4">
-          {[
-            ['CADERNOS', String(cadernos.length).padStart(2, '0')],
-            ['ESTAMPAS', String(estampas.length).padStart(2, '0')],
-            ['TRABALHOS', String(projects.length).padStart(2, '0')],
-            ['EDIÇÃO', `01 · ${ano}`],
-          ].map(([rotulo, valor]) => (
-            <div key={rotulo}>
-              <dt className="rotulo mb-1">{rotulo}</dt>
-              <dd className="mono text-[13px]">{valor}</dd>
-            </div>
-          ))}
-        </dl>
-
-        <p className="corpo mt-7 max-w-[52ch] text-[0.86rem]">{site.colofao}</p>
-
-        <hr className="linha-fina my-7" />
-
-        <div className="grid grid-cols-12 gap-y-8 pb-9">
-          <nav aria-label="Redes sociais" className="col-span-12 md:col-span-7">
-            <ul className="flex flex-wrap gap-x-7 gap-y-3">
-              {site.social.map((s) => (
+        {/* ---- redes ---- */}
+        <nav aria-label="Redes sociais" className="mt-[var(--space-8)]">
+          <ul className="flex flex-wrap gap-x-[var(--space-6)] gap-y-[var(--space-3)]">
+            {site.social.map((s) => {
+              const externo = s.href.startsWith('http');
+              return (
                 <li key={s.label}>
                   <a
                     href={s.href}
-                    target={s.href.startsWith('http') ? '_blank' : undefined}
-                    rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    target={externo ? '_blank' : undefined}
+                    rel={externo ? 'noopener noreferrer' : undefined}
                     data-cursor="abrir"
-                    className="alvo zine-sub inline-block transition-transform duration-200 hover:-translate-y-1"
+                    className="link hit label"
                   >
                     {s.label} <span aria-hidden="true">↗</span>
                   </a>
                 </li>
-              ))}
-            </ul>
-            <p className="mono mt-6 text-[10px] tracking-[0.16em]" style={{ color: 'var(--tinta-3)' }}>
-              © {ano} {site.handle} · DESENHADO E CODADO POR MIM
-            </p>
-          </nav>
+              );
+            })}
+          </ul>
+        </nav>
 
-          <div className="col-span-12 md:col-span-5 md:text-right">
-            <p className="hand inline-flex items-center gap-2 text-[clamp(24px,3.6vw,40px)] leading-none">
-              <Asterisco cor="var(--tinta)" tamanho={20} />
-              {site.frase}
-            </p>
-            <div className="mt-4 flex md:justify-end">
-              <Rabisco cor="var(--tinta)" largura={160} className="opacity-60" />
-            </div>
-          </div>
+        {/* ---- assinatura ----
+             Sangra até a borda do contêiner e é cortada em baixo: o corte é
+             o ponto final. `aria-hidden` porque o nome já está na navegação
+             e no JSON-LD — repetido aqui seria ruído no leitor de tela. */}
+        <Reveal direction="none">
+          <p
+            aria-hidden="true"
+            className="mt-[var(--space-9)] select-none leading-[0.78] tracking-[-0.045em]"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(4rem, 22vw, 20rem)',
+              fontWeight: 700,
+              color: 'var(--text-primary)',
+            }}
+          >
+            {site.name}
+          </p>
+        </Reveal>
+
+        <div className="mt-[var(--space-6)] flex flex-wrap items-baseline justify-between gap-[var(--space-4)] border-t pt-[var(--space-4)]" style={{ borderColor: 'var(--border)' }}>
+          <p className="label">
+            © {ano} {site.handle} — desenhado e codado pela mesma pessoa
+          </p>
+          <p className="label">{site.colofao}</p>
         </div>
       </div>
     </footer>

@@ -32,13 +32,13 @@ function useNaTela<T extends HTMLElement>() {
 /* ---------- 1. moiré: duas grades brigando ---------- */
 function Moire() {
   return (
-    <div className="relative h-full w-full overflow-hidden" style={{ background: 'var(--papel)' }}>
+    <div className="relative h-full w-full overflow-hidden" style={{ background: 'var(--surface)' }}>
       <span
         className="gira absolute left-1/2 top-1/2 h-[200%] w-[200%] -translate-x-1/2 -translate-y-1/2"
         style={{
           ['--dur' as string]: '26s',
           backgroundImage:
-            'repeating-radial-gradient(circle at 50% 50%, var(--tinta) 0 1.2px, transparent 1.2px 7px)',
+            'repeating-radial-gradient(circle at 50% 50%, var(--text-primary) 0 1.2px, transparent 1.2px 7px)',
         }}
       />
       <span
@@ -47,7 +47,7 @@ function Moire() {
           ['--dur' as string]: '19s',
           animationDirection: 'reverse',
           backgroundImage:
-            'repeating-radial-gradient(circle at 50% 50%, var(--tinta-2) 0 1.2px, transparent 1.2px 7px)',
+            'repeating-radial-gradient(circle at 50% 50%, var(--text-secondary) 0 1.2px, transparent 1.2px 7px)',
           mixBlendMode: 'screen',
         }}
       />
@@ -62,7 +62,7 @@ function Listras() {
       className="h-full w-full"
       style={{
         backgroundImage:
-          'repeating-linear-gradient(115deg, var(--tinta-2) 0 10px, var(--papel) 10px 20px, var(--tinta) 20px 24px, var(--papel) 24px 42px)',
+          'repeating-linear-gradient(115deg, var(--text-secondary) 0 10px, var(--surface) 10px 20px, var(--text-primary) 20px 24px, var(--surface) 24px 42px)',
         backgroundSize: '200% 100%',
         animation: 'desliza-listra 5.5s linear infinite',
       }}
@@ -112,7 +112,7 @@ function Ascii() {
       ref={ref}
       aria-hidden="true"
       className="mono flex h-full w-full items-center justify-center overflow-hidden text-[clamp(5px,1vw,9px)] leading-[1.05]"
-      style={{ background: 'var(--linha-forte)', color: 'var(--tinta)' }}
+      style={{ background: 'var(--border-strong)', color: 'var(--text-primary)' }}
     >
       {quadro || '···'}
     </pre>
@@ -122,22 +122,22 @@ function Ascii() {
 /* ---------- 4. órbita ---------- */
 function Orbita() {
   return (
-    <div className="flex h-full w-full items-center justify-center" style={{ background: 'var(--papel)' }}>
+    <div className="flex h-full w-full items-center justify-center" style={{ background: 'var(--surface)' }}>
       <svg viewBox="0 0 120 120" className="h-[86%] w-[86%]" aria-hidden="true">
-        <g fill="none" stroke="var(--tinta)" strokeWidth="0.7" opacity="0.35">
+        <g fill="none" stroke="var(--text-primary)" strokeWidth="0.7" opacity="0.35">
           <circle cx="60" cy="60" r="46" />
           <circle cx="60" cy="60" r="30" />
           <circle cx="60" cy="60" r="16" />
         </g>
-        <circle cx="60" cy="60" r="4.5" fill="var(--tinta)" />
+        <circle cx="60" cy="60" r="4.5" fill="var(--text-primary)" />
         <g className="gira" style={{ ['--dur' as string]: '9s', transformOrigin: '60px 60px' }}>
-          <circle cx="106" cy="60" r="4" fill="var(--tinta)" />
+          <circle cx="106" cy="60" r="4" fill="var(--text-primary)" />
         </g>
         <g className="gira" style={{ ['--dur' as string]: '5.5s', transformOrigin: '60px 60px' }}>
-          <circle cx="90" cy="60" r="2.8" fill="var(--tinta-2)" />
+          <circle cx="90" cy="60" r="2.8" fill="var(--text-secondary)" />
         </g>
         <g className="gira" style={{ ['--dur' as string]: '3s', animationDirection: 'reverse', transformOrigin: '60px 60px' }}>
-          <circle cx="76" cy="60" r="2" fill="var(--tinta-2)" />
+          <circle cx="76" cy="60" r="2" fill="var(--text-secondary)" />
         </g>
       </svg>
     </div>
@@ -154,9 +154,9 @@ function Ruido() {
         </feTurbulence>
         <feColorMatrix type="saturate" values="0" />
       </filter>
-      <rect width="200" height="140" fill="var(--linha-forte)" />
+      <rect width="200" height="140" fill="var(--border-strong)" />
       <rect width="200" height="140" filter="url(#chuvisco)" opacity="0.3" />
-      <rect width="200" height="4" fill="var(--tinta)" opacity="0.85">
+      <rect width="200" height="4" fill="var(--text-primary)" opacity="0.85">
         <animate attributeName="y" values="-6;140;-6" dur="4.5s" repeatCount="indefinite" />
       </rect>
     </svg>
@@ -168,9 +168,9 @@ function Tipo() {
   return (
     <div
       className="tipo-elastico flex h-full w-full items-center justify-center overflow-hidden"
-      style={{ background: 'var(--tinta)' }}
+      style={{ background: 'var(--text-primary)' }}
     >
-      <span className="zine-titulo text-[clamp(1.6rem,5vw,3.4rem)] leading-none" style={{ color: 'var(--papel)' }}>
+      <span className="display-md leading-none" style={{ color: 'var(--surface)' }}>
         ESTICA
       </span>
     </div>
@@ -202,9 +202,9 @@ function Grade() {
       style={{
         ['--mx' as string]: '50%',
         ['--my' as string]: '50%',
-        background: 'var(--papel)',
+        background: 'var(--surface)',
         backgroundImage:
-          'linear-gradient(var(--tinta-2) 1px, transparent 1px), linear-gradient(90deg, var(--tinta-2) 1px, transparent 1px)',
+          'linear-gradient(var(--text-secondary) 1px, transparent 1px), linear-gradient(90deg, var(--text-secondary) 1px, transparent 1px)',
         backgroundSize: '17px 17px',
         maskImage: 'radial-gradient(circle 90px at var(--mx) var(--my), #000 0%, rgba(0,0,0,0.15) 100%)',
         WebkitMaskImage: 'radial-gradient(circle 90px at var(--mx) var(--my), #000 0%, rgba(0,0,0,0.15) 100%)',
@@ -216,9 +216,9 @@ function Grade() {
 /* ---------- 8. gota que nunca repete (SMIL) ---------- */
 function Gota() {
   return (
-    <div className="flex h-full w-full items-center justify-center" style={{ background: 'var(--linha-forte)' }}>
+    <div className="flex h-full w-full items-center justify-center" style={{ background: 'var(--border-strong)' }}>
       <svg viewBox="0 0 120 120" className="h-[82%] w-[82%]" aria-hidden="true">
-        <path fill="var(--tinta)">
+        <path fill="var(--text-primary)">
           <animate
             attributeName="d"
             dur="7s"
