@@ -122,8 +122,6 @@ export type Content = {
     /** a linha de prova logo abaixo do lead: cinco produtos no ar */
     proof: string;
     productsLabel: string;
-    ctaWork: string;
-    ctaContact: string;
     basedIn: string;
     localTime: string;
     languages: string;

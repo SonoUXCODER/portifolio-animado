@@ -58,8 +58,6 @@ export const pt: Content = {
     lead: 'Uma pessoa da pesquisa ao deploy. A decisão de interface já nasce sabendo o que custa construir, e o código já nasce sabendo o que precisa parecer.',
     proof: 'Cinco produtos no ar. Dá pra abrir todos aqui dentro, sem sair da página.',
     productsLabel: 'No ar',
-    ctaWork: 'Ver o trabalho',
-    ctaContact: 'Começar uma conversa',
     basedIn: 'Base',
     localTime: 'Hora local',
     languages: 'Idiomas',

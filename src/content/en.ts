@@ -50,8 +50,6 @@ export const en: Content = {
     lead: 'One person from research to deploy. The interface decision is made already knowing what it costs to build, and the code is written already knowing what it has to feel like.',
     proof: 'Five products in production. You can open every one of them right here, without leaving the page.',
     productsLabel: 'In production',
-    ctaWork: 'Selected work',
-    ctaContact: 'Start a conversation',
     basedIn: 'Based in',
     localTime: 'Local time',
     languages: 'Languages',

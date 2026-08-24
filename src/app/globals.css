@@ -429,6 +429,41 @@
     --btn-fg: var(--accent-contrast);
   }
 
+  /* No celular os dois botões do cartão empilhavam, e 120px de altura era
+     o que fazia o painel não caber na tela: o cartão media 760px numa área
+     útil de 744px e era cortado pela moldura fixa. Com o padding menor os
+     dois cabem lado a lado em 313px de 333 disponíveis, e o painel volta a
+     caber inteiro. Medido em 375px, com o texto mais longo dos três
+     idiomas, que é o português. */
+  @media (max-width: 640px) {
+    .btn {
+      min-height: 48px;
+      padding-inline: var(--space-5);
+    }
+
+    /* O segundo botão do cartão vira link no estreito. A área útil dentro
+       do painel é de 297px e os dois comprimidos somam 374px, então eles
+       empilhavam; empilhados custavam 112px de altura, e era isso que
+       fazia o cartão passar de 744px e ser cortado pela moldura fixa.
+       Um primário e um link secundário também é a hierarquia mais honesta:
+       são duas ações de peso diferente. */
+    .btn--discreto {
+      min-height: 0;
+      padding: var(--space-2) 0;
+      border-color: transparent;
+      background: transparent;
+      color: var(--text-primary);
+      text-decoration: underline;
+      text-underline-offset: 5px;
+    }
+    .btn--discreto:hover,
+    .btn--discreto:focus-visible {
+      background: transparent;
+      border-color: transparent;
+      color: var(--accent);
+    }
+  }
+
   .btn--ghost {
     --btn-bg: transparent;
     --btn-fg: var(--text-primary);

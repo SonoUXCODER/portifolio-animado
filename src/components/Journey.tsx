@@ -6,7 +6,7 @@ import type { Entry } from '@/content';
 import { useConteudo, useHref, useT } from './ContentProvider';
 import SectionIndex from './SectionIndex';
 import { TransitionLink } from './PageTransition';
-import { Lines, Reveal, ScrollLine } from './Reveal';
+import { Acende, Lines, Reveal, ScrollLine } from './Reveal';
 import { easeStandard } from '@/lib/motion';
 
 /* -------------------------------------------------------------------------
@@ -163,11 +163,7 @@ export default function Journey() {
         </div>
 
         <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
-          <Reveal delay={0.1}>
-            <p className="body">
-              {t.journey.intro}
-            </p>
-          </Reveal>
+          <Acende texto={t.journey.intro} className="body" />
         </div>
       </div>
 

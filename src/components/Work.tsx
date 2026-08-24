@@ -17,7 +17,7 @@ import LivePreview from './LivePreview';
 import Magnetic from './Magnetic';
 import InlineCta from './InlineCta';
 import { TransitionLink } from './PageTransition';
-import { Lines, Reveal } from './Reveal';
+import { Acende, Lines } from './Reveal';
 import { useMedia } from '@/hooks/useMedia';
 
 /* -------------------------------------------------------------------------
@@ -36,10 +36,12 @@ import { useMedia } from '@/hooks/useMedia';
    de sempre — seta, espaço, Page Down e roda funcionam sem saber que existe
    uma galeria — e o movimento lateral é consequência dela.
 
-   No toque a conta se inverte: o dedo arrasta de lado nativamente, e fixar
-   a tela num celular costuma dar a sensação de que a página travou. Por
-   isso abaixo de 1024px a mesma lista vira uma faixa com rolagem nativa e
-   scroll-snap, sem prender nada.
+   Vale no toque também. Já teve um caminho separado no celular, com
+   rolagem lateral nativa e scroll-snap, e estava errado pelo mesmo motivo
+   que um botão no hero estava: pedia que a pessoa descobrisse um gesto pra
+   ver o trabalho. Agora é um só comportamento em qualquer largura — rolar
+   pra baixo, e a galeria anda sozinha. O que muda no telefone é a medida:
+   painel mais largo, porque 76vw de 390px não caberia um cartão.
 
    >>> A PROFUNDIDADE <<<
    Cada painel encolhe e escurece conforme se afasta do centro da tela. Não
@@ -54,10 +56,13 @@ import { useMedia } from '@/hooks/useMedia';
    linha só, e os dois botões. O resto está no estudo de caso, a um clique.
    ------------------------------------------------------------------------- */
 
-/** largura de cada painel de projeto, em % da tela */
-const PAINEL_VW = 76;
-/** largura dos painéis de declaração, que são só uma frase */
-const FRASE_VW = 46;
+/* Largura dos painéis, em % da tela. No telefone o cartão precisa de quase
+   tudo; no desktop 76vw é o que deixa as bordas dos vizinhos aparecendo, e
+   é essa borda que faz a profundidade ser percebida. */
+const MEDIDAS = {
+  desktop: { painel: 76, frase: 46, telaPorPainel: 90 },
+  toque: { painel: 92, frase: 74, telaPorPainel: 72 },
+} as const;
 /** depois de qual projeto entra cada declaração */
 const POSICOES = [1, 3];
 
@@ -90,7 +95,7 @@ function Painel({
   largura,
   reduzido,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode | ((zoom: MotionValue<number>) => React.ReactNode);
   progresso: MotionValue<number>;
   /** em que ponto do progresso (0..1) este painel está no meio da tela */
   centro: number;
@@ -100,8 +105,21 @@ function Painel({
   reduzido: boolean;
 }) {
   const faixa = [centro - janela, centro, centro + janela];
-  const escala = useTransform(progresso, faixa, [0.82, 1, 0.82]);
-  const veu = useTransform(progresso, faixa, [0.72, 0, 0.72]);
+
+  /* A profundidade é feita em Z, e não em `scale`. Com a perspectiva de
+     1100px logo abaixo, 520px de recuo deixam o painel em 68% do tamanho
+     aparente — e, diferente de `scale`, o recuo também afasta as bordas do
+     ponto de fuga, então o painel *vira* um pouco enquanto se afasta. É o
+     que separa um cartão encolhendo de um objeto indo pra trás. */
+  const z = useTransform(progresso, faixa, [-520, 0, -520]);
+  /* a virada: 9° é o ponto em que a lateral aparece sem o texto do vizinho
+     virar borrão ilegível na periferia */
+  const giro = useTransform(progresso, faixa, [9, 0, -9]);
+  const veu = useTransform(progresso, faixa, [0.78, 0, 0.78]);
+
+  /* o título anda de 0.7 a 1: mais fundo que o cartão, então ele "chega"
+     depois e a diferença aparece */
+  const zoomTitulo = useTransform(progresso, faixa, [0.7, 1, 0.7]);
 
   return (
     /* a perspectiva mora no painel: ela só alcança filho direto, e um ponto
@@ -109,13 +127,13 @@ function Painel({
        distorceria as pontas */
     <div
       className="relative h-full shrink-0"
-      style={{ width: `${largura}vw`, perspective: 1400 }}
+      style={{ width: `${largura}vw`, perspective: 1100 }}
     >
       <motion.div
         className="flex h-full items-center"
-        style={reduzido ? undefined : { scale: escala, transformStyle: 'preserve-3d' }}
+        style={reduzido ? undefined : { z, rotateY: giro, transformStyle: 'preserve-3d' }}
       >
-        {children}
+        {typeof children === 'function' ? (children as (z: MotionValue<number>) => React.ReactNode)(zoomTitulo) : children}
       </motion.div>
 
       {!reduzido && (
@@ -139,11 +157,14 @@ function Cartao({
   aoVer,
   t,
   prioridade,
+  zoom,
 }: {
   project: Project;
   aoVer: () => void;
   t: Content;
   prioridade: boolean;
+  /** escala extra do título, pra ele crescer mais que o cartão */
+  zoom?: MotionValue<number>;
 }) {
   const href = useHref();
 
@@ -164,7 +185,10 @@ function Cartao({
         tabIndex={-1}
         aria-hidden="true"
       >
-        <figure className="media media--dim aspect-[4/3] max-h-[52svh] w-full lg:max-h-[62svh]">
+        {/* No celular a proporção fecha pra 16/10 e o teto passa a ser em
+            svh: assim a imagem encolhe junto com a tela em vez de empurrar o
+            texto pra fora da moldura fixa. */}
+        <figure className="media media--dim aspect-[16/10] max-h-[26svh] w-full sm:aspect-[4/3] sm:max-h-[52svh] lg:max-h-[62svh]">
           <Image
             src={project.cover.src}
             alt={project.cover.alt}
@@ -183,7 +207,14 @@ function Cartao({
           {project.kind} <span className="index-line__sep">·</span> {project.year}
         </p>
 
-        <h3 className="display-lg mt-[var(--space-4)]">
+        {/* O título cresce mais que o cartão. O painel inteiro já vem de
+            trás, e o título vem um pouco mais de trás ainda: essa diferença
+            de velocidade entre a moldura e o que está dentro dela é o que o
+            olho lê como zoom, em vez de "a página toda deu um zoom". */}
+        <motion.h3
+          className="display-lg mt-[var(--space-4)] origin-left"
+          style={zoom ? { scale: zoom } : undefined}
+        >
           <TransitionLink
             href={href(`/work/${project.slug}`)}
             className="hit inline-block transition-colors duration-[var(--duration-normal)] group-hover:text-[var(--accent)]"
@@ -192,7 +223,7 @@ function Cartao({
           >
             {project.title}
           </TransitionLink>
-        </h3>
+        </motion.h3>
 
         <p className="label mt-[var(--space-4)] flex flex-wrap items-center gap-x-[var(--space-3)]">
           {project.disciplines.map((d, i) => (
@@ -209,14 +240,23 @@ function Cartao({
 
         <p className="body mt-[var(--space-5)] max-w-[42ch]">{project.summary}</p>
 
-        <p className="body-sm mt-[var(--space-4)] flex max-w-[44ch] gap-[var(--space-3)] italic">
+        {/* A nota é a primeira coisa a sair quando a tela é baixa: ela é
+            voz, não informação de decisão, e existe inteira no estudo de
+            caso. O corte é por ALTURA de viewport, não largura, porque o
+            problema é o cartão não caber em pé. */}
+        <p className="body-sm mt-[var(--space-4)] flex max-w-[44ch] gap-[var(--space-3)] italic [@media(max-height:760px)]:hidden">
           <span aria-hidden="true" style={{ color: 'var(--accent)' }}>
             ↳
           </span>
           {project.note}
         </p>
 
-        <p className="label label--dim mt-[var(--space-5)]">{project.stack.join(' · ')}</p>
+        {/* a stack sai junto com a nota em tela baixa, e pelo mesmo
+            motivo: é detalhe verificável no estudo de caso, não o que faz
+            alguém clicar */}
+        <p className="label label--dim mt-[var(--space-5)] [@media(max-height:760px)]:hidden">
+          {project.stack.join(' · ')}
+        </p>
 
         <div className="mt-[var(--space-6)] flex flex-wrap items-center gap-[var(--space-4)]">
           {project.live && (
@@ -229,7 +269,7 @@ function Cartao({
           <Magnetic>
             <TransitionLink
               href={href(`/work/${project.slug}`)}
-              className="btn btn--ghost"
+              className="btn btn--ghost btn--discreto"
               cursor="case"
               aria-label={fill(t.work.readCase, project.title)}
             >
@@ -253,7 +293,17 @@ function Frase({ lines, align }: { lines: string[]; align: 'left' | 'right' }) {
 /* -------------------------------------------------------------------------
    A FAIXA FIXADA — desktop
    ------------------------------------------------------------------------- */
-function Faixa({ itens, aoVer, t }: { itens: Item[]; aoVer: (p: Project) => void; t: Content }) {
+function Faixa({
+  itens,
+  aoVer,
+  t,
+  medidas,
+}: {
+  itens: Item[];
+  aoVer: (p: Project) => void;
+  t: Content;
+  medidas: (typeof MEDIDAS)[keyof typeof MEDIDAS];
+}) {
   const trilho = useRef<HTMLDivElement>(null);
   const palco = useRef<HTMLDivElement>(null);
   const reduzido = useReducedMotion();
@@ -264,10 +314,8 @@ function Faixa({ itens, aoVer, t }: { itens: Item[]; aoVer: (p: Project) => void
   /* Quanto o trilho anda: a largura total menos uma tela. Em vw, porque é a
      unidade em que os painéis foram declarados, e assim a conta continua
      certa quando a janela muda de tamanho sem precisar medir nada. */
-  const larguraTotal = itens.reduce(
-    (soma, it) => soma + (it.tipo === 'projeto' ? PAINEL_VW : FRASE_VW),
-    0,
-  );
+  const larguraDe = (it: Item) => (it.tipo === 'projeto' ? medidas.painel : medidas.frase);
+  const larguraTotal = itens.reduce((soma, it) => soma + larguraDe(it), 0);
   const curso = Math.max(1, larguraTotal - 100);
   const x = useTransform(suave, [0, 1], ['0vw', `-${curso}vw`]);
 
@@ -275,12 +323,12 @@ function Faixa({ itens, aoVer, t }: { itens: Item[]; aoVer: (p: Project) => void
   const centros: number[] = [];
   let acumulado = 0;
   for (const it of itens) {
-    const w = it.tipo === 'projeto' ? PAINEL_VW : FRASE_VW;
+    const w = larguraDe(it);
     const centroVw = acumulado + w / 2 - 50;
     centros.push(Math.min(1, Math.max(0, centroVw / curso)));
     acumulado += w;
   }
-  const janela = PAINEL_VW / curso;
+  const janela = medidas.painel / curso;
 
   /* Tabular pra um link dentro de um painel fora de vista faz o navegador
      tentar trazê-lo pra tela rolando o contêiner na horizontal, e aí a
@@ -299,7 +347,7 @@ function Faixa({ itens, aoVer, t }: { itens: Item[]; aoVer: (p: Project) => void
   return (
     /* a altura é a distância de rolagem: uma tela por painel, mais uma
        folga pra o último não sair correndo */
-    <div ref={trilho} style={{ height: `${itens.length * 90 + 40}svh` }}>
+    <div ref={trilho} style={{ height: `${itens.length * medidas.telaPorPainel + 40}svh` }}>
       <div ref={palco} className="sticky top-0 h-[100svh] overflow-hidden">
         <motion.div className="flex h-full items-center pt-[var(--header-h)]" style={{ x }}>
           {itens.map((it, i) => (
@@ -308,19 +356,20 @@ function Faixa({ itens, aoVer, t }: { itens: Item[]; aoVer: (p: Project) => void
               progresso={suave}
               centro={centros[i]}
               janela={janela}
-              largura={it.tipo === 'projeto' ? PAINEL_VW : FRASE_VW}
+              largura={larguraDe(it)}
               reduzido={Boolean(reduzido)}
             >
-              {it.tipo === 'projeto' ? (
-                <Cartao
-                  project={it.project}
-                  aoVer={() => aoVer(it.project)}
-                  t={t}
-                  prioridade={i === 0}
-                />
-              ) : (
-                <Frase lines={it.lines} align={it.align} />
-              )}
+              {it.tipo === 'projeto'
+                ? (zoom) => (
+                    <Cartao
+                      project={it.project}
+                      aoVer={() => aoVer(it.project)}
+                      t={t}
+                      prioridade={i === 0}
+                      zoom={reduzido ? undefined : zoom}
+                    />
+                  )
+                : <Frase lines={it.lines} align={it.align} />}
             </Painel>
           ))}
         </motion.div>
@@ -343,53 +392,6 @@ function Progresso({ progresso }: { progresso: MotionValue<number> }) {
         className="h-full origin-left"
         style={{ background: 'var(--accent)', scaleX: progresso }}
       />
-    </div>
-  );
-}
-
-/* -------------------------------------------------------------------------
-   A FAIXA NATIVA — toque
-
-   No dedo a rolagem lateral já existe e é boa. Fixar a tela num celular dá
-   a sensação de que a página travou, então aqui não se prende nada: é
-   overflow-x com scroll-snap, que é o gesto que a pessoa já conhece.
-   ------------------------------------------------------------------------- */
-function FaixaToque({
-  itens,
-  aoVer,
-  t,
-}: {
-  itens: Item[];
-  aoVer: (p: Project) => void;
-  t: Content;
-}) {
-  return (
-    <div
-      role="region"
-      aria-label={t.sections.work.name}
-      tabIndex={0}
-      /* a margem lateral do site vira padding do trilho e do snap: sem
-         isso o primeiro cartão encosta na borda da tela e o último não tem
-         pra onde parar centralizado */
-      className="mt-[var(--space-8)] flex snap-x snap-mandatory gap-[var(--space-6)] overflow-x-auto px-[var(--gutter)] pb-[var(--space-5)]"
-      style={{ scrollPaddingInline: 'var(--gutter)' }}
-    >
-      {itens.map((it, i) =>
-        it.tipo === 'projeto' ? (
-          <div key={it.project.slug} className="w-[86vw] shrink-0 snap-center">
-            <Cartao
-              project={it.project}
-              aoVer={() => aoVer(it.project)}
-              t={t}
-              prioridade={i === 0}
-            />
-          </div>
-        ) : (
-          <div key={`frase-${i}`} className="flex w-[70vw] shrink-0 snap-center items-center">
-            <Frase lines={it.lines} align="left" />
-          </div>
-        ),
-      )}
     </div>
   );
 }
@@ -422,21 +424,22 @@ export default function Work() {
             </div>
 
             <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
-              <Reveal delay={0.1}>
-                <p className="body">{t.work.intro}</p>
-              </Reveal>
+              <Acende texto={t.work.intro} className="body" />
             </div>
           </div>
         </div>
 
-        {/* `useMedia` só responde no cliente, então o servidor entrega sempre
-            a faixa de toque. É a escolha certa pra esse empate: ela é HTML
-            comum, funciona sem JavaScript nenhum, e não prende a tela. */}
-        {desktop ? (
-          <Faixa itens={itens} aoVer={setAoVivo} t={t} />
-        ) : (
-          <FaixaToque itens={itens} aoVer={setAoVivo} t={t} />
-        )}
+        {/* Um comportamento só, em qualquer largura: rolar pra baixo e a
+            galeria anda de lado. O que muda no telefone é a medida, não o
+            gesto. `useMedia` começa `false` no servidor, então o HTML sai
+            com as medidas de toque e o desktop as corrige na hidratação —
+            o que troca é largura de painel, e nenhum conteúdo. */}
+        <Faixa
+          itens={itens}
+          aoVer={setAoVivo}
+          t={t}
+          medidas={desktop ? MEDIDAS.desktop : MEDIDAS.toque}
+        />
 
         <div className="shell mt-[var(--space-9)]">
           <InlineCta pergunta={t.work.ctaAfter} acao={t.work.ctaAfterLink} />

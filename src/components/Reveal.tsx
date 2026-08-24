@@ -9,6 +9,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  type MotionValue,
 } from 'framer-motion';
 import { duration, easeStandard, enter, stagger, viewport } from '@/lib/motion';
 import { cn } from '@/lib/utils';
@@ -362,5 +363,89 @@ export function Counter({
       {formata(to)}
       {suffix}
     </span>
+  );
+}
+
+/* -------------------------------------------------------------------------
+   TEXTO QUE ACENDE
+
+   O parágrafo entra apagado e cada palavra acende conforme a rolagem passa
+   por ele. Não é um fade no bloco inteiro: é palavra por palavra, da
+   esquerda pra direita, no ritmo do dedo de quem lê.
+
+   O efeito existe porque estes parágrafos têm um problema real: eles ficam
+   ao lado de um título em tipografia de display, e ao lado dele nenhum
+   texto de 17px consegue ser visto. Acender palavra a palavra dá ao
+   parágrafo o único tipo de atenção que ele pode disputar, que é o tempo.
+
+   >>> A JANELA <<<
+   `['start 0.85', 'start 0.35']` significa: começa quando o topo do bloco
+   chega a 85% da altura da tela, termina quando ele sobe até 35%. Metade da
+   tela de curso. Mais que isso e a última palavra só acende quando o
+   parágrafo já está saindo por cima; menos, e tudo acende de uma vez e o
+   efeito vira um piscar.
+
+   >>> POR QUE OPACIDADE, E NÃO COR <<<
+   Interpolar `color` obriga o navegador a repintar o texto a cada quadro, e
+   repintar texto é das coisas mais caras que existem. Opacidade num
+   `<span>` inline composita e não repinta nada. A palavra apagada fica em
+   0.22, que sobre este fundo lê como um cinza fantasma em vez de um buraco.
+   ------------------------------------------------------------------------- */
+
+function Palavra({
+  children,
+  progresso,
+  faixa,
+}: {
+  children: string;
+  progresso: MotionValue<number>;
+  faixa: [number, number];
+}) {
+  const opacity = useTransform(progresso, faixa, [0.22, 1]);
+  return (
+    <motion.span style={{ opacity }} className="inline-block whitespace-pre">
+      {children}
+    </motion.span>
+  );
+}
+
+export function Acende({
+  texto,
+  className,
+  as: Tag = 'p',
+}: {
+  texto: string;
+  className?: string;
+  as?: 'p' | 'div';
+}) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const reduzido = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'start 0.35'] });
+
+  const palavras = texto.split(' ');
+  const M = motion[Tag] as typeof motion.p;
+
+  /* com movimento reduzido o parágrafo é só um parágrafo. Acender palavra a
+     palavra é movimento contínuo ligado à rolagem, que é exatamente o que
+     quem liga essa preferência está pedindo pra não ver. */
+  if (reduzido) {
+    return <Tag className={className}>{texto}</Tag>;
+  }
+
+  return (
+    <M ref={ref} className={className}>
+      {palavras.map((p, i) => (
+        <Palavra
+          key={`${p}-${i}`}
+          progresso={scrollYProgress}
+          /* cada palavra acende num pedaço da janela, e as faixas se
+             sobrepõem de propósito: sem a sobreposição a onda vira uma
+             sequência de piscadas em vez de um varrer */
+          faixa={[i / palavras.length, (i + 1.6) / palavras.length]}
+        >
+          {i < palavras.length - 1 ? `${p} ` : p}
+        </Palavra>
+      ))}
+    </M>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { Lines, Reveal } from './Reveal';
+import { Acende, Lines } from './Reveal';
 import { useT } from './ContentProvider';
 
 /* -------------------------------------------------------------------------
@@ -64,11 +64,7 @@ export default function Philosophy() {
           </div>
 
           <div className="col-span-12 md:col-span-8 lg:col-span-3 lg:col-start-10 lg:self-end">
-            <Reveal delay={0.1}>
-              <p className="body">
-                {t.philosophy.text}
-              </p>
-            </Reveal>
+            <Acende texto={t.philosophy.text} className="body" />
           </div>
         </div>
       </motion.div>

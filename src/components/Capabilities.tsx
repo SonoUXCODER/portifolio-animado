@@ -5,7 +5,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useConteudo } from './ContentProvider';
 import SectionIndex from './SectionIndex';
 import Visual from './Visual';
-import { Lines, Reveal } from './Reveal';
+import { Acende, Lines } from './Reveal';
 import InlineCta from './InlineCta';
 import { duration, easeStandard } from '@/lib/motion';
 
@@ -65,11 +65,7 @@ export default function Capabilities() {
         </div>
 
         <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
-          <Reveal delay={0.1}>
-            <p className="body">
-              {t.capabilities.intro}
-            </p>
-          </Reveal>
+          <Acende texto={t.capabilities.intro} className="body" />
         </div>
       </div>
 

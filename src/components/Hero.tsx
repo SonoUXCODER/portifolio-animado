@@ -7,7 +7,6 @@ import { useT } from './ContentProvider';
 import { basePath } from '@/lib/base';
 import { duration, easeStandard, enter } from '@/lib/motion';
 import { Lines } from './Reveal';
-import Magnetic from './Magnetic';
 import { useMedia, usePonteiroFino } from '@/hooks/useMedia';
 
 /* -------------------------------------------------------------------------
@@ -17,6 +16,16 @@ import { useMedia, usePonteiroFino } from '@/hooks/useMedia';
    está, e se dá pra contratar agora. Nada mais entra — o hero é a única
    parte da página em que cada elemento a mais custa impacto, porque o
    impacto aqui *é* o vazio ao redor do título.
+
+   >>> NÃO HÁ BOTÃO AQUI, E ISSO É A DECISÃO <<<
+   Havia dois: "ver o trabalho" e "começar uma conversa". Os dois saíram.
+   Um botão no hero é um atalho, e atalho é o contrário do que esta página
+   é: ela foi feita pra ser atravessada, e quem pula direto pro contato
+   chega lá sem ter visto nada que justifique escrever. O convite agora é
+   rolar, e a única coisa que pede ação na primeira tela é a seta.
+
+   Os pontos de contato continuam existindo, três deles, mas depois de o
+   trabalho ter sido mostrado. Ver <InlineCta/>.
 
    A composição é de duas faixas: a declaração ocupando quase a largura
    inteira, e a régua técnica embaixo. Havia uma terceira no topo, com
@@ -183,18 +192,6 @@ export default function Hero() {
               {t.hero.proof}
             </p>
 
-            <div className="mt-[var(--space-6)] flex flex-wrap items-center gap-[var(--space-4)]">
-              <Magnetic>
-                <a href="#work" className="btn" data-cursor="view">
-                  {t.hero.ctaWork}
-                </a>
-              </Magnetic>
-              <Magnetic>
-                <a href="#contact" className="btn btn--ghost" data-cursor="open">
-                  {t.hero.ctaContact} <span aria-hidden="true">↗</span>
-                </a>
-              </Magnetic>
-            </div>
           </motion.div>
         </div>
       </div>

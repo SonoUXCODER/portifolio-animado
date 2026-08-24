@@ -5,7 +5,7 @@ import { identity } from '@/content';
 import { useConteudo } from './ContentProvider';
 import SectionIndex from './SectionIndex';
 import TiltCard from './TiltCard';
-import { Counter, Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Reveal';
+import { Acende, Counter, Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Reveal';
 
 /* -------------------------------------------------------------------------
    MANIFESTO.
@@ -64,9 +64,7 @@ export default function Manifesto() {
         <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
           <RevealGroup className="flex flex-col gap-[var(--space-4)]" delay={0.1}>
             {t.manifesto.paragraphs.map((p) => (
-              <RevealItem key={p}>
-                <p className="body">{p}</p>
-              </RevealItem>
+              <Acende key={p} texto={p} className="body" />
             ))}
           </RevealGroup>
         </div>

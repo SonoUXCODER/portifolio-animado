@@ -58,8 +58,6 @@ export const de: Content = {
     lead: 'Eine Person von der Recherche bis zum Deployment. Die Interface-Entscheidung fällt schon mit dem Wissen, was sie im Bau kostet, und der Code entsteht schon mit dem Wissen, wie er sich anfühlen muss.',
     proof: 'Fünf Produkte im Produktivbetrieb. Du kannst jedes davon direkt hier öffnen, ohne die Seite zu verlassen.',
     productsLabel: 'Im Betrieb',
-    ctaWork: 'Ausgewählte Arbeiten',
-    ctaContact: 'Gespräch starten',
     basedIn: 'Standort',
     localTime: 'Ortszeit',
     languages: 'Sprachen',

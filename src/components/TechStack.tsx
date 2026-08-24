@@ -1,7 +1,7 @@
 'use client';
 
 import { useConteudo } from './ContentProvider';
-import { Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
+import { Acende, Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
 
 /* -------------------------------------------------------------------------
    TECHNOLOGY STACK.
@@ -44,9 +44,7 @@ export default function TechStack() {
 
         <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
           <Reveal delay={0.1}>
-            <p className="body">
-              {t.stack.intro}
-            </p>
+            <Acende texto={t.stack.intro} className="body" />
             <p className="label label--dim mt-[var(--space-5)]">
               {tools.length} {t.stack.toolsWord}
               <span className="index-line__sep"> / </span>
