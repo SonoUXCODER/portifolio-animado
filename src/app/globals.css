@@ -596,6 +596,23 @@
   body.has-cursor [role='button'] {
     cursor: none;
   }
+
+  /* Enquanto o visualizador ao vivo está aberto, o cursor nativo volta.
+
+     O motivo é que o site do cliente roda num <iframe>, e um iframe engole
+     o pointermove: enquanto o ponteiro está por cima dele, a nossa página
+     não recebe evento nenhum e a bolinha desenhada por <CustomCursor/>
+     congela onde parou. Como `cursor: none` continua valendo, a pessoa
+     fica sem cursor nenhum na tela e não acha o botão de fechar.
+
+     Não dá pra resolver desenhando melhor: o evento não chega, ponto. A
+     saída é admitir que dentro do visualizador quem manda é o sistema. */
+  body.has-cursor[data-native-cursor='1'],
+  body.has-cursor[data-native-cursor='1'] a,
+  body.has-cursor[data-native-cursor='1'] button,
+  body.has-cursor[data-native-cursor='1'] [role='button'] {
+    cursor: auto;
+  }
 }
 
 /* =========================================================================

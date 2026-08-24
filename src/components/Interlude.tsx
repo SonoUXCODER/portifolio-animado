@@ -45,19 +45,31 @@ export default function Interlude({ peca }: { peca: Peca }) {
   const [estado, setEstado] = useState<'espera' | 'carregando' | 'pronto' | 'erro'>('espera');
   const [perto, setPerto] = useState(false);
 
-  /* ---------- só começa quando a peça se aproxima da tela ---------- */
+  /* ---------- monta perto, desmonta longe ----------
+
+     Antes este observador se desconectava na primeira aproximação, e a peça
+     nunca mais era desmontada. O efeito colateral só aparece numa página
+     desta altura: são três esculturas, e depois de rolar até o fim as três
+     ficam com contexto WebGL vivo, cada uma segurando geometria, textura e
+     o ambiente PMREM na memória da GPU. O laço de render estava pausado,
+     então não custava quadro nenhum, mas custava memória o tempo todo, e em
+     celular de meio termo isso é a diferença entre rolar liso e o navegador
+     começar a descartar aba.
+
+     Agora o observador continua escutando. Sair da margem desmonta a cena, e
+     o `parar()` no fim do efeito principal destrói tudo na mão. Voltar
+     remonta: o .glb já está no cache HTTP, então o custo é reprocessar a
+     malha, e isso acontece 1000px antes de a peça aparecer.
+
+     1000px de margem, e não 600: com a margem curta demais uma rolagem
+     rápida cruzaria a fronteira duas vezes em poucos quadros e a cena
+     ficaria montando e desmontando. */
   useEffect(() => {
     const el = secao.current;
     if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setPerto(true);
-          obs.disconnect();
-        }
-      },
-      { rootMargin: '600px 0px' },
-    );
+    const obs = new IntersectionObserver(([e]) => setPerto(e.isIntersecting), {
+      rootMargin: '1000px 0px',
+    });
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
@@ -88,7 +100,10 @@ export default function Interlude({ peca }: { peca: Peca }) {
         });
         /* 2 já é mais do que suficiente pra uma escultura em pedra; acima
            disso é só calor no aparelho de quem visita */
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        /* 2 em tela grande, 1.5 no telefone. O canvas ocupa a viewport
+           inteira, então cada 0.5 de razão são milhões de pixels a mais por
+           quadro, e numa escultura em pedra cinza ninguém vê a diferença. */
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.5 : 2));
         renderer.setSize(larg(), alt());
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         /* exposição baixa: a peça tem de sair da penumbra, não estar acesa */
@@ -251,6 +266,9 @@ export default function Interlude({ peca }: { peca: Peca }) {
       vivo = false;
       recursos.current?.parar();
       recursos.current = null;
+      /* volta pro estado inicial: sem isto a legenda continuaria dizendo
+         que a peça está pronta depois de a cena ter sido destruída */
+      setEstado('espera');
     };
   }, [perto, peca, reduzido]);
 

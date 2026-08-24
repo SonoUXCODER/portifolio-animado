@@ -15,7 +15,7 @@ import { easeEmphasis, easeStandard } from '@/lib/motion';
 
    Regras que eu me impus, pra que ela não vire pedágio:
 
-   1. Tempo máximo de 1.4s. A cortina sai quando as fontes ficam prontas ou
+   1. Tempo máximo de 1.1s. A cortina sai quando as fontes ficam prontas ou
       quando o relógio estoura — o que vier primeiro. Nunca espera imagem.
    2. Aparece uma vez por aba (sessionStorage). Voltar da página de um
       projeto não pode custar outra espera.
@@ -30,7 +30,11 @@ import { easeEmphasis, easeStandard } from '@/lib/motion';
    ------------------------------------------------------------------------- */
 
 const CHAVE = 'sono:loaded';
-const TETO_MS = 1400;
+const TETO_MS = 1100;
+/* Piso, pra cortina não piscar. Já foi 600ms e era tempo demais: numa
+   segunda visita, com a fonte em cache, a página está pronta em ~120ms e o
+   piso virava espera inventada. 320ms ainda lê como transição. */
+const PISO_MS = 320;
 
 /** devolve a rolagem e marca a sessão; seguro de chamar mais de uma vez */
 function liberar() {
@@ -98,9 +102,8 @@ export default function Loader() {
 
     const teto = window.setTimeout(fechar, TETO_MS);
     document.fonts?.ready.then(() => {
-      /* piso de 600ms: fechar em 80ms parece defeito, não velocidade */
       const decorrido = performance.now() - inicio;
-      window.setTimeout(fechar, Math.max(0, 600 - decorrido));
+      window.setTimeout(fechar, Math.max(0, PISO_MS - decorrido));
     });
 
     return () => {

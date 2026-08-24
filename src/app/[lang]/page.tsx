@@ -30,10 +30,12 @@ import { langs } from '@/lib/lang';
                   CAPABILITIES. Separar "o que eu faço" de "com o que eu
                   faço" daria dois títulos pro mesmo assunto.
 
-     filosofia    a única tela clara do site, logo antes do contato. Depois
-                  de sete cenas numa sala escura, inverter a página por uma
-                  tela é mais forte do que qualquer animação, e é o último
-                  respiro antes do convite.
+     filosofia    a única tela clara do site, logo depois da primeira
+                  escultura. Ela ficava antes do contato, no fim de tudo, e
+                  chegava tarde demais: quem rolou vinte telas já formou
+                  opinião. Aqui ela funciona como declaração de princípio
+                  antes de o trabalho ser mostrado, e a inversão de fundo
+                  emenda direto na saída do mármore.
 
    As declarações ("design with intention", "build with precision") vivem
    dentro de <Work/>, entre os projetos, porque é lá que elas fazem sentido:
@@ -52,6 +54,8 @@ export default function Home() {
       <Manifesto />
       <Interludes indice={0} />
 
+      <Philosophy />
+
       <Work />
       <Interludes indice={1} />
 
@@ -60,8 +64,6 @@ export default function Home() {
       <Interludes indice={2} />
 
       <Journey />
-
-      <Philosophy />
       <Contact />
     </>
   );

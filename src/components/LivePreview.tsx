@@ -74,6 +74,8 @@ export default function LivePreview({
     focoAnterior.current = document.activeElement as HTMLElement | null;
     const overflowAntes = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    /* devolve o cursor do sistema: ver a explicação em globals.css */
+    document.body.dataset.nativeCursor = '1';
 
     painel.current?.querySelector<HTMLElement>('button, a')?.focus();
 
@@ -101,6 +103,7 @@ export default function LivePreview({
     return () => {
       window.removeEventListener('keydown', tecla);
       document.body.style.overflow = overflowAntes;
+      delete document.body.dataset.nativeCursor;
       focoAnterior.current?.focus?.();
     };
   }, [aoFechar]);

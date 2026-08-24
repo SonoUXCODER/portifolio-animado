@@ -61,7 +61,10 @@ export default function CustomCursor() {
     const mover = (e: PointerEvent) => {
       x.set(e.clientX);
       y.set(e.clientY);
-      if (!visivel) setVisivel(true);
+      /* com o visualizador ao vivo aberto quem desenha o cursor é o
+         sistema, então a bolinha some junto. Ver globals.css. */
+      const nativo = document.body.dataset.nativeCursor === '1';
+      if (visivel === nativo) setVisivel(!nativo);
 
       const alvo = (e.target as HTMLElement | null)?.closest?.('[data-cursor]') as HTMLElement | null;
       setModo(alvo?.dataset.cursor ?? null);

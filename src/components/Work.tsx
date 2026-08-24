@@ -32,19 +32,16 @@ import { cn } from '@/lib/utils';
      split   duas chapas montadas, uma mais alta que a outra
 
    >>> O MOVIMENTO <<<
-   Cada capítulo entra em 3D: chega deitado 12° pra trás, endireita, e volta
-   a deitar ao sair de cena, encolhendo e escurecendo. É como uma folha
-   sendo virada sobre uma mesa, e resolve o problema de cinco blocos
-   entrarem todos com o mesmo fade.
+   Cada capítulo vem de longe, chega ao plano da tela, e volta pra longe.
+   Vertical com eixo Z: é aproximação de verdade, com perspectiva, e não
+   `scale` imitando. Detalhes e o custo de cada escolha estão no comentário
+   de <Folha/>, logo abaixo.
 
-   Três cuidados que fazem isso ser uma cena e não um efeito:
+   Dois cuidados que fazem isso ser uma cena e não um efeito:
    1. a perspectiva mora no contêiner da lista, e não em cada capítulo.
       Uma perspectiva por elemento faz cada um ter o próprio ponto de fuga,
       e o conjunto perde a sensação de espaço único;
-   2. a rotação é de 12°, no máximo. Acima disso o texto entra ilegível e a
-      pessoa espera a animação terminar pra começar a ler, que é o oposto
-      do que uma entrada deveria fazer;
-   3. o progresso passa por mola. Sem ela a rolagem picotada aparece como
+   2. o progresso passa por mola. Sem ela a rolagem picotada aparece como
       tremor na borda da imagem.
 
    >>> O QUE MUDOU DE PROPÓSITO <<<
@@ -70,8 +67,38 @@ import { cn } from '@/lib/utils';
    ------------------------------------------------------------------------- */
 const POSICOES = [1, 3];
 
-/* ---------- a folha 3D ----------
-   Envolve o capítulo inteiro e o inclina conforme ele atravessa a tela. */
+/* -------------------------------------------------------------------------
+   A PROFUNDIDADE.
+
+   O capítulo entra vindo de longe e sai voltando pra longe. É movimento
+   vertical com eixo Z de verdade: a perspectiva mora no contêiner da lista,
+   então `translateZ` produz a escala em perspectiva sozinho, do mesmo jeito
+   que um objeto se aproximando produziria. Não é `scale` fingindo
+   profundidade, e a diferença aparece na borda da imagem.
+
+   >>> O QUE FOI DESFEITO, E POR QUÊ <<<
+   A versão anterior inclinava o capítulo em `rotateX` de 12° e animava
+   `opacity` no mesmo nó. As duas coisas eram caras pelo mesmo motivo: o nó
+   é a coluna inteira do projeto, com quatro mil pixels de altura.
+
+     rotateX   a caixa de composição de um elemento girado em 3D é o volume
+               que ele varre, não o retângulo em que ele está. Girar uma
+               coluna de 4000px cria uma textura absurda na GPU, e eram
+               cinco delas vivas ao mesmo tempo.
+     opacity   deixar um nó translúcido obriga o navegador a desenhar a
+               subárvore inteira num buffer separado e só então misturar.
+               Numa coluna com imagem grande, isso é raster de tela cheia a
+               cada quadro de rolagem.
+     will-change  estava fixo em 'transform, opacity'. Isso não é dica, é
+               ordem: o navegador promove as cinco colunas a camada e as
+               mantém em memória mesmo muito longe da tela.
+
+   Agora: `translateZ` e `translateY`, que são a mesma matriz e não custam
+   raster nenhum, e o escurecimento virou uma **cortina** — um retângulo de
+   cor sólida por cima, com a opacidade nele. Compor um retângulo opaco é
+   barato; deixar uma subárvore translúcida não é. O efeito na tela é o
+   mesmo, o custo não.
+   ------------------------------------------------------------------------- */
 function Folha({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduzido = useReducedMotion();
@@ -79,25 +106,31 @@ function Folha({ children }: { children: React.ReactNode }) {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const suave = useSpring(scrollYProgress, { stiffness: 90, damping: 30, mass: 0.4 });
 
-  const rotateX = useTransform(suave, [0, 0.28, 0.72, 1], [12, 0, 0, -7]);
-  const scale = useTransform(suave, [0, 0.28, 0.72, 1], [0.9, 1, 1, 0.93]);
-  const opacity = useTransform(suave, [0, 0.2, 0.8, 1], [0.25, 1, 1, 0.3]);
+  /* longe -> perto -> longe. 260px de curso em Z, que com a perspectiva de
+     1600px do contêiner dá cerca de 14% de variação aparente de tamanho:
+     o bastante pra ler como aproximação, pouco o bastante pra o texto não
+     entrar borrado. */
+  const z = useTransform(suave, [0, 0.3, 0.7, 1], [-260, 0, 0, -200]);
+  /* o deslocamento vertical corre contra a rolagem, então o capítulo parece
+     frear ao chegar e acelerar ao sair */
+  const y = useTransform(suave, [0, 0.3, 0.7, 1], [70, 0, 0, -70]);
+  /* a cortina: 0 no meio da passagem, escura nas pontas */
+  const veu = useTransform(suave, [0, 0.32, 0.68, 1], [0.72, 0, 0, 0.72]);
 
   if (reduzido) return <div ref={ref}>{children}</div>;
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="relative">
+      <motion.div style={{ z, y, transformStyle: 'preserve-3d' }}>{children}</motion.div>
+
+      {/* A cortina fica por cima e não recebe evento nenhum. Ela é da cor do
+          fundo, então escurecer é literalmente aproximar a página do preto
+          em vez de apagar o conteúdo. */}
       <motion.div
-        style={{
-          rotateX,
-          scale,
-          opacity,
-          transformStyle: 'preserve-3d',
-          willChange: 'transform, opacity',
-        }}
-      >
-        {children}
-      </motion.div>
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0"
+        style={{ background: 'var(--background)', opacity: veu }}
+      />
     </div>
   );
 }

@@ -109,7 +109,6 @@ export default function TiltCard({
                 rotateZ: rotZ,
                 y: eleva,
                 transformStyle: 'preserve-3d',
-                willChange: 'transform',
               }
             : { rotate: rest }
         }
