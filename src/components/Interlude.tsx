@@ -13,6 +13,9 @@ import { basePath } from '@/lib/base';
    luzes e nenhuma interação além da rolagem. R3F custaria uns 80kB de
    runtime pra reimplementar exatamente isto.
 
+   A rolagem comanda quatro coisas na câmera — aproximação, giro, altura e
+   abertura da lente. Está detalhado no laço de desenho, mais abaixo.
+
    Três regras que sustentam a performance:
    1. o three só é baixado quando a peça chega perto da tela (import
       dinâmico), então quem nunca rola até aqui não paga nada;
@@ -121,7 +124,9 @@ export default function Interlude({ peca }: { peca: Peca }) {
         cena.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
         const camera = new THREE.PerspectiveCamera(38, larg() / alt(), 0.1, 100);
-        camera.position.set(0, 0, 6);
+        /* 7.4 é o começo do dolly, e a peça precisa nascer já ali: montar em
+           6 e saltar pra 7.4 no primeiro quadro dá um tranco visível */
+        camera.position.set(0, 0, 7.4);
 
         /* chave quente e alta pela direita — é ela que desenha a forma */
         const chave = new THREE.DirectionalLight(0xfff2e6, 3.1);
@@ -184,20 +189,58 @@ export default function Interlude({ peca }: { peca: Peca }) {
         let rodando = false;
         let giroSuave = grupo.rotation.y;
 
+        /* -------------------------------------------------------------
+           A CÂMERA É A ROLAGEM.
+
+           Não existe rotação automática nenhuma aqui: cada quadro é uma
+           função da posição da barra de rolagem, e parar de rolar para a
+           peça. É o que faz a escultura parecer um objeto que a pessoa está
+           examinando, e não um GIF girando no canto.
+
+           O que a rolagem comanda, em ordem de quanto se percebe:
+
+             dolly   a câmera vai de 7.4 a 4.5 no eixo Z. Era de 6 a 5.2, um
+                     movimento de 13% que praticamente não se lia. Agora são
+                     39%, e a peça de fato vem em direção a quem olha.
+             giro    a rotação inteira declarada em content/shared.ts.
+             altura  a câmera sobe de leve e continua olhando pro centro,
+                     então o ponto de vista desce ao redor da peça em vez de
+                     só se aproximar dela em linha reta.
+             lente   38° a 46° de campo. Abrir a lente enquanto a câmera se
+                     aproxima é o "dolly zoom": o fundo parece se afastar
+                     enquanto o objeto fica do mesmo tamanho. Em dose alta é
+                     o efeito de vertigem do Hitchcock; nesta dose é só uma
+                     inquietação que ninguém consegue nomear.
+
+           A interpolação existe porque a rolagem chega picotada. Sem ela o
+           mármore treme; com ela demais, ele fica pendurado atrás do dedo.
+           ------------------------------------------------------------- */
+        let zSuave = 7.4;
+        let fovSuave = 38;
+
         const desenhar = () => {
-          const alvoGiro =
-            (peca.startAngle ?? 0) + progresso.current * (peca.totalAngle ?? Math.PI * 1.2);
+          const p = progresso.current;
+          const alvoGiro = (peca.startAngle ?? 0) + p * (peca.totalAngle ?? Math.PI * 1.2);
+
           if (reduzido) {
             grupo.rotation.y = alvoGiro;
+            camera.position.set(0, 0, 6);
+            camera.lookAt(0, 0, 0);
           } else {
-            /* a rolagem é picotada; a interpolação tira o degrau sem
-               atrasar a ponto de parecer solta */
             giroSuave += (alvoGiro - giroSuave) * 0.09;
             grupo.rotation.y = giroSuave;
-            grupo.position.y = Math.sin(progresso.current * Math.PI) * 0.12;
+            grupo.position.y = Math.sin(p * Math.PI) * 0.12;
+
+            zSuave += (7.4 - p * 2.9 - zSuave) * 0.07;
+            fovSuave += (38 + p * 8 - fovSuave) * 0.07;
+
+            camera.position.z = zSuave;
+            camera.position.y = Math.sin(p * Math.PI) * 0.75;
+            camera.fov = fovSuave;
+            camera.updateProjectionMatrix();
+            camera.lookAt(0, 0, 0);
           }
-          camera.position.z = 6 - progresso.current * 0.8;
-          camera.lookAt(0, 0, 0);
+
           renderer.render(cena, camera);
           raf = requestAnimationFrame(desenhar);
         };

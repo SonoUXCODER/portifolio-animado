@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { identity, spyIds } from '@/content';
 import { useConteudo } from './ContentProvider';
 import LanguageSwitcher from './LanguageSwitcher';
+import Scramble from './Scramble';
 import { useSectionSpy } from '@/hooks/useSectionSpy';
 import { TransitionLink } from './PageTransition';
 import MobileMenu from './MobileMenu';
@@ -68,12 +69,10 @@ export default function Nav() {
               className="hit group flex items-baseline gap-[var(--space-3)]"
               cursor="home"
             >
-              <span
+              <Scramble
+                texto={identity.wordmark}
                 className="text-[1rem] font-semibold tracking-[-0.02em]"
-                style={{ fontFamily: 'var(--font-display)' }}
-              >
-                {identity.wordmark}
-              </span>
+              />
               <span className="label label--dim hidden sm:inline">
                 {naHome ? t.ui.roleLabel : t.ui.caseStudyLabel}
               </span>

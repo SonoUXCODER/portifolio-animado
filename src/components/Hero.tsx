@@ -91,9 +91,33 @@ export default function Hero() {
 
   /* a grade técnica desce mais devagar que o conteúdo enquanto o hero sai
      de cena: é o que dá profundidade sem colocar imagem nenhuma no fundo */
+  /* -----------------------------------------------------------------------
+     AS CAMADAS
+
+     Quatro planos saindo de cena em velocidades diferentes. A regra é a
+     mesma da fotografia: o que está longe se move pouco, o que está perto
+     se move muito. Não é enfeite — é a única pista de profundidade que uma
+     tela plana consegue dar sem sombra e sem 3D.
+
+       vídeo   18% pra baixo. É o fundo, e fundo quase não anda.
+       título  60px pra cima, com desfoque entrando no fim. O desfoque é o
+               que o olho lê como "saiu do plano de foco" em vez de "subiu".
+       lead    110px. Está na frente do título.
+       régua   170px, o mais rápido de todos, porque é a camada mais
+               próxima e a última a sair.
+
+     Nenhuma delas passa de 170px de curso. Acima disso o hero deixa de
+     parecer profundidade e passa a parecer que as peças se desmontaram.
+     ----------------------------------------------------------------------- */
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const fundoY = useTransform(scrollYProgress, [0, 1], ['0%', '18%']);
   const fundoOpacidade = useTransform(scrollYProgress, [0, 0.9], [1, 0]);
+
+  const tituloY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const tituloDesfoque = useTransform(scrollYProgress, [0, 0.65, 1], ['blur(0px)', 'blur(0px)', 'blur(7px)']);
+  const tituloOpacidade = useTransform(scrollYProgress, [0, 0.72, 1], [1, 1, 0.15]);
+  const leadY = useTransform(scrollYProgress, [0, 1], [0, -110]);
+  const reguaY = useTransform(scrollYProgress, [0, 1], [0, -170]);
 
   useEffect(() => {
     if (!fino || reduzido) return;
@@ -155,7 +179,18 @@ export default function Hero() {
 
       {/* ================= a declaração ================= */}
       <div className="shell relative w-full py-[var(--space-8)]">
-        <motion.div style={fino && !reduzido ? { x, y } : undefined}>
+        <motion.div
+          style={
+            reduzido
+              ? undefined
+              : {
+                  y: tituloY,
+                  filter: tituloDesfoque,
+                  opacity: tituloOpacidade,
+                  ...(fino ? { x, translateY: y } : {}),
+                }
+          }
+        >
           {/* O título visível é o h1. Ele já foi um <p>, com um h1 em
               sr-only por cima: dava a hierarquia certa pro leitor de tela e
               a errada pra todo o resto, porque a manchete de 13rem não
@@ -170,6 +205,7 @@ export default function Hero() {
             as="h1"
             className="display-hero"
             immediate
+            cinema
             delay={0.25}
           />
         </motion.div>
@@ -180,6 +216,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...enter, delay: 0.75 }}
             className="col-span-12 md:col-span-6 lg:col-span-5 lg:col-start-7"
+            {...(reduzido ? {} : { style: { y: leadY } })}
           >
             <p className="lead">{t.hero.lead}</p>
 
@@ -202,6 +239,7 @@ export default function Hero() {
         animate={{ opacity: 1 }}
         transition={{ duration: duration.slow, delay: 0.95 }}
         className="shell relative w-full"
+        {...(reduzido ? {} : { style: { y: reguaY } })}
       >
         <dl
           className="grid grid-cols-2 gap-x-[var(--space-5)] gap-y-[var(--space-5)] border-t pt-[var(--space-4)] sm:grid-cols-4"
@@ -225,8 +263,11 @@ export default function Hero() {
           <motion.span
             aria-hidden="true"
             className="label"
-            animate={reduzido ? undefined : { y: [0, 5, 0] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: easeStandard }}
+            /* o pulso é o único convite da primeira tela desde que os
+               botões saíram, então ele ficou mais insistente: curso maior e
+               ciclo mais curto, com uma pausa no fim pra não virar tique */
+            animate={reduzido ? undefined : { y: [0, 9, 0, 0], opacity: [1, 1, 1, 0.45] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: easeStandard, times: [0, 0.35, 0.6, 1] }}
           >
             ↓
           </motion.span>

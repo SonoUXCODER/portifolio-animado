@@ -223,6 +223,24 @@ export function ScrollProgress() {
 
    A máscara precisa de folga no topo: com line-height abaixo de 1, o
    overflow corta a parte de cima das maiúsculas.
+
+   >>> A VARIANTE DE CINEMA <<<
+   `cinema` troca a máscara por outra coisa: palavra por palavra, saindo de
+   desfocado e passando do ponto antes de assentar. É reservada ao hero, e
+   a razão de não ser o padrão é a mesma que faz ela funcionar lá — só vale
+   quando a pessoa acabou de chegar e ainda não está lendo nada. Repetida
+   em seis títulos ao longo da página viraria maneirismo.
+
+   Duas diferenças técnicas em relação ao padrão:
+
+   1. **Não há máscara.** Uma mola que passa do ponto sobe além da posição
+      final, e sob `overflow: hidden` isso corta o topo das letras no
+      instante mais visível da animação. Quem esconde o estado inicial aqui
+      é o desfoque com a opacidade, não um recorte.
+   2. **O desfoque é caro e é uma vez só.** Animar `filter` obriga o
+      navegador a rasterizar o texto a cada quadro, e são seis palavras em
+      208px. Custa porque roda uma vez, na entrada, por baixo da cortina de
+      carregamento. Não use em nada que a rolagem dispare.
    ------------------------------------------------------------------------- */
 
 export function Lines({
@@ -233,6 +251,7 @@ export function Lines({
   /** anima assim que monta, em vez de esperar entrar na tela — para o hero */
   immediate = false,
   id,
+  cinema = false,
 }: {
   lines: string[];
   className?: string;
@@ -241,6 +260,8 @@ export function Lines({
   immediate?: boolean;
   /** pra quando uma seção precisa apontar o aria-labelledby pra este título */
   id?: string;
+  /** entrada palavra a palavra, de desfocado, com mola que passa do ponto */
+  cinema?: boolean;
 }) {
   const reduced = useReducedMotion();
   const M = motion[Tag] as typeof motion.h2;
@@ -257,6 +278,39 @@ export function Lines({
         {lines.map((l, i) => (
           <span key={`${l}-${i}`} className="block">
             {l}
+          </span>
+        ))}
+      </M>
+    );
+  }
+
+  if (cinema) {
+    return (
+      <M
+        id={id}
+        className={className}
+        initial="hidden"
+        {...(immediate ? { animate: 'shown' } : { whileInView: 'shown', viewport })}
+        transition={{ staggerChildren: 0.075, delayChildren: delay }}
+      >
+        {lines.map((l, i) => (
+          <span key={`${l}-${i}`} className="block">
+            {l.split(' ').map((palavra, j) => (
+              <motion.span
+                key={`${palavra}-${j}`}
+                className="inline-block"
+                variants={{
+                  hidden: { opacity: 0, y: '0.34em', filter: 'blur(16px)' },
+                  shown: { opacity: 1, y: '0em', filter: 'blur(0px)' },
+                }}
+                /* damping baixo é o que produz o passar do ponto. Abaixo de
+                   ~11 a letra balança duas vezes e vira desenho animado. */
+                transition={{ type: 'spring', stiffness: 120, damping: 13, mass: 0.9 }}
+              >
+                {palavra}
+                {j < l.split(' ').length - 1 ? '\u00A0' : ''}
+              </motion.span>
+            ))}
           </span>
         ))}
       </M>

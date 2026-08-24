@@ -95,9 +95,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             O seletor pega o atributo style em vez de uma classe porque é o
             próprio Framer quem escreve esse atributo; não há classe nossa
             onde ancorar. Só entra dentro de <noscript>, então não custa nada
-            a quem tem JS ligado. */}
+            a quem tem JS ligado.
+
+            `filter` está na regra por causa da entrada do hero, que começa
+            em `blur(16px)`. Sem essa linha o título da primeira tela ficava
+            desfocado pra sempre em quem tem script bloqueado, e esse é o
+            tipo de defeito que ninguém reporta porque quem vê acha que o
+            site é assim mesmo. */}
         <noscript>
-          <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important}`}</style>
+          <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important;filter:none!important}`}</style>
         </noscript>
       </head>
       <body>
