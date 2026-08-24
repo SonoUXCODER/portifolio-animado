@@ -47,6 +47,9 @@ export default function Interlude({ peca }: { peca: Peca }) {
   const reduzido = useReducedMotion();
   const [estado, setEstado] = useState<'espera' | 'carregando' | 'pronto' | 'erro'>('espera');
   const [perto, setPerto] = useState(false);
+  /* posição do ponteiro, de -0.5 a 0.5, escrita num ref e lida pelo laço de
+     desenho. Passar por estado aqui seria um render de React por quadro. */
+  const ponteiro = useRef({ x: 0, y: 0 });
 
   /* ---------- monta perto, desmonta longe ----------
 
@@ -123,12 +126,15 @@ export default function Interlude({ peca }: { peca: Peca }) {
         const pmrem = new THREE.PMREMGenerator(renderer);
         cena.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
+        /* a câmera nasce já no começo do percurso da peça: montar num
+           lugar e saltar pro outro no primeiro quadro dá um tranco visível.
+           O valor sai do caráter, definido mais abaixo. */
+        const INICIO = { descoberta: 8.6, metamorfose: 7.2, precisao: 5.6 } as const;
         const camera = new THREE.PerspectiveCamera(38, larg() / alt(), 0.1, 100);
-        /* 7.4 é o começo do dolly, e a peça precisa nascer já ali: montar em
-           6 e saltar pra 7.4 no primeiro quadro dá um tranco visível */
-        camera.position.set(0, 0, 7.4);
+        camera.position.set(0, 0, INICIO[peca.carater]);
 
-        /* chave quente e alta pela direita — é ela que desenha a forma */
+        /* chave quente e alta pela direita — é ela que desenha a forma, e
+           no caráter "descoberta" é ela que sobe com a rolagem */
         const chave = new THREE.DirectionalLight(0xfff2e6, 3.1);
         chave.position.set(3.4, 5, 3.4);
         cena.add(chave);
@@ -215,8 +221,44 @@ export default function Interlude({ peca }: { peca: Peca }) {
            A interpolação existe porque a rolagem chega picotada. Sem ela o
            mármore treme; com ela demais, ele fica pendurado atrás do dedo.
            ------------------------------------------------------------- */
-        let zSuave = 7.4;
-        let fovSuave = 38;
+        /* -------------------------------------------------------------
+           O CARÁTER
+
+           As três não podem entrar iguais: se entrarem, a segunda já é
+           repetição da primeira e a terceira é preguiça. Cada uma responde
+           a uma ideia, e a ideia mora em content/shared.ts.
+
+             descoberta   Klio. Percurso longo de câmera, de 8.6 a 4.6, com
+                          a luz-chave subindo de 0.9 a 3.6 conforme a
+                          rolagem. Ela literalmente emerge do escuro, que é
+                          o gesto de achar uma coisa enterrada.
+             metamorfose  Daphne. A câmera orbita 2.4 unidades no eixo X
+                          enquanto o modelo gira no dele, então a silhueta
+                          nunca se repete duas vezes. É a peça que mais muda
+                          de forma ao ser vista, e ela vira árvore no mito.
+             precisao     Saint André. Quase não se aproxima (5.6 a 4.4),
+                          mas a lente fecha de 40° a 24°. Comprimir a
+                          perspectiva achata a profundidade e é o que revela
+                          a dobra do tecido; é o oposto do que as outras
+                          duas fazem, e de propósito.
+
+           A interpolação é a mesma nas três, então continuam parecendo do
+           mesmo site. O que muda é o alvo, não o modo de chegar nele.
+           ------------------------------------------------------------- */
+        const CARATER = {
+          descoberta: { z: [8.6, 4.6], fov: [38, 44], orbita: 0, luz: [0.9, 3.6] },
+          metamorfose: { z: [7.2, 4.9], fov: [38, 46], orbita: 2.4, luz: [3.1, 3.1] },
+          precisao: { z: [5.6, 4.4], fov: [40, 24], orbita: 0, luz: [2.6, 3.2] },
+        } as const;
+        const c = CARATER[peca.carater];
+
+        let zSuave = c.z[0];
+        let fovSuave = c.fov[0];
+        let orbSuave = 0;
+        let pxSuave = 0;
+        let pySuave = 0;
+
+        const entre = (par: readonly [number, number], p: number) => par[0] + (par[1] - par[0]) * p;
 
         const desenhar = () => {
           const p = progresso.current;
@@ -231,14 +273,23 @@ export default function Interlude({ peca }: { peca: Peca }) {
             grupo.rotation.y = giroSuave;
             grupo.position.y = Math.sin(p * Math.PI) * 0.12;
 
-            zSuave += (7.4 - p * 2.9 - zSuave) * 0.07;
-            fovSuave += (38 + p * 8 - fovSuave) * 0.07;
+            zSuave += (entre(c.z, p) - zSuave) * 0.07;
+            fovSuave += (entre(c.fov, p) - fovSuave) * 0.07;
+            orbSuave += (Math.sin(p * Math.PI) * c.orbita - orbSuave) * 0.07;
+
+            /* o ponteiro entra por último e com peso pequeno: ele tempera a
+               posição que a rolagem definiu, nunca disputa com ela */
+            pxSuave += (ponteiro.current.x * 0.5 - pxSuave) * 0.05;
+            pySuave += (ponteiro.current.y * -0.35 - pySuave) * 0.05;
 
             camera.position.z = zSuave;
-            camera.position.y = Math.sin(p * Math.PI) * 0.75;
+            camera.position.x = orbSuave + pxSuave;
+            camera.position.y = Math.sin(p * Math.PI) * 0.75 + pySuave;
             camera.fov = fovSuave;
             camera.updateProjectionMatrix();
             camera.lookAt(0, 0, 0);
+
+            chave.intensity = entre(c.luz, p);
           }
 
           renderer.render(cena, camera);
@@ -314,6 +365,26 @@ export default function Interlude({ peca }: { peca: Peca }) {
       setEstado('espera');
     };
   }, [perto, peca, reduzido]);
+
+  /* ---------- o ponteiro desloca a câmera ----------
+     Um quarto de unidade de deslocamento, com o olhar sempre no centro: o
+     efeito é o de andar um passo ao redor da peça, não o de arrastá-la. Só
+     em ponteiro fino, porque no dedo não há posição de repouso e a
+     escultura ficaria pulando a cada toque. */
+  useEffect(() => {
+    if (reduzido) return;
+    const fino = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!fino) return;
+
+    const mover = (e: PointerEvent) => {
+      ponteiro.current = {
+        x: e.clientX / window.innerWidth - 0.5,
+        y: e.clientY / window.innerHeight - 0.5,
+      };
+    };
+    window.addEventListener('pointermove', mover, { passive: true });
+    return () => window.removeEventListener('pointermove', mover);
+  }, [reduzido]);
 
   /* ---------- rolagem -> progresso ----------
      Sem framer-motion aqui de propósito: um listener passivo escrevendo num

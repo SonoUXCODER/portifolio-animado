@@ -256,6 +256,22 @@ export const entryShapes: EntryShape[] = [
   { id: 'foundations' },
 ];
 
+/**
+ * O caráter de cada escultura, que decide como a câmera se comporta.
+ *
+ * As três não podem entrar iguais: se entrarem, viram três vezes o mesmo
+ * intervalo e a segunda já é repetição. Cada uma responde a uma ideia:
+ *
+ *   descoberta   a peça emerge do escuro. Percurso longo de câmera e a luz
+ *                subindo com a rolagem, como quem acha uma coisa enterrada.
+ *   metamorfose  a câmera orbita enquanto o modelo gira, então a silhueta
+ *                nunca se repete. É a que mais muda de forma ao ser vista.
+ *   precisao     quase não se aproxima, mas a lente fecha. Comprimir a
+ *                perspectiva é o que revela a dobra do tecido, e é o
+ *                oposto do que as outras duas fazem.
+ */
+export type CaraterInterlude = 'descoberta' | 'metamorfose' | 'precisao';
+
 export type InterludeShape = {
   slug: string;
   file: string;
@@ -263,12 +279,13 @@ export type InterludeShape = {
   startAngle: number;
   /** quanto o modelo gira do começo ao fim da rolagem */
   totalAngle: number;
+  carater: CaraterInterlude;
 };
 
 export const interludeShapes: InterludeShape[] = [
-  { slug: 'klio', file: '/3d/klio.glb', startAngle: -0.35, totalAngle: Math.PI * 1.15 },
-  { slug: 'daphne', file: '/3d/daphne.glb', startAngle: 0.5, totalAngle: -Math.PI * 1.3 },
-  { slug: 'saint-andre', file: '/3d/saint-andre.glb', startAngle: -0.2, totalAngle: Math.PI },
+  { slug: 'klio', file: '/3d/klio.glb', startAngle: -0.35, totalAngle: Math.PI * 1.15, carater: 'descoberta' },
+  { slug: 'daphne', file: '/3d/daphne.glb', startAngle: 0.5, totalAngle: -Math.PI * 1.3, carater: 'metamorfose' },
+  { slug: 'saint-andre', file: '/3d/saint-andre.glb', startAngle: -0.2, totalAngle: Math.PI, carater: 'precisao' },
 ];
 
 /** qual estudo o <Visual/> desenha; a implementação está em Visual.tsx */

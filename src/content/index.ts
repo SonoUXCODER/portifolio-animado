@@ -8,6 +8,7 @@ import {
   layerShapes,
   projectShapes,
   sectionIds,
+  type CaraterInterlude,
   type ProjectLayout,
   type SectionId,
   type VisualKind,
@@ -93,6 +94,8 @@ export type Interlude = {
   file: string;
   startAngle: number;
   totalAngle: number;
+  /** decide o comportamento da câmera; ver CaraterInterlude em shared.ts */
+  carater: CaraterInterlude;
 };
 
 export type Capability = {
@@ -250,7 +253,7 @@ export const getSections = (lang: Lang): Section[] =>
 export const spyIds = ['hero', ...sectionIds];
 
 export { identity };
-export type { Content, SectionId, VisualKind, ProjectLayout };
+export type { Content, SectionId, VisualKind, ProjectLayout, CaraterInterlude };
 
 /** troca {title} pelo nome do projeto */
 export const fill = (molde: string, valor: string) => molde.replace('{title}', valor);

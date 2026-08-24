@@ -470,11 +470,11 @@ export function Counter({
    parágrafo já está saindo por cima; menos, e tudo acende de uma vez e o
    efeito vira um piscar.
 
-   >>> POR QUE OPACIDADE, E NÃO COR <<<
+   >>> A COR É FIXA, A OPACIDADE É QUE ANDA <<<
    Interpolar `color` obriga o navegador a repintar o texto a cada quadro, e
-   repintar texto é das coisas mais caras que existem. Opacidade num
-   `<span>` inline composita e não repinta nada. A palavra apagada fica em
-   0.22, que sobre este fundo lê como um cinza fantasma em vez de um buraco.
+   repintar texto é das coisas mais caras que existem. Então a cor é
+   escrita uma vez em `--text-primary` e quem varia é a opacidade, que
+   composita. Detalhes de amplitude e do halo estão em <Palavra/>.
    ------------------------------------------------------------------------- */
 
 function Palavra({
@@ -486,9 +486,44 @@ function Palavra({
   progresso: MotionValue<number>;
   faixa: [number, number];
 }) {
-  const opacity = useTransform(progresso, faixa, [0.22, 1]);
+  const meio = (faixa[0] + faixa[1]) / 2;
+
+  /* -----------------------------------------------------------------------
+     O BRILHO ERA FRACO POR DOIS MOTIVOS, E SÓ UM ERA A OPACIDADE.
+
+     O outro é que a palavra "acesa" terminava em `--text-secondary`, o cinza
+     de corpo de texto, porque é o que a classe `.body` define. Ou seja: o
+     trabalho todo de acender levava de um cinza apagado até um cinza. A cor
+     agora é fixada em `--text-primary` e quem varia é só a opacidade, então
+     a mesma animação passa a percorrer de quase invisível até o bone cheio.
+     Continua sendo uma propriedade animada por palavra, e a amplitude
+     triplicou.
+
+     Em cima disso entra o clarão: um halo em acento que sobe e desce dentro
+     da janela de cada palavra, com o pico no meio da passagem. É ele que dá
+     a sensação de a palavra estar sendo acesa em vez de revelada.
+
+     O halo é a única coisa cara aqui — `text-shadow` repinta o texto — e por
+     isso ele começa e termina em zero: fora da janela de transição a
+     propriedade é `none` e não custa nada. A qualquer momento só um punhado
+     de palavras está no meio da faixa.
+     ----------------------------------------------------------------------- */
+  const opacity = useTransform(progresso, faixa, [0.08, 1]);
+  const halo = useTransform(
+    progresso,
+    [faixa[0], meio, faixa[1]],
+    [
+      '0 0 0px rgba(226,103,63,0)',
+      '0 0 24px rgba(226,103,63,0.85)',
+      '0 0 0px rgba(226,103,63,0)',
+    ],
+  );
+
   return (
-    <motion.span style={{ opacity }} className="inline-block whitespace-pre">
+    <motion.span
+      style={{ opacity, textShadow: halo, color: 'var(--text-primary)' }}
+      className="inline-block whitespace-pre"
+    >
       {children}
     </motion.span>
   );

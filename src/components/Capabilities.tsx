@@ -76,7 +76,19 @@ export default function Capabilities() {
           const destacado = estaAberto || sobre === c.id;
 
           return (
-            <li key={c.id} className="border-t" style={{ borderColor: 'var(--line)' }}>
+            <li key={c.id} className="relative border-t" style={{ borderColor: 'var(--line)' }}>
+              {/* a régua que varre da esquerda no hover. É a resposta
+                  imediata que faltava: antes o item fechado só mudava de
+                  opacidade, e mudança de opacidade em texto grande lê como
+                  "a tela piscou", não como "isto responde ao meu mouse". */}
+              <motion.span
+                aria-hidden="true"
+                className="absolute left-0 top-0 h-px w-full origin-left"
+                style={{ background: 'var(--accent)' }}
+                initial={false}
+                animate={{ scaleX: destacado ? 1 : 0 }}
+                transition={{ duration: 0.45, ease: easeStandard }}
+              />
               <h3>
                 <button
                   type="button"
@@ -151,61 +163,104 @@ export default function Capabilities() {
                     transition={{ duration: reduzido ? 0.12 : 0.5, ease: easeStandard }}
                     className="overflow-hidden"
                   >
-                    <div className="grid-12 gap-y-[var(--space-6)] pb-[var(--space-8)]">
-                      <div className="col-span-12 md:col-span-5 md:col-start-2">
-                        {/* o resumo entra de baixo, e o parágrafo longo
-                            acende palavra por palavra logo atrás: duas
-                            velocidades diferentes pro olho ter onde pousar
-                            primeiro */}
-                        <motion.p
-                          className="lead"
-                          style={{ maxWidth: '40ch' }}
-                          initial={{ opacity: 0, y: 18 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: reduzido ? 0 : 0.12, duration: 0.5, ease: easeStandard }}
+                    {/* ---------------------------------------------------
+                        O PAINEL ABERTO
+
+                        Era duas colunas de texto com uma figurinha de 16:9
+                        espremida embaixo da lista, e parecia exatamente o
+                        que era: um acordeão. O estudo ao vivo, que é a única
+                        coisa nesta seção que ninguém mais tem, estava do
+                        tamanho de um selo.
+
+                        Agora ele é uma faixa de 21:9 atravessando a largura
+                        toda, e é a primeira coisa que abre. O texto vem
+                        depois, por baixo dela. A ordem importa: quem abre um
+                        item vê primeiro alguma coisa acontecendo, e só então
+                        lê o que aquilo é.
+
+                        A faixa tem um degradê no pé pra o estudo dissolver
+                        no fundo em vez de terminar numa borda dura, e uma
+                        régua em acento no topo, que é a mesma que marca o
+                        item ativo na linha acima — a continuidade entre as
+                        duas é o que amarra painel e título.
+                        --------------------------------------------------- */}
+                    <div className="pb-[var(--space-8)] pl-0 sm:pl-[calc(var(--space-6)+var(--space-7))]">
+                      {!reduzido && (
+                        <motion.figure
+                          className="relative aspect-[21/9] w-full overflow-hidden"
+                          style={{ background: 'var(--surface)' }}
+                          initial={{ opacity: 0, scaleY: 0.72 }}
+                          animate={{ opacity: 1, scaleY: 1 }}
+                          transition={{ duration: 0.55, ease: easeStandard }}
                         >
-                          {c.summary}
-                        </motion.p>
-                        <Acende texto={c.text} className="body mt-[var(--space-4)]" />
-                      </div>
+                          <div className="absolute inset-0 opacity-60">
+                            <Visual kind={c.visual} />
+                          </div>
 
-                      <div className="col-span-12 md:col-span-5 md:col-start-8">
-                        <p className="label label--dim">{t.capabilities.deliverablesLabel}</p>
-                        <ul className="mt-[var(--space-4)] flex flex-col">
-                          {c.deliverables.map((d, j) => (
-                            <motion.li
-                              key={d}
-                              initial={{ opacity: 0, y: 8 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{
-                                delay: reduzido ? 0 : 0.1 + j * 0.05,
-                                duration: duration.normal,
-                                ease: easeStandard,
-                              }}
-                              className="body-sm border-b py-[var(--space-3)]"
-                              style={{ borderColor: 'var(--line)', color: 'var(--text-primary)' }}
-                            >
-                              {d}
-                            </motion.li>
-                          ))}
-                        </ul>
+                          {/* o estudo dissolve no fundo em vez de bater numa
+                              borda: sem isto a faixa vira uma caixa, e caixa
+                              é o vocabulário que esta seção estava tentando
+                              deixar pra trás */}
+                          <span
+                            aria-hidden="true"
+                            className="pointer-events-none absolute inset-0"
+                            style={{
+                              background:
+                                'linear-gradient(to bottom, transparent 35%, var(--background) 100%)',
+                            }}
+                          />
+                          <span
+                            aria-hidden="true"
+                            className="absolute inset-x-0 top-0 h-px"
+                            style={{ background: 'var(--accent)' }}
+                          />
+                        </motion.figure>
+                      )}
 
-                        {/* ---- o estudo, como figura ----
-                             Moldura, proporção fixa e opacidade contida. É a
-                             prova de que o item acima não é só uma palavra
-                             numa lista, e cabe num canto em vez de tomar a
-                             tela. Só o item aberto monta o dele, então nunca
-                             existe mais de um canvas rodando. */}
-                        {!reduzido && (
-                          <figure
-                            className="relative mt-[var(--space-6)] aspect-[16/9] w-full overflow-hidden"
-                            style={{ border: '1px solid var(--line)', background: 'var(--surface)' }}
+                      <div className="grid-12 mt-[var(--space-6)] gap-y-[var(--space-6)]">
+                        <div className="col-span-12 md:col-span-6">
+                          {/* o resumo entra de baixo, e o parágrafo longo
+                              acende palavra por palavra logo atrás: duas
+                              velocidades diferentes pro olho ter onde pousar
+                              primeiro */}
+                          <motion.p
+                            className="lead"
+                            style={{ maxWidth: '40ch' }}
+                            initial={{ opacity: 0, y: 18 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: reduzido ? 0 : 0.14, duration: 0.5, ease: easeStandard }}
                           >
-                            <div className="absolute inset-0 opacity-45">
-                              <Visual kind={c.visual} />
-                            </div>
-                          </figure>
-                        )}
+                            {c.summary}
+                          </motion.p>
+                          <Acende texto={c.text} className="body mt-[var(--space-4)]" />
+                        </div>
+
+                        <div className="col-span-12 md:col-span-5 md:col-start-8">
+                          <p className="label label--dim">{t.capabilities.deliverablesLabel}</p>
+                          <ul className="mt-[var(--space-4)] flex flex-col">
+                            {c.deliverables.map((d, j) => (
+                              <motion.li
+                                key={d}
+                                initial={{ opacity: 0, x: -14 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{
+                                  delay: reduzido ? 0 : 0.18 + j * 0.06,
+                                  duration: duration.normal,
+                                  ease: easeStandard,
+                                }}
+                                className="body-sm flex items-baseline gap-[var(--space-4)] border-b py-[var(--space-3)]"
+                                style={{ borderColor: 'var(--line)', color: 'var(--text-primary)' }}
+                              >
+                                <span
+                                  aria-hidden="true"
+                                  className="block h-px w-[var(--space-4)] shrink-0 translate-y-[-4px]"
+                                  style={{ background: 'var(--accent)' }}
+                                />
+                                {d}
+                              </motion.li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     </div>
                   </motion.div>

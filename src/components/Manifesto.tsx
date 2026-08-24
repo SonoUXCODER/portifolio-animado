@@ -82,7 +82,10 @@ export default function Manifesto() {
               é o que impede a foto de virar mais um retângulo numa página
               cheia deles. */}
           <Parallax strength={30}>
-            <TiltCard className="w-full max-w-[420px]">
+            {/* centralizada na coluna: com `max-w` sozinho ela encostava na
+                margem esquerda e sobrava um vão à direita que não era
+                composição, era acidente */}
+            <TiltCard className="mx-auto w-full max-w-[420px]">
               {/* A foto não aparece: ela é descoberta.
 
                   `clip-path` sobe de baixo pra cima revelando a imagem, e ao
@@ -92,31 +95,45 @@ export default function Manifesto() {
 
                   Roda uma vez, quando entra na tela. Animar clip-path e
                   blur é caro; caber num elemento só, uma vez, não é. */}
-              {/* A moldura recorta.
+              {/* A REVELAÇÃO FALHA MOSTRANDO, NÃO ESCONDENDO.
 
-                  A revelação começa com a foto em 1.18 de escala, e escala
-                  cresce a partir do centro pra fora: sem este recorte a
-                  imagem transbordava a borda fina do card por um segundo,
-                  bem no momento em que ela é o único elemento em movimento
-                  na tela. */}
-              <div className="overflow-hidden">
-              <motion.figure
-                className="media media--dim aspect-[4/5] w-full"
-                initial={{ clipPath: 'inset(100% 0% 0% 0%)', scale: 1.18, filter: 'blur(12px)' }}
-                whileInView={{ clipPath: 'inset(0% 0% 0% 0%)', scale: 1, filter: 'blur(0px)' }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ duration: 1.15, ease: easeStandard }}
-              >
+                  A versão anterior escondia a foto com `clip-path:
+                  inset(100%)` e contava com a animação pra devolvê-la. É o
+                  padrão errado, e o custo apareceu no ar: qualquer coisa que
+                  impeça o `whileInView` de disparar — e dentro de um
+                  contêiner `preserve-3d` com `overflow: hidden` no caminho
+                  há mais de uma — deixa a foto invisível pra sempre. Não
+                  quebra nada, não aparece no console, e a pessoa só vê um
+                  buraco onde deveria estar o retrato.
+
+                  Agora a foto está sempre visível e quem se move é uma
+                  cortina por cima, que sobe e sai. Mesmo gesto na tela, e a
+                  falha inverteu de lado: se a animação não rodar, a cortina
+                  fica no lugar por um instante e some — nunca o contrário.
+
+                  A escala de 1.06 na imagem é o resto do efeito de foco, e é
+                  segura pelo mesmo motivo: se travar, o retrato fica 6%
+                  maior, e ninguém percebe. */}
+              <figure className="media media--dim relative aspect-[4/5] w-full">
                 <Image
                   src="/assets/foto-cracha.webp"
-                  alt={`${identity.name}`}
+                  alt={identity.name}
                   width={620}
                   height={827}
                   sizes="(max-width: 640px) 80vw, 400px"
                   className="h-full w-full"
                 />
-              </motion.figure>
-              </div>
+
+                <motion.span
+                  aria-hidden="true"
+                  className="absolute inset-0 origin-bottom"
+                  style={{ background: 'var(--background)' }}
+                  initial={{ scaleY: 1 }}
+                  whileInView={{ scaleY: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{ duration: 1, ease: easeStandard }}
+                />
+              </figure>
             </TiltCard>
           </Parallax>
           <Reveal delay={0.1}>
