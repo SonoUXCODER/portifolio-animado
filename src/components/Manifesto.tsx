@@ -5,6 +5,7 @@ import { identity } from '@/content';
 import { useConteudo } from './ContentProvider';
 import SectionIndex from './SectionIndex';
 import TiltCard from './TiltCard';
+import Metodo from './Metodo';
 import { motion } from 'framer-motion';
 import { easeStandard } from '@/lib/motion';
 import { Acende, Counter, Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Reveal';
@@ -91,6 +92,14 @@ export default function Manifesto() {
 
                   Roda uma vez, quando entra na tela. Animar clip-path e
                   blur é caro; caber num elemento só, uma vez, não é. */}
+              {/* A moldura recorta.
+
+                  A revelação começa com a foto em 1.18 de escala, e escala
+                  cresce a partir do centro pra fora: sem este recorte a
+                  imagem transbordava a borda fina do card por um segundo,
+                  bem no momento em que ela é o único elemento em movimento
+                  na tela. */}
+              <div className="overflow-hidden">
               <motion.figure
                 className="media media--dim aspect-[4/5] w-full"
                 initial={{ clipPath: 'inset(100% 0% 0% 0%)', scale: 1.18, filter: 'blur(12px)' }}
@@ -107,6 +116,7 @@ export default function Manifesto() {
                   className="h-full w-full"
                 />
               </motion.figure>
+              </div>
             </TiltCard>
           </Parallax>
           <Reveal delay={0.1}>
@@ -123,23 +133,7 @@ export default function Manifesto() {
              e ela dá a mesma leitura em qualquer site. A linha empilhada dá
              ritmo de documento. */}
         <div className="col-span-12 lg:col-span-7 lg:col-start-6">
-          <Reveal>
-            <p className="label label--dim">{t.manifesto.methodLabel}</p>
-          </Reveal>
-
-          <RevealGroup as="ol" className="mt-[var(--space-5)] flex flex-col">
-            {cadeia.map((c) => (
-              <RevealItem
-                as="li"
-                key={c.step}
-                className="border-t py-[var(--space-5)]"
-                style={{ borderColor: 'var(--line)' }}
-              >
-                <h3 className="display-md">{c.step}</h3>
-                <p className="body mt-[var(--space-2)] max-w-[46ch]">{c.note}</p>
-              </RevealItem>
-            ))}
-          </RevealGroup>
+          <Metodo rotulo={t.manifesto.methodLabel} etapas={cadeia} />
 
           <Reveal delay={0.1}>
             <p

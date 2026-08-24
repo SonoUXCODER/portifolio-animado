@@ -1,7 +1,9 @@
 'use client';
 
 import { useConteudo } from './ContentProvider';
-import { Acende, Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
+import { motion, useReducedMotion } from 'framer-motion';
+import { easeStandard } from '@/lib/motion';
+import { Acende, Lines, Reveal } from './Reveal';
 
 /* -------------------------------------------------------------------------
    TECHNOLOGY STACK.
@@ -24,6 +26,20 @@ import { Acende, Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
    reservado. Empurrar layout no hover é a diferença entre uma tabela viva
    e uma tabela que pula.
 
+   >>> AS TRINTA NÃO ENTRAM IGUAIS <<<
+   Trinta itens com a mesma animação é a definição de fadiga: o olho aprende
+   o padrão no terceiro e desliga. Aqui cada camada tem a própria assinatura
+   de entrada, alternando eixo e velocidade — as ímpares vêm da esquerda e
+   mais devagar, as pares de baixo e mais rápido, e o passo entre itens muda
+   de camada pra camada. O conjunto continua sendo um sistema porque a curva
+   é a mesma; o que varia é a direção e o ritmo.
+
+   >>> O TÍTULO DA CAMADA GRUDA <<<
+   Abaixo de xl a grade de cinco colunas vira uma ou duas, e a seção fica
+   longa o bastante pra a pessoa perder de vista em qual camada está. Ali o
+   nome da camada gruda no topo enquanto as ferramentas passam. No xl as
+   cinco estão lado a lado e não há o que grudar, então a regra some.
+
    Esta seção não tem abertura própria: ela é a segunda metade de
    CAPABILITIES, e separar "o que eu faço" de "com o que eu faço" em dois
    capítulos daria dois títulos para um assunto só.
@@ -31,6 +47,7 @@ import { Acende, Lines, Reveal, RevealGroup, RevealItem } from './Reveal';
 
 export default function TechStack() {
   const { t, layers, tools } = useConteudo();
+  const reduzido = useReducedMotion();
 
   return (
     <section aria-labelledby="stack-title" className="shell py-[var(--space-10)]">
@@ -59,20 +76,42 @@ export default function TechStack() {
           deixariam uma sozinha na segunda linha, e é justamente o tipo de
           sobra que faz uma grade parecer acidente */}
       <div className="mt-[var(--space-9)] grid grid-cols-1 gap-x-[var(--space-6)] gap-y-[var(--space-8)] sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-        {layers.map((layer) => (
-          <div key={layer.id} className="border-t pt-[var(--space-5)]" style={{ borderColor: 'var(--line-strong)' }}>
-            <Reveal>
-              <h3 className="display-md">{layer.title}</h3>
-              <p className="body-sm mt-[var(--space-3)] max-w-[34ch]">{layer.summary}</p>
-            </Reveal>
+        {layers.map((layer, camada) => {
+          /* ímpar entra da esquerda e devagar, par entra de baixo e rápido */
+          const daEsquerda = camada % 2 === 0;
+          const passo = daEsquerda ? 0.07 : 0.045;
 
-            <RevealGroup as="ul" className="mt-[var(--space-6)] flex flex-col" delay={0.05}>
+          return (
+          <div key={layer.id} className="border-t pt-[var(--space-5)]" style={{ borderColor: 'var(--line-strong)' }}>
+            {/* o nome da camada gruda enquanto as ferramentas passam, e só
+                onde a coluna é alta o bastante pra isso significar algo */}
+            <div className="top-[calc(var(--header-h)+var(--space-4))] z-[2] bg-[var(--background)] pb-[var(--space-3)] max-xl:sticky">
+              <Reveal>
+                <h3 className="display-md">{layer.title}</h3>
+                <p className="body-sm mt-[var(--space-3)] max-w-[34ch]">{layer.summary}</p>
+              </Reveal>
+            </div>
+
+            <motion.ul
+              className="mt-[var(--space-5)] flex flex-col"
+              initial="hidden"
+              whileInView="shown"
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ staggerChildren: passo, delayChildren: 0.05 }}
+            >
               {layer.tools.map((tool) => (
-                <RevealItem
-                  as="li"
+                <motion.li
                   key={tool.label}
                   className="group border-t py-[var(--space-3)]"
                   style={{ borderColor: 'var(--line)' }}
+                  variants={
+                    reduzido
+                      ? { hidden: { opacity: 0 }, shown: { opacity: 1 } }
+                      : daEsquerda
+                        ? { hidden: { opacity: 0, x: -22 }, shown: { opacity: 1, x: 0 } }
+                        : { hidden: { opacity: 0, y: 20 }, shown: { opacity: 1, y: 0 } }
+                  }
+                  transition={{ duration: daEsquerda ? 0.62 : 0.42, ease: easeStandard }}
                 >
                   <div className="flex items-baseline justify-between gap-[var(--space-3)]">
                     <span className="flex items-baseline gap-[var(--space-3)]">
@@ -106,11 +145,12 @@ export default function TechStack() {
                       <span className="block pt-[var(--space-2)]">{tool.note}</span>
                     </p>
                   </div>
-                </RevealItem>
+                </motion.li>
               ))}
-            </RevealGroup>
+            </motion.ul>
           </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

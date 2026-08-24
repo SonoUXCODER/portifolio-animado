@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import type { Entry } from '@/content';
 import { useConteudo, useHref, useT } from './ContentProvider';
 import SectionIndex from './SectionIndex';
@@ -33,9 +33,31 @@ function Entrada({ entry, index }: { entry: Entry; index: number }) {
   const [aberto, setAberto] = useState(false);
   const reduzido = useReducedMotion();
   const painelId = `journey-${index}`;
+  const ref = useRef<HTMLLIElement>(null);
+
+  /* -----------------------------------------------------------------------
+     A ENTRADA QUE ESTÁ SENDO LIDA
+
+     Cada item mede a própria passagem pela tela e reage a ela. No meio do
+     percurso ele é "o atual": o ano cresce 60%, o bloco fica em opacidade
+     cheia. Nas pontas ele recua.
+
+     Isso resolve o problema real de uma linha do tempo com sete entradas,
+     que é todas parecerem igualmente importantes o tempo todo. Aqui só uma
+     está em foco por vez, e o foco anda com a rolagem — que é o que dá a
+     sensação de percorrer o tempo em vez de ler uma tabela.
+
+     O ano é o que cresce, e não o título, por dois motivos: é tabular, então
+     crescer não muda a largura e nada empurra do lado; e é o dado que
+     organiza a leitura de uma trajetória.
+     ----------------------------------------------------------------------- */
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 90%', 'end 10%'] });
+  const suave = useSpring(scrollYProgress, { stiffness: 90, damping: 28, mass: 0.4 });
+  const anoEscala = useTransform(suave, [0, 0.5, 1], [1, 1.6, 1]);
+  const presenca = useTransform(suave, [0, 0.35, 0.65, 1], [0.4, 1, 1, 0.4]);
 
   return (
-    <li className="relative sm:pl-[var(--space-8)]">
+    <li ref={ref} className="relative sm:pl-[var(--space-8)]">
       {/* ponto na régua — cheio quando é virada de fase */}
       <span
         aria-hidden="true"
@@ -51,14 +73,23 @@ function Entrada({ entry, index }: { entry: Entry; index: number }) {
         />
       </span>
 
-      <div className="grid-12 gap-y-[var(--space-3)] border-t pt-[var(--space-5)]" style={{ borderColor: 'var(--line)' }}>
+      <motion.div
+        className="grid-12 gap-y-[var(--space-3)] border-t pt-[var(--space-5)]"
+        style={{ borderColor: 'var(--line)', ...(reduzido ? {} : { opacity: presenca }) }}
+      >
         {/* ---- período ---- */}
         <div className="col-span-12 md:col-span-3">
-          <p className="label" style={{ color: entry.milestone ? 'var(--accent)' : 'var(--text-primary)' }}>
+          <motion.p
+            className="label origin-left"
+            style={{
+              color: entry.milestone ? 'var(--accent)' : 'var(--text-primary)',
+              ...(reduzido ? {} : { scale: anoEscala }),
+            }}
+          >
             {entry.period}
-          </p>
+          </motion.p>
           {entry.milestone && (
-            <p className="label label--dim mt-[var(--space-2)]">{t.journey.turningPoint}</p>
+            <p className="label label--dim mt-[var(--space-4)]">{t.journey.turningPoint}</p>
           )}
         </div>
 
@@ -135,7 +166,7 @@ function Entrada({ entry, index }: { entry: Entry; index: number }) {
             )}
           </AnimatePresence>
         </div>
-      </div>
+      </motion.div>
     </li>
   );
 }
