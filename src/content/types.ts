@@ -67,17 +67,6 @@ export type ProjectCopy = {
   gallery: { alt: string; caption: string }[];
 };
 
-export type EntryCopy = {
-  /** o período como ele aparece: `2026 / Now` */
-  period: string;
-  title: string;
-  org: string;
-  summary: string;
-  /** o que se abre no clique */
-  details: string[];
-  roles: string[];
-};
-
 export type CapabilityCopy = {
   title: string;
   summary: string;
@@ -172,15 +161,6 @@ export type Content = {
     layers: Record<string, { title: string; summary: string }>;
     /** a nota de cada ferramenta, pela `label` de shared.ts */
     notes: Record<string, string>;
-  };
-
-  journey: {
-    lines: string[];
-    intro: string;
-    turningPoint: string;
-    detail: string;
-    less: string;
-    entries: Record<string, EntryCopy>;
   };
 
   interludes: {

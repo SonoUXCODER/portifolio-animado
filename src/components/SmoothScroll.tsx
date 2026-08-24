@@ -78,7 +78,14 @@ export default function SmoothScroll() {
         getComputedStyle(document.documentElement).getPropertyValue('--header-h') || '68',
         10,
       );
-      lenis.scrollTo(destino, { offset: -(header + 16) });
+      /* Uma seção dentro de uma <Passagem/> tem a caixa 100svh acima de
+         onde ela realmente assenta, por causa da margem negativa que deixa o
+         capítulo nascer de dentro da escultura. Sem esta correção, clicar em
+         "capacidades" na navegação levaria pro meio do intervalo, com a
+         seção ainda recortada em nada — ou seja, uma tela que parece vazia.
+         O equivalente sem JS é o `scroll-margin-top` em globals.css. */
+      const sobreposto = destino.closest('.passagem') ? window.innerHeight : 0;
+      lenis.scrollTo(destino, { offset: -(header + 16) + sobreposto });
       /* o hash entra no histórico à mão: sem isso o botão "voltar" pula
          a seção e a URL não guarda onde a pessoa estava */
       window.history.pushState(null, '', href);

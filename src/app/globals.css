@@ -720,3 +720,58 @@
     background-position: 200% 0;
   }
 }
+
+/* =========================================================================
+   PASSAGEM — a sobreposição que deixa o próximo capítulo nascer de dentro
+   da escultura em vez de subir de baixo. A lógica está em
+   components/Passagem.tsx; aqui mora só a parte estrutural.
+
+   A margem negativa e o corredor são um par e têm de somar zero. A margem
+   compra o direito de desenhar a seção 100svh antes da posição dela; o
+   corredor devolve esses 100svh ao fluxo, pra nada depois da passagem se
+   mover. Mexer num sem mexer no outro desloca metade da página.
+
+   Os dois vivem numa media query, e não numa condição de JavaScript, porque
+   são layout: quem pede menos movimento tem de receber uma seção em fluxo
+   normal já na primeira pintura, sem depender de hidratação pra a página
+   não sair torta.
+   ========================================================================= */
+
+.passagem {
+  position: relative;
+  /* abaixo do palco 3D (z-10), pra os cacos voarem na frente da seção que
+     está nascendo, e não atrás dela */
+  z-index: 0;
+}
+
+/* sem corredor por padrão: é o estado de quem pede menos movimento */
+.passagem__corredor {
+  height: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .passagem {
+    margin-top: -100svh;
+  }
+  .passagem__corredor {
+    height: 100svh;
+  }
+
+  /* Enquanto o conteúdo está preso no alto da janela ele precisa cobrir a
+     janela inteira. Uma seção mais curta que a tela — a Filosofia é — deixa
+     uma faixa do fundo aparecendo entre o pé dela e a seção seguinte, que
+     só fecha quando a fixação solta. Na tela isso é uma tira escura
+     encolhendo, e lê como defeito, não como transição. */
+  .passagem__conteudo {
+    min-height: 100svh;
+  }
+
+  /* O âncora tem de cair onde a seção assenta, e não onde a caixa dela
+     começa: sem isto, clicar em "capacidades" na navegação levaria pro meio
+     do intervalo, com a seção ainda recortada em nada — uma tela que parece
+     vazia. O Lenis calcula o destino por conta própria, então quem trata o
+     clique é SmoothScroll.tsx; isto aqui cobre a rolagem nativa, sem JS. */
+  .passagem [id] {
+    scroll-margin-top: calc(var(--header-h) - 100svh);
+  }
+}

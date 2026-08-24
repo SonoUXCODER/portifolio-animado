@@ -49,7 +49,6 @@ export const de: Content = {
     about: { name: 'Über mich', nav: 'Über mich', note: 'Eine Person, zwei Disziplinen' },
     work: { name: 'Ausgewählte Arbeiten', nav: 'Arbeiten', note: 'Fünf Produkte, vom Start bis live' },
     capabilities: { name: 'Leistungen', nav: 'Leistungen', note: 'Vom Interface bis zur Infrastruktur' },
-    experience: { name: 'Werdegang', nav: 'Werdegang', note: 'In umgekehrter Reihenfolge' },
     contact: { name: 'Kontakt', nav: 'Kontakt', note: 'Wo das hier endet und etwas anfängt' },
   },
 
@@ -221,108 +220,6 @@ export const de: Content = {
     },
   },
 
-  journey: {
-    lines: ['Der', 'Werdegang.'],
-    intro:
-      'Vom ersten Kunden bis zum eigenen Produkt, das Neueste zuerst. Öffne einen Eintrag für die Entscheidung, die ihn erwähnenswert macht.',
-    turningPoint: 'Wendepunkt',
-    detail: 'Details',
-    less: 'Weniger',
-    entries: {
-      now: {
-        period: '2026 / Heute',
-        title: 'Full-Stack-Entwickler & Produktdesigner',
-        org: 'Selbstständig · Bern, Schweiz',
-        summary:
-          'Digitale Produkte von Anfang bis Ende gestalten und bauen, für Kunden in der Schweiz und in Brasilien, und für mich selbst.',
-        details: [
-          'Arbeit in drei Sprachen: Deutsch, Englisch und Portugiesisch.',
-          'Jedes Projekt läuft von der Recherche über Design und Build bis zum Deployment, mit einer Person, die für alles geradesteht.',
-          'Verfügbar für ausgewählte freie Aufträge und Produktkooperationen.',
-        ],
-        roles: ['Produkt', 'UX/UI', 'Full-Stack', 'Deployment'],
-      },
-      knifes: {
-        period: '2026',
-        title: 'knifes.me',
-        org: 'Eigenes Produkt · SaaS',
-        summary:
-          'Vom Frontend zum ganzen Produkt: Datenbank, Konten, Abonnements, und die Entscheidung, was nicht gebaut wird.',
-        details: [
-          'Theme-Engine auf CSS-Variablen, die als Datenbankzeilen liegen, sodass neue Themes Bytes kosten und nicht Bundle-Grösse.',
-          'Stripe-Abonnements mit Webhook-Abgleich im Produktivbetrieb.',
-          'Das Schwerste war der Umfang: drei Funktionen wurden gestrichen, nachdem sie fertig waren.',
-        ],
-        roles: ['Produkt', 'Full-Stack', 'Datenbank', 'Abonnements'],
-      },
-      phobia: {
-        period: '2026',
-        title: 'PHOBIACORI',
-        org: 'Kundin · Unabhängige Künstlerin',
-        summary:
-          'Der erste Shop, den ich von null gebaut habe. Das Problem war nie das Verkaufen. Es war, einen Katalog in Kleinauflage nicht wie Fabrikware aussehen zu lassen.',
-        details: [
-          'Der Warenkorb lebt komplett im Browser: keine Konten, keine Datenbank, keine laufenden Kosten.',
-          'Die Produktliste ist eine typisierte Datendatei, die die Künstlerin selbst bearbeitet.',
-          'Statischer Export auf GitHub Pages: nichts, was ausfallen kann, nichts, was verlängert werden muss.',
-        ],
-        roles: ['Art Direction', 'UI-Design', 'Frontend', 'Inhaltsarchitektur'],
-      },
-      truffle: {
-        period: '2025',
-        title: 'Truffle N.B. Tricolore',
-        org: 'Kunde · Schweiz',
-        summary:
-          'Ein saisonales Produkt zwang mich, für Inhalte zu gestalten, die von selbst altern. Der Katalog musste veralten können, ohne zu brechen.',
-        details: [
-          'Die Verfügbarkeit steuert das Layout: was ausserhalb der Saison ist, wird zur Information statt zur Sackgasse.',
-          'React und Vite, First Paint unter einer Sekunde im 4G.',
-          'Der Kunde bearbeitet die Saisondatei; der Liefertext folgt automatisch.',
-        ],
-        roles: ['UI-Design', 'React-Frontend', 'Inhaltsintegration'],
-      },
-      sandra: {
-        period: '2025',
-        title: 'Sandra Hair Salon',
-        org: 'Kundin · Buchs SG',
-        summary:
-          'Drei Sprachen am selben Tresen. Hier habe ich aufgehört, Übersetzung als Schicht zu behandeln, und angefangen, sie als Architektur zu behandeln.',
-        details: [
-          'Sprache ist Zustand, nicht Route: der Wechsel behält die Scrollposition und schreibt Währung, Öffnungszeiten und Datumsformat mit um.',
-          'Eine Wörterbuchdatei, kein Build-Schritt, kein CMS.',
-          'Die Terminanfrage baut eine fertige Nachricht in der gerade gewählten Sprache.',
-        ],
-        roles: ['UI-Design', 'Frontend', 'i18n-Architektur'],
-      },
-      thayse: {
-        period: '2025',
-        title: 'Dra. Thayse Marques',
-        org: 'Kundin · Rio de Janeiro',
-        summary:
-          'Das erste Projekt, in dem die Inhaltsarbeit die Interface-Arbeit überwog: acht Rechtsgebiete, jedes mit eigenem Text und eigener Suchintention.',
-        details: [
-          'Ein Jahr eingehender Anfragen wurde nach Bedarf gruppiert, und diese Gruppen wurden zur Architektur der Seite.',
-          'Das Formular baut eine Nachricht, die bereits nach Rechtsgebiet eingeordnet ist.',
-          'Acht indexierte Seiten ersetzten eine einzige, und das Ranking folgte dem Inhalt, nicht umgekehrt.',
-        ],
-        roles: ['Recherche und Inhalt', 'UI-Design', 'Frontend', 'Technisches SEO'],
-      },
-      foundations: {
-        period: '2021 / 2024',
-        title: 'Beide Hälften gleichzeitig lernen',
-        org: 'Autodidaktisch',
-        summary:
-          'Ich habe Design und Technik im selben Zeitraum gelernt, weil es niemanden gab, dem ich die andere Hälfte hätte übergeben können.',
-        details: [
-          'Start mit HTML, CSS und Figma 2021; React 2022; TypeScript und Next.js 2023.',
-          'Datenbanken und Authentifizierung kamen 2024 dazu, als ein privates Projekt nicht mehr in den Browser passte.',
-          'Was einmal eine Einschränkung war, ist heute das Argument: keine Übergabe, keine stille Post.',
-        ],
-        roles: ['Grundlagen', 'Selbstgesteuerte Praxis'],
-      },
-    },
-  },
-
   interludes: {
     label: 'Zwischenspiel',
     items: {
@@ -337,12 +234,6 @@ export const de: Content = {
         caption:
           'Sie wird mitten auf der Flucht zum Baum. Ungefähr das passiert einer Idee zwischen Skizze und Deployment. Sie kommt auf der anderen Seite als etwas anderes an.',
         technique: 'Punktwolken-Scan · Vertex-Farbe · ohne Textur',
-      },
-      'saint-andre': {
-        title: 'Saint André',
-        caption:
-          'Fünf Jahrhunderte später sitzt der Faltenwurf immer noch. Das ist das kürzeste Argument, das ich kenne, für langsam und von Hand.',
-        technique: 'Fotogrammetrie · 1024px-Textur',
       },
     },
   },

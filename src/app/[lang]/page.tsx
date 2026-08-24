@@ -3,10 +3,10 @@ import Manifesto from '@/components/Manifesto';
 import Work from '@/components/Work';
 import Capabilities from '@/components/Capabilities';
 import TechStack from '@/components/TechStack';
-import Journey from '@/components/Journey';
 import Philosophy from '@/components/Philosophy';
 import Contact from '@/components/Contact';
 import Interludes from '@/components/Interludes';
+import Passagem from '@/components/Passagem';
 import { langs } from '@/lib/lang';
 
 /* -------------------------------------------------------------------------
@@ -54,16 +54,21 @@ export default function Home() {
       <Manifesto />
       <Interludes indice={0} />
 
-      <Philosophy />
+      {/* Cada <Passagem> é a seção que nasce de dentro da escultura que vem
+          logo acima dela. O par é o efeito: tirar o <Interludes/> e deixar a
+          <Passagem/> sozinha faz a seção subir 100svh e cobrir o que vier
+          antes. Os dois andam juntos. */}
+      <Passagem>
+        <Philosophy />
+      </Passagem>
 
       <Work />
       <Interludes indice={1} />
 
-      <Capabilities />
+      <Passagem>
+        <Capabilities />
+      </Passagem>
       <TechStack />
-      <Interludes indice={2} />
-
-      <Journey />
       <Contact />
     </>
   );

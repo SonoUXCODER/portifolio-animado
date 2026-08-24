@@ -49,7 +49,6 @@ export const pt: Content = {
     about: { name: 'Sobre', nav: 'Sobre', note: 'Uma pessoa, duas metades' },
     work: { name: 'Trabalho Selecionado', nav: 'Trabalho', note: 'Cinco produtos, do início ao ar' },
     capabilities: { name: 'Capacidades', nav: 'Capacidades', note: 'Da interface à infraestrutura' },
-    experience: { name: 'Trajetória', nav: 'Trajetória', note: 'Em ordem inversa' },
     contact: { name: 'Contato', nav: 'Contato', note: 'Onde isto acaba e outra coisa começa' },
   },
 
@@ -221,108 +220,6 @@ export const pt: Content = {
     },
   },
 
-  journey: {
-    lines: ['A', 'trajetória.'],
-    intro:
-      'Do primeiro cliente ao produto próprio, do mais recente pro começo. Abra qualquer entrada pra ver a decisão que fez valer a pena listar.',
-    turningPoint: 'Virada',
-    detail: 'Detalhe',
-    less: 'Menos',
-    entries: {
-      now: {
-        period: '2026 / Hoje',
-        title: 'Desenvolvedor Full-Stack & Designer de Produto',
-        org: 'Independente · Berna, Suíça',
-        summary:
-          'Desenhando e construindo produtos digitais de ponta a ponta, para clientes na Suíça e no Brasil, e para mim.',
-        details: [
-          'Trabalhando em três idiomas: alemão, inglês e português.',
-          'Cada projeto vai da pesquisa ao design, ao código e à publicação, com uma pessoa só respondendo por tudo.',
-          'Disponível para freelas selecionados e colaborações de produto.',
-        ],
-        roles: ['Produto', 'UX/UI', 'Full-stack', 'Publicação'],
-      },
-      knifes: {
-        period: '2026',
-        title: 'knifes.me',
-        org: 'Produto próprio · SaaS',
-        summary:
-          'Saí de front-end para o produto inteiro: banco, contas, assinatura, e a decisão do que não construir.',
-        details: [
-          'Motor de temas feito com variáveis CSS guardadas como linha no banco, então tema novo custa bytes, não bundle.',
-          'Assinaturas Stripe com reconciliação por webhook rodando em produção.',
-          'O trabalho mais difícil foi escopo: três recursos foram cortados depois de prontos.',
-        ],
-        roles: ['Produto', 'Full-stack', 'Banco de dados', 'Assinaturas'],
-      },
-      phobia: {
-        period: '2026',
-        title: 'PHOBIACORI',
-        org: 'Cliente · Artista independente',
-        summary:
-          'A primeira loja que montei do zero. O problema nunca foi vender. Era fazer um catálogo de tiragem pequena não parecer estoque de fábrica.',
-        details: [
-          'O carrinho vive inteiro no navegador: sem conta, sem banco, sem custo mensal.',
-          'A lista de produtos é um arquivo de dados tipado que a artista edita sozinha.',
-          'Export estático no GitHub Pages: nada pra cair, nada pra renovar.',
-        ],
-        roles: ['Direção de arte', 'Design de UI', 'Front-end', 'Arquitetura de conteúdo'],
-      },
-      truffle: {
-        period: '2025',
-        title: 'Truffle N.B. Tricolore',
-        org: 'Cliente · Suíça',
-        summary:
-          'Produto sazonal me obrigou a projetar para conteúdo que envelhece sozinho. O catálogo tinha que se desatualizar sem quebrar.',
-        details: [
-          'A disponibilidade comanda o layout: o que saiu da safra vira informação, não beco sem saída.',
-          'React e Vite, primeira pintura abaixo de um segundo no 4G.',
-          'O cliente edita o arquivo da safra; o texto de entrega acompanha sozinho.',
-        ],
-        roles: ['Design de UI', 'Front-end em React', 'Integração de conteúdo'],
-      },
-      sandra: {
-        period: '2025',
-        title: 'Sandra Hair Salon',
-        org: 'Cliente · Buchs SG',
-        summary:
-          'Três idiomas no mesmo balcão. Foi aqui que parei de tratar tradução como camada e passei a tratar como arquitetura.',
-        details: [
-          'Idioma é estado, não rota: a troca mantém a posição de rolagem e reescreve moeda, horário e formato de data.',
-          'Um arquivo de dicionário, sem etapa de build, sem CMS.',
-          'O agendamento monta uma mensagem pronta no idioma que está selecionado.',
-        ],
-        roles: ['Design de UI', 'Front-end', 'Arquitetura de i18n'],
-      },
-      thayse: {
-        period: '2025',
-        title: 'Dra. Thayse Marques',
-        org: 'Cliente · Rio de Janeiro',
-        summary:
-          'O primeiro projeto em que o trabalho de conteúdo pesou mais que o de interface: oito áreas do direito, cada uma com texto e intenção de busca próprios.',
-        details: [
-          'Um ano de contatos recebidos foi agrupado por necessidade, e esses grupos viraram a arquitetura do site.',
-          'O formulário monta uma mensagem já classificada por área.',
-          'Oito páginas indexadas substituíram uma só, e o ranking veio atrás do conteúdo, não o contrário.',
-        ],
-        roles: ['Pesquisa e conteúdo', 'Design de UI', 'Front-end', 'SEO técnico'],
-      },
-      foundations: {
-        period: '2021 / 2024',
-        title: 'Aprendendo as duas metades ao mesmo tempo',
-        org: 'Autodidata',
-        summary:
-          'Aprendi design e engenharia no mesmo período, porque não tinha para quem passar a outra metade.',
-        details: [
-          'Comecei com HTML, CSS e Figma em 2021; React em 2022; TypeScript e Next.js em 2023.',
-          'Banco de dados e autenticação chegaram em 2024, quando um projeto pessoal deixou de caber no navegador.',
-          'O que já foi limitação hoje é o argumento: sem handoff, sem telefone sem fio.',
-        ],
-        roles: ['Fundamentos', 'Prática autodirigida'],
-      },
-    },
-  },
-
   interludes: {
     label: 'Intervalo',
     items: {
@@ -337,12 +234,6 @@ export const pt: Content = {
         caption:
           'Ela vira árvore no meio da fuga. É mais ou menos o que acontece com uma ideia entre o rascunho e o deploy. Chega do outro lado sendo outra coisa.',
         technique: 'Scan em nuvem de pontos · cor por vértice · sem textura',
-      },
-      'saint-andre': {
-        title: 'Saint André',
-        caption:
-          'Cinco séculos depois, a dobra do tecido ainda está certa. É o argumento mais curto que eu conheço a favor de fazer devagar e à mão.',
-        technique: 'Fotogrametria · textura de 1024px',
       },
     },
   },

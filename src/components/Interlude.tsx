@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import type { Interlude as Peca } from '@/content';
 import { useT } from './ContentProvider';
 import { basePath } from '@/lib/base';
+import { prepararEstilhaco, type Estilhaco } from '@/lib/estilhaco';
 
 /* -------------------------------------------------------------------------
    INTERVALO — a escultura entre dois capítulos.
@@ -50,6 +51,21 @@ export default function Interlude({ peca }: { peca: Peca }) {
   /* posição do ponteiro, de -0.5 a 0.5, escrita num ref e lida pelo laço de
      desenho. Passar por estado aqui seria um render de React por quadro. */
   const ponteiro = useRef({ x: 0, y: 0 });
+
+  /* ---------- a moldura sai junto com a peça ----------
+     Enquanto a escultura se desmonta, a régua de cima e a legenda de baixo
+     se afastam pra fora da tela e apagam. Sem isso a peça explode dentro de
+     uma moldura que continua parada, e a moldura parada denuncia que aquilo
+     é um quadro com um efeito dentro — exatamente a leitura que a seção
+     inteira existe pra evitar.
+
+     Aqui é framer-motion e não o ref do laço 3D de propósito: são elementos
+     de DOM, e MotionValue escreve direto no estilo sem passar por render do
+     React. O laço de desenho continua com a própria medição. */
+  const { scrollYProgress } = useScroll({ target: secao, offset: ['start start', 'end end'] });
+  const molduraOpacidade = useTransform(scrollYProgress, [0.62, 0.88], [1, 0]);
+  const reguaY = useTransform(scrollYProgress, [0.62, 1], [0, -70]);
+  const legendaY = useTransform(scrollYProgress, [0.62, 1], [0, 90]);
 
   /* ---------- monta perto, desmonta longe ----------
 
@@ -129,7 +145,7 @@ export default function Interlude({ peca }: { peca: Peca }) {
         /* a câmera nasce já no começo do percurso da peça: montar num
            lugar e saltar pro outro no primeiro quadro dá um tranco visível.
            O valor sai do caráter, definido mais abaixo. */
-        const INICIO = { descoberta: 8.6, metamorfose: 7.2, precisao: 5.6 } as const;
+        const INICIO = { descoberta: 8.6, metamorfose: 7.2 } as const;
         const camera = new THREE.PerspectiveCamera(38, larg() / alt(), 0.1, 100);
         camera.position.set(0, 0, INICIO[peca.carater]);
 
@@ -181,6 +197,19 @@ export default function Interlude({ peca }: { peca: Peca }) {
           malha.castShadow = false;
           malha.receiveShadow = false;
         });
+
+        /* -------------------------------------------------------------
+           O ESTILHAÇO
+
+           Converte a malha pra não-indexada e injeta o deslocamento por
+           triângulo no shader. É a parte cara do carregamento — no Klio são
+           135 mil triângulos virando 405 mil vértices — e por isso acontece
+           aqui, colada no parse do .glb, que já é um bloqueio de linha
+           principal. Engorda uma pausa que já existe em vez de criar uma
+           nova, e acontece 1000px antes de a peça entrar na tela.
+
+           A matemática toda está em lib/estilhaco.ts. */
+        const estilhaco: Estilhaco = prepararEstilhaco(THREE, modelo);
 
         const redimensionar = () => {
           if (!palco.current) return;
@@ -236,11 +265,6 @@ export default function Interlude({ peca }: { peca: Peca }) {
                           enquanto o modelo gira no dele, então a silhueta
                           nunca se repete duas vezes. É a peça que mais muda
                           de forma ao ser vista, e ela vira árvore no mito.
-             precisao     Saint André. Quase não se aproxima (5.6 a 4.4),
-                          mas a lente fecha de 40° a 24°. Comprimir a
-                          perspectiva achata a profundidade e é o que revela
-                          a dobra do tecido; é o oposto do que as outras
-                          duas fazem, e de propósito.
 
            A interpolação é a mesma nas três, então continuam parecendo do
            mesmo site. O que muda é o alvo, não o modo de chegar nele.
@@ -248,7 +272,6 @@ export default function Interlude({ peca }: { peca: Peca }) {
         const CARATER = {
           descoberta: { z: [8.6, 4.6], fov: [38, 44], orbita: 0, luz: [0.9, 3.6] },
           metamorfose: { z: [7.2, 4.9], fov: [38, 46], orbita: 2.4, luz: [3.1, 3.1] },
-          precisao: { z: [5.6, 4.4], fov: [40, 24], orbita: 0, luz: [2.6, 3.2] },
         } as const;
         const c = CARATER[peca.carater];
 
@@ -257,12 +280,38 @@ export default function Interlude({ peca }: { peca: Peca }) {
         let orbSuave = 0;
         let pxSuave = 0;
         let pySuave = 0;
+        /* nasce desmontada: o primeiro quadro tem de ser o mesmo estado que
+           o progresso 0 pede, senão a peça aparece inteira e salta pra
+           despedaçada no quadro seguinte */
+        let eSuave = reduzido ? 0 : 1;
+        let opacidadeEscrita = 1;
 
         const entre = (par: readonly [number, number], p: number) => par[0] + (par[1] - par[0]) * p;
+        const preso = (v: number) => Math.min(1, Math.max(0, v));
 
         const desenhar = () => {
           const p = progresso.current;
           const alvoGiro = (peca.startAngle ?? 0) + p * (peca.totalAngle ?? Math.PI * 1.2);
+
+          /* -----------------------------------------------------------
+             O ARCO EM TRÊS TEMPOS
+
+               0    -> 0.34   ela se monta. Entra em cacos suspensos e se
+                              fecha, e é a rolagem que fecha: parar no meio
+                              deixa a peça pela metade no ar.
+               0.34 -> 0.62   ela existe. Inteira, girando, com a câmera
+                              fazendo o que o caráter dela manda.
+               0.62 -> 1      ela se desmonta e abre o vão por onde a
+                              próxima seção entra.
+
+             O mesmo número comanda os dois extremos, então montar é
+             literalmente desmontar ao contrário, e voltar a rolar pra cima
+             refaz o caminho. Não há estado escondido: a posição de cada caco
+             é uma função da barra de rolagem, como o resto da seção.
+             ----------------------------------------------------------- */
+          const montagem = 1 - preso(p / 0.34);
+          const desmonte = preso((p - 0.62) / 0.38);
+          const alvoE = reduzido ? 0 : Math.max(montagem, desmonte);
 
           if (reduzido) {
             grupo.rotation.y = alvoGiro;
@@ -273,7 +322,10 @@ export default function Interlude({ peca }: { peca: Peca }) {
             grupo.rotation.y = giroSuave;
             grupo.position.y = Math.sin(p * Math.PI) * 0.12;
 
-            zSuave += (entre(c.z, p) - zSuave) * 0.07;
+            /* na saída a câmera mergulha 2.2 a mais pra dentro da casca
+               que está se abrindo: é o que transforma "a peça explodiu" em
+               "eu atravessei a peça" */
+            zSuave += (entre(c.z, p) - desmonte * 2.2 - zSuave) * 0.07;
             fovSuave += (entre(c.fov, p) - fovSuave) * 0.07;
             orbSuave += (Math.sin(p * Math.PI) * c.orbita - orbSuave) * 0.07;
 
@@ -290,6 +342,22 @@ export default function Interlude({ peca }: { peca: Peca }) {
             camera.lookAt(0, 0, 0);
 
             chave.intensity = entre(c.luz, p);
+          }
+
+          /* interpolar o estilhaço, e não usar o alvo cru, é o que impede a
+             peça de tremer quando a rolagem chega picotada — mesma razão do
+             resto do laço */
+          eSuave += (alvoE - eSuave) * 0.14;
+          estilhaco.explodir(eSuave);
+
+          /* no fim do desmonte o canvas apaga, pra os últimos cacos não
+             ficarem pendurados enquanto a próxima seção já está subindo.
+             Só escreve no estilo quando o valor muda de verdade: escrever
+             igual todo quadro é um recálculo de estilo de graça. */
+          const alvoOpacidade = 1 - preso((desmonte - 0.72) / 0.28);
+          if (Math.abs(alvoOpacidade - opacidadeEscrita) > 0.004) {
+            opacidadeEscrita = alvoOpacidade;
+            renderer.domElement.style.opacity = String(alvoOpacidade);
           }
 
           renderer.render(cena, camera);
@@ -344,6 +412,9 @@ export default function Interlude({ peca }: { peca: Peca }) {
                 m.dispose();
               }
             });
+            /* toNonIndexed() deixou as geometrias originais órfãs: elas não
+               estão mais na cena, então o traverse acima não as alcança */
+            estilhaco.descartar();
             cena.environment?.dispose();
             pmrem.dispose();
             renderer.dispose();
@@ -426,9 +497,12 @@ export default function Interlude({ peca }: { peca: Peca }) {
       aria-labelledby={`interlude-${peca.slug}-title`}
       className="relative h-[180vh] md:h-[210vh]"
     >
-      <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden">
+      <div className="sticky top-0 z-10 flex h-[100svh] flex-col overflow-hidden">
         {/* ---- régua superior ---- */}
-        <div className="shell pointer-events-none pt-[calc(var(--header-h)+var(--space-5))]">
+        <motion.div
+          className="shell pointer-events-none pt-[calc(var(--header-h)+var(--space-5))]"
+          style={reduzido ? undefined : { opacity: molduraOpacidade, y: reguaY }}
+        >
           <div
             className="flex items-start justify-between gap-[var(--space-5)] border-b pb-[var(--space-3)]"
             style={{ borderColor: 'var(--line)' }}
@@ -438,7 +512,7 @@ export default function Interlude({ peca }: { peca: Peca }) {
             </p>
             <p className="label label--dim text-right">{peca.technique}</p>
           </div>
-        </div>
+        </motion.div>
 
         {/* ---- o palco ----
              flex-1 + min-h-0 em vez de altura fixa: com svh fixo a legenda
@@ -455,7 +529,10 @@ export default function Interlude({ peca }: { peca: Peca }) {
         </div>
 
         {/* ---- legenda ---- */}
-        <div className="shell pb-[var(--space-7)]">
+        <motion.div
+          className="shell pb-[var(--space-7)]"
+          style={reduzido ? undefined : { opacity: molduraOpacidade, y: legendaY }}
+        >
           <div
             className="flex flex-wrap items-end justify-between gap-x-[var(--space-7)] gap-y-[var(--space-3)] border-t pt-[var(--space-4)]"
             style={{ borderColor: 'var(--line)' }}
@@ -468,7 +545,7 @@ export default function Interlude({ peca }: { peca: Peca }) {
             </div>
             <p className="label label--dim">{peca.title}</p>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -2,7 +2,6 @@ import type { Lang } from '@/lib/lang';
 import type { Content, ProjectCopy } from './types';
 import {
   capabilityShapes,
-  entryShapes,
   identity,
   interludeShapes,
   layerShapes,
@@ -74,18 +73,6 @@ export type Project = {
 export type Tool = { label: string; note: string; since: string; primary?: boolean };
 export type Layer = { id: string; title: string; summary: string; tools: Tool[] };
 
-export type Entry = {
-  id: string;
-  period: string;
-  title: string;
-  org: string;
-  summary: string;
-  details: string[];
-  roles: string[];
-  slug?: string;
-  milestone?: boolean;
-};
-
 export type Interlude = {
   slug: string;
   title: string;
@@ -151,11 +138,6 @@ function conferir() {
       }
     }
 
-    for (const e of entryShapes) {
-      if (!dict.journey.entries[e.id]) {
-        throw new Error(`[content] ${lang}: falta a entrada de trajetória "${e.id}"`);
-      }
-    }
     for (const c of capabilityShapes) {
       if (!dict.capabilities.items[c.id]) {
         throw new Error(`[content] ${lang}: falta a capacidade "${c.id}"`);
@@ -236,9 +218,6 @@ export const getLayers = (lang: Lang): Layer[] =>
 
 /** todas as ferramentas, achatadas — usado nos contadores */
 export const getTools = (lang: Lang): Tool[] => getLayers(lang).flatMap((l) => l.tools);
-
-export const getExperience = (lang: Lang): Entry[] =>
-  entryShapes.map((e) => ({ ...e, ...dicts[lang].journey.entries[e.id] }));
 
 export const getInterludes = (lang: Lang): Interlude[] =>
   interludeShapes.map((i) => ({ ...i, ...dicts[lang].interludes.items[i.slug] }));

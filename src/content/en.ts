@@ -41,7 +41,6 @@ export const en: Content = {
     about: { name: 'About', nav: 'About', note: 'One person, two disciplines' },
     work: { name: 'Selected Work', nav: 'Work', note: 'Five products, start to ship' },
     capabilities: { name: 'Capabilities', nav: 'Capabilities', note: 'From interface to infrastructure' },
-    experience: { name: 'Experience', nav: 'Experience', note: 'In reverse order' },
     contact: { name: 'Contact', nav: 'Contact', note: 'Where this ends and something starts' },
   },
 
@@ -213,108 +212,6 @@ export const en: Content = {
     },
   },
 
-  journey: {
-    lines: ['The', 'journey.'],
-    intro:
-      'From the first client to my own product, most recent first. Open any entry for the decision that made it worth listing.',
-    turningPoint: 'Turning point',
-    detail: 'Detail',
-    less: 'Less',
-    entries: {
-      now: {
-        period: '2026 / Now',
-        title: 'Full-Stack Developer & Product Designer',
-        org: 'Independent · Bern, Switzerland',
-        summary:
-          'Designing and building digital products end to end, for clients across Switzerland and Brazil, and for myself.',
-        details: [
-          'Working in three languages: German, English and Portuguese.',
-          'Every project runs from research through design, build and deployment with one person accountable for all of it.',
-          'Available for selected freelance work and product collaborations.',
-        ],
-        roles: ['Product', 'UX/UI', 'Full-stack', 'Deployment'],
-      },
-      knifes: {
-        period: '2026',
-        title: 'knifes.me',
-        org: 'Own product · SaaS',
-        summary:
-          'Moved from frontend to an entire product: database, accounts, subscriptions, and the decision about what not to build.',
-        details: [
-          'Theme engine built on CSS custom properties stored as database rows, so new themes cost bytes, not bundle size.',
-          'Stripe subscriptions with webhook reconciliation running in production.',
-          'The hardest work was scope: three features were cut after being built.',
-        ],
-        roles: ['Product', 'Full-stack', 'Database', 'Subscriptions'],
-      },
-      phobia: {
-        period: '2026',
-        title: 'PHOBIACORI',
-        org: 'Client · Independent artist',
-        summary:
-          'The first store I built from nothing. The problem was never selling. It was making a small-run catalogue not look like factory stock.',
-        details: [
-          'Cart state lives entirely in the browser: no accounts, no database, no running cost.',
-          'The product list is a typed data file the artist edits herself.',
-          'Static export on GitHub Pages: nothing to go down, nothing to renew.',
-        ],
-        roles: ['Art direction', 'UI design', 'Frontend', 'Content architecture'],
-      },
-      truffle: {
-        period: '2025',
-        title: 'Truffle N.B. Tricolore',
-        org: 'Client · Switzerland',
-        summary:
-          'A seasonal product forced me to design for content that ages by itself. The catalogue had to go out of date without breaking.',
-        details: [
-          'Availability drives the layout: what is out of season becomes information, not a dead end.',
-          'React and Vite, first paint under one second on 4G.',
-          'The client edits the season file; the delivery copy follows it automatically.',
-        ],
-        roles: ['UI design', 'React frontend', 'Content integration'],
-      },
-      sandra: {
-        period: '2025',
-        title: 'Sandra Hair Salon',
-        org: 'Client · Buchs SG',
-        summary:
-          'Three languages across the same counter. This is where I stopped treating translation as a layer and started treating it as architecture.',
-        details: [
-          'Language is state, not a route: switching keeps scroll position and rewrites currency, hours and date format.',
-          'One dictionary file, no build step, no CMS.',
-          'Booking composes a pre-written message in the language currently selected.',
-        ],
-        roles: ['UI design', 'Frontend', 'i18n architecture'],
-      },
-      thayse: {
-        period: '2025',
-        title: 'Dra. Thayse Marques',
-        org: 'Client · Rio de Janeiro',
-        summary:
-          'The first project where content work outweighed interface work: eight practice areas, each with its own copy and its own search intent.',
-        details: [
-          'A year of incoming enquiries was clustered by need, and those clusters became the site architecture.',
-          'The form composes a message already classified by practice area.',
-          'Eight indexed pages replaced a single one, and the ranking followed the content, not the other way round.',
-        ],
-        roles: ['Research and content', 'UI design', 'Frontend', 'Technical SEO'],
-      },
-      foundations: {
-        period: '2021 / 2024',
-        title: 'Learning both halves at once',
-        org: 'Self-taught',
-        summary:
-          'I learned design and engineering in the same period, because there was nobody to hand the other half to.',
-        details: [
-          'Started with HTML, CSS and Figma in 2021; React in 2022; TypeScript and Next.js in 2023.',
-          'Databases and authentication came in 2024, when a personal project stopped fitting in the browser.',
-          'What was once a limitation is now the argument: no handoff, no telephone game.',
-        ],
-        roles: ['Foundations', 'Self-directed practice'],
-      },
-    },
-  },
-
   interludes: {
     label: 'Interlude',
     items: {
@@ -329,12 +226,6 @@ export const en: Content = {
         caption:
           'She turns into a tree mid-escape. Which is roughly what happens to an idea between the sketch and the deploy. It arrives on the other side as something else.',
         technique: 'Point-cloud scan · vertex colour · no texture',
-      },
-      'saint-andre': {
-        title: 'Saint André',
-        caption:
-          'Five centuries on, the fold of the cloth is still right. It is the shortest argument I know for doing things slowly and by hand.',
-        technique: 'Photogrammetry · 1024px texture',
       },
     },
   },

@@ -5,14 +5,12 @@ import type { Lang } from '@/lib/lang';
 import {
   getCapabilities,
   getContent,
-  getExperience,
   getInterludes,
   getLayers,
   getProjects,
   getTools,
   type Capability,
   type Content,
-  type Entry,
   type Interlude,
   type Layer,
   type Project,
@@ -44,7 +42,6 @@ type Pacote = {
   projects: Project[];
   layers: Layer[];
   tools: Tool[];
-  experience: Entry[];
   interludes: Interlude[];
   capabilities: Capability[];
   sections: Section[];
@@ -60,7 +57,6 @@ export function ContentProvider({ lang, children }: { lang: Lang; children: Reac
       projects: getProjects(lang),
       layers: getLayers(lang),
       tools: getTools(lang),
-      experience: getExperience(lang),
       interludes: getInterludes(lang),
       capabilities: getCapabilities(lang),
       sections: getSections(lang),

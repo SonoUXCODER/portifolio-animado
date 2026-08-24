@@ -235,26 +235,8 @@ export const layerShapes: LayerShape[] = [
 ];
 
 /* -------------------------------------------------------------------------
-   A TRAJETÓRIA E OS INTERVALOS
+   OS INTERVALOS
    ------------------------------------------------------------------------- */
-
-export type EntryShape = {
-  id: string;
-  /** liga a entrada ao estudo de caso, quando existe */
-  slug?: string;
-  /** virada de fase */
-  milestone?: boolean;
-};
-
-export const entryShapes: EntryShape[] = [
-  { id: 'now', milestone: true },
-  { id: 'knifes', slug: 'knifes-me', milestone: true },
-  { id: 'phobia', slug: 'phobiacori' },
-  { id: 'truffle', slug: 'truffle-nb' },
-  { id: 'sandra', slug: 'sandra-hair-salon' },
-  { id: 'thayse', slug: 'thayse-marques' },
-  { id: 'foundations' },
-];
 
 /**
  * O caráter de cada escultura, que decide como a câmera se comporta.
@@ -266,11 +248,8 @@ export const entryShapes: EntryShape[] = [
  *                subindo com a rolagem, como quem acha uma coisa enterrada.
  *   metamorfose  a câmera orbita enquanto o modelo gira, então a silhueta
  *                nunca se repete. É a que mais muda de forma ao ser vista.
- *   precisao     quase não se aproxima, mas a lente fecha. Comprimir a
- *                perspectiva é o que revela a dobra do tecido, e é o
- *                oposto do que as outras duas fazem.
  */
-export type CaraterInterlude = 'descoberta' | 'metamorfose' | 'precisao';
+export type CaraterInterlude = 'descoberta' | 'metamorfose';
 
 export type InterludeShape = {
   slug: string;
@@ -285,7 +264,6 @@ export type InterludeShape = {
 export const interludeShapes: InterludeShape[] = [
   { slug: 'klio', file: '/3d/klio.glb', startAngle: -0.35, totalAngle: Math.PI * 1.15, carater: 'descoberta' },
   { slug: 'daphne', file: '/3d/daphne.glb', startAngle: 0.5, totalAngle: -Math.PI * 1.3, carater: 'metamorfose' },
-  { slug: 'saint-andre', file: '/3d/saint-andre.glb', startAngle: -0.2, totalAngle: Math.PI, carater: 'precisao' },
 ];
 
 /** qual estudo o <Visual/> desenha; a implementação está em Visual.tsx */
@@ -306,7 +284,7 @@ export const capabilityShapes: CapabilityShape[] = [
 ];
 
 /** os capítulos, na ordem em que são lidos */
-export const sectionIds = ['about', 'work', 'capabilities', 'experience', 'contact'] as const;
+export const sectionIds = ['about', 'work', 'capabilities', 'contact'] as const;
 export type SectionId = (typeof sectionIds)[number];
 
 /* -------------------------------------------------------------------------
