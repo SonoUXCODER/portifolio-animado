@@ -5,6 +5,8 @@ import { identity } from '@/content';
 import { useConteudo } from './ContentProvider';
 import SectionIndex from './SectionIndex';
 import TiltCard from './TiltCard';
+import { motion } from 'framer-motion';
+import { easeStandard } from '@/lib/motion';
 import { Acende, Counter, Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Reveal';
 
 /* -------------------------------------------------------------------------
@@ -80,7 +82,22 @@ export default function Manifesto() {
               cheia deles. */}
           <Parallax strength={30}>
             <TiltCard className="w-full max-w-[420px]">
-              <figure className="media media--dim aspect-[4/5] w-full">
+              {/* A foto não aparece: ela é descoberta.
+
+                  `clip-path` sobe de baixo pra cima revelando a imagem, e ao
+                  mesmo tempo ela vem de 1.18 de escala e 12px de desfoque.
+                  A combinação é o que dá a sensação de foco sendo achado
+                  numa câmera, em vez de um elemento surgindo.
+
+                  Roda uma vez, quando entra na tela. Animar clip-path e
+                  blur é caro; caber num elemento só, uma vez, não é. */}
+              <motion.figure
+                className="media media--dim aspect-[4/5] w-full"
+                initial={{ clipPath: 'inset(100% 0% 0% 0%)', scale: 1.18, filter: 'blur(12px)' }}
+                whileInView={{ clipPath: 'inset(0% 0% 0% 0%)', scale: 1, filter: 'blur(0px)' }}
+                viewport={{ once: true, amount: 0.35 }}
+                transition={{ duration: 1.15, ease: easeStandard }}
+              >
                 <Image
                   src="/assets/foto-cracha.webp"
                   alt={`${identity.name}`}
@@ -89,7 +106,7 @@ export default function Manifesto() {
                   sizes="(max-width: 640px) 80vw, 400px"
                   className="h-full w-full"
                 />
-              </figure>
+              </motion.figure>
             </TiltCard>
           </Parallax>
           <Reveal delay={0.1}>
@@ -150,11 +167,16 @@ export default function Manifesto() {
         className="mt-[var(--space-10)] grid grid-cols-2 gap-x-[var(--space-5)] gap-y-[var(--space-8)] border-t pt-[var(--space-6)] lg:grid-cols-4"
         style={{ borderColor: 'var(--line)' }}
       >
-        {estatisticas.map((e) => (
+        {estatisticas.map((e, i) => (
           /* `flex-col-reverse` põe o número em cima sem inverter o HTML: em
              <dl> o <dt> tem de vir antes do <dd>, e um leitor de tela que
-             recebesse "05" antes de "products shipped" leria um número solto */
-          <RevealItem key={e.rotulo} className="flex flex-col-reverse">
+             recebesse "05" antes de "products shipped" leria um número solto.
+
+             O atraso crescente faz os quatro baterem um depois do outro em
+             vez de juntos. Quatro números aparecendo ao mesmo tempo é um
+             evento; quatro em sequência são quatro eventos, e é isso que
+             segura a atenção pelo tempo que a seção dura. */
+          <RevealItem key={e.rotulo} className="flex flex-col-reverse" style={{ transitionDelay: `${i * 90}ms` }}>
             <dt className="label mt-[var(--space-4)]">{e.rotulo}</dt>
             <dd className="numeral text-[clamp(3.5rem,8vw,7rem)]">
               <Counter to={e.valor} suffix={e.sufixo} pad={2} />

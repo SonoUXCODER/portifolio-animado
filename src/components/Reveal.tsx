@@ -397,14 +397,45 @@ export function Counter({
       return;
     }
 
+    /* Mola, não curva de tempo.
+
+       Uma curva sabe onde termina e chega lá educadamente. Uma mola tem
+       massa: acelera, passa do valor, volta e assenta. Num contador isso é
+       visível de um jeito que uma curva nunca é — o número sobe rápido
+       demais, mostra um valor maior que o final por um instante, e recua.
+
+       `damping: 14` é onde o passar do ponto aparece em um algarismo sem
+       virar gangorra. Abaixo de 12 o número oscila duas vezes e a pessoa
+       repara no efeito em vez de no dado.
+
+       O desfoque acompanha a velocidade, não o tempo: quanto mais rápido o
+       número muda, mais borrado ele fica, e ele entra em foco exatamente
+       quando para. É o mesmo princípio de motion blur de câmera, e é o que
+       dá peso ao movimento. Só o nó do número é desfocado, que é um
+       elemento minúsculo — barato. */
+    let anterior = 0;
     const controle = animate(0, to, {
-      duration: 1.6,
-      ease: easeStandard,
+      type: 'spring',
+      stiffness: 55,
+      damping: 14,
+      mass: 1.1,
+      restDelta: 0.4,
       onUpdate: (v) => {
         alvo.textContent = formata(v) + suffix;
+        const velocidade = Math.abs(v - anterior);
+        anterior = v;
+        const desfoque = Math.min(5, velocidade * 0.34);
+        alvo.style.filter = desfoque > 0.35 ? `blur(${desfoque.toFixed(2)}px)` : 'none';
+      },
+      onComplete: () => {
+        alvo.style.filter = 'none';
+        alvo.textContent = formata(to) + suffix;
       },
     });
-    return () => controle.stop();
+    return () => {
+      controle.stop();
+      alvo.style.filter = 'none';
+    };
     /* formata depende só de props estáveis; incluí-la faria o efeito
        reiniciar a contagem a cada render */
     // eslint-disable-next-line react-hooks/exhaustive-deps

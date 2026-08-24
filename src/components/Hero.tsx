@@ -33,10 +33,13 @@ import { useMedia, usePonteiroFino } from '@/hooks/useMedia';
    e o contato já dizem, e porque o vazio acima do título é metade do
    impacto dele.
 
-   Movimento, em ordem de entrada:
-     1. as três linhas do título sobem de trás da máscara, 80ms entre si;
-     2. o parágrafo e o CTA assentam depois;
-     3. a régua de baixo aparece por último.
+   Movimento, em duas partes:
+
+   ENTRADA   as palavras do título saem de desfocado com mola que passa do
+             ponto, 75ms entre si; o parágrafo assenta depois; a régua
+             aparece por último.
+   SAÍDA     a primeira rolagem desmonta a composição em três direções
+             diferentes. Está detalhado logo abaixo, em A SAÍDA.
    Nada disso espera rolagem: é a primeira tela, e ela tem de estar inteira
    antes de a pessoa tocar no mouse.
 
@@ -113,11 +116,40 @@ export default function Hero() {
   const fundoY = useTransform(scrollYProgress, [0, 1], ['0%', '18%']);
   const fundoOpacidade = useTransform(scrollYProgress, [0, 0.9], [1, 0]);
 
-  const tituloY = useTransform(scrollYProgress, [0, 1], [0, -60]);
-  const tituloDesfoque = useTransform(scrollYProgress, [0, 0.65, 1], ['blur(0px)', 'blur(0px)', 'blur(7px)']);
-  const tituloOpacidade = useTransform(scrollYProgress, [0, 0.72, 1], [1, 1, 0.15]);
-  const leadY = useTransform(scrollYProgress, [0, 1], [0, -110]);
-  const reguaY = useTransform(scrollYProgress, [0, 1], [0, -170]);
+  /* -----------------------------------------------------------------------
+     A SAÍDA
+
+     A primeira rolagem não faz o hero subir: faz a pessoa atravessá-lo. O
+     título cresce 34% e continua subindo, então ele passa **por fora** da
+     viewport em vez de sair por cima dela, e por um instante as letras são
+     maiores que a tela. É a diferença entre uma página que rola e uma
+     câmera que avança.
+
+     As três camadas saem em direções que não combinam de propósito: o
+     título pra frente e pra cima, a régua pra baixo, o lead pro lado. Sair
+     tudo junto na mesma direção lê como um bloco; sair desencontrado lê
+     como uma composição se desfazendo, que é o efeito.
+
+     O desfoque entra só no último terço. Antes disso o título ainda está
+     sendo lido, e desfocar texto legível é hostilidade, não cinema.
+     ----------------------------------------------------------------------- */
+  const tituloEscala = useTransform(scrollYProgress, [0, 1], [1, 1.34]);
+  const tituloY = useTransform(scrollYProgress, [0, 1], [0, -190]);
+  const tituloDesfoque = useTransform(
+    scrollYProgress,
+    [0, 0.66, 1],
+    ['blur(0px)', 'blur(0px)', 'blur(11px)'],
+  );
+  const tituloOpacidade = useTransform(scrollYProgress, [0, 0.74, 1], [1, 1, 0]);
+
+  const leadY = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const leadX = useTransform(scrollYProgress, [0, 1], [0, 130]);
+  const leadOpacidade = useTransform(scrollYProgress, [0, 0.55, 1], [1, 1, 0]);
+
+  /* a régua desce enquanto o resto sobe: é ela que dá a sensação de a
+     composição estar sendo puxada por dois lados */
+  const reguaY = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const reguaOpacidade = useTransform(scrollYProgress, [0, 0.45, 1], [1, 1, 0]);
 
   useEffect(() => {
     if (!fino || reduzido) return;
@@ -137,7 +169,11 @@ export default function Hero() {
       ref={ref}
       id="hero"
       aria-labelledby="hero-title"
-      className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pb-[var(--space-7)] pt-[calc(var(--header-h)+var(--space-7))]"
+      /* overflow-clip no lugar de hidden: o título cresce pra além da
+         seção na saída, e precisa ser recortado sem que a seção vire
+         contêiner de rolagem — que é o que hidden faria, matando o sticky
+         da galeria mais abaixo. */
+      className="relative flex min-h-[100svh] flex-col justify-between overflow-clip pb-[var(--space-7)] pt-[calc(var(--header-h)+var(--space-7))]"
     >
       {/* ---- fundo ----
            Uma camada só: o vídeo, em cinza e a 14%. Nessa opacidade ninguém
@@ -185,8 +221,13 @@ export default function Hero() {
               ? undefined
               : {
                   y: tituloY,
+                  scale: tituloEscala,
                   filter: tituloDesfoque,
                   opacity: tituloOpacidade,
+                  /* cresce a partir da esquerda e de cima: escalar pelo
+                     centro afastaria o título da margem e quebraria a grade
+                     justo no momento em que ele é a única coisa na tela */
+                  transformOrigin: 'left top',
                   ...(fino ? { x, translateY: y } : {}),
                 }
           }
@@ -216,7 +257,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...enter, delay: 0.75 }}
             className="col-span-12 md:col-span-6 lg:col-span-5 lg:col-start-7"
-            {...(reduzido ? {} : { style: { y: leadY } })}
+            {...(reduzido ? {} : { style: { y: leadY, x: leadX, opacity: leadOpacidade } })}
           >
             <p className="lead">{t.hero.lead}</p>
 
@@ -239,7 +280,7 @@ export default function Hero() {
         animate={{ opacity: 1 }}
         transition={{ duration: duration.slow, delay: 0.95 }}
         className="shell relative w-full"
-        {...(reduzido ? {} : { style: { y: reguaY } })}
+        {...(reduzido ? {} : { style: { y: reguaY, opacity: reguaOpacidade } })}
       >
         <dl
           className="grid grid-cols-2 gap-x-[var(--space-5)] gap-y-[var(--space-5)] border-t pt-[var(--space-4)] sm:grid-cols-4"

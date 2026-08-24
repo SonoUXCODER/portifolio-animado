@@ -96,15 +96,32 @@ export default function Capabilities() {
                     style={{ background: destacado ? 'var(--accent)' : 'var(--line-strong)' }}
                   />
 
-                  <span
-                    className="display-lg flex-1 transition-[color,opacity] duration-[var(--duration-normal)]"
-                    style={{
-                      color: destacado ? 'var(--text-primary)' : undefined,
-                      opacity: destacado ? 1 : 0.55,
+                  {/* O item ativo cresce 12% e os outros recuam: encolhem,
+                      apagam e escorregam um pouco pra direita. É a diferença
+                      entre "este está selecionado" e "estamos olhando pra
+                      este agora" — o segundo precisa que os outros percam
+                      presença, não só que um ganhe.
+
+                      12% é o teto. Acima disso a linha ativa empurra as de
+                      baixo enquanto abre, e o acordeão inteiro treme. Cresce
+                      a partir da esquerda pra a margem não se mexer. */}
+                  <motion.span
+                    className="display-lg flex-1 origin-left"
+                    /* `initial={false}` pinta já no estado final em vez de
+                       animar a partir do padrão: sem isso os cinco itens
+                       inativos nascem em opacidade 1 e escurecem no
+                       primeiro quadro, o que lê como piscada */
+                    initial={false}
+                    animate={{
+                      scale: destacado ? 1.12 : 1,
+                      opacity: destacado ? 1 : 0.38,
+                      x: destacado ? 0 : 10,
                     }}
+                    transition={{ type: 'spring', stiffness: 260, damping: 26, mass: 0.7 }}
+                    style={{ color: destacado ? 'var(--text-primary)' : undefined }}
                   >
                     {c.title}
-                  </span>
+                  </motion.span>
 
                   {/* o sinal de mais que vira menos: a única affordance de
                       que a linha abre. A barra vertical encolhe em vez de
@@ -136,10 +153,20 @@ export default function Capabilities() {
                   >
                     <div className="grid-12 gap-y-[var(--space-6)] pb-[var(--space-8)]">
                       <div className="col-span-12 md:col-span-5 md:col-start-2">
-                        <p className="lead" style={{ maxWidth: '40ch' }}>
+                        {/* o resumo entra de baixo, e o parágrafo longo
+                            acende palavra por palavra logo atrás: duas
+                            velocidades diferentes pro olho ter onde pousar
+                            primeiro */}
+                        <motion.p
+                          className="lead"
+                          style={{ maxWidth: '40ch' }}
+                          initial={{ opacity: 0, y: 18 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: reduzido ? 0 : 0.12, duration: 0.5, ease: easeStandard }}
+                        >
                           {c.summary}
-                        </p>
-                        <p className="body mt-[var(--space-4)]">{c.text}</p>
+                        </motion.p>
+                        <Acende texto={c.text} className="body mt-[var(--space-4)]" />
                       </div>
 
                       <div className="col-span-12 md:col-span-5 md:col-start-8">
