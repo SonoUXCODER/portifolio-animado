@@ -2,7 +2,6 @@ import Hero from '@/components/Hero';
 import Manifesto from '@/components/Manifesto';
 import Work from '@/components/Work';
 import Capabilities from '@/components/Capabilities';
-import TechStack from '@/components/TechStack';
 import Philosophy from '@/components/Philosophy';
 import Contact from '@/components/Contact';
 import Interludes from '@/components/Interludes';
@@ -25,10 +24,6 @@ import { langs } from '@/lib/lang';
                   assina, depois de mostrar o trabalho, e depois de mostrar
                   as ferramentas. Cada uma toma a tela inteira e não pede
                   nada em troca. É a pausa.
-
-     stack        não é capítulo numerado: é a segunda metade de
-                  CAPABILITIES. Separar "o que eu faço" de "com o que eu
-                  faço" daria dois títulos pro mesmo assunto.
 
      filosofia    a única tela clara do site, logo depois da primeira
                   escultura. Ela ficava antes do contato, no fim de tudo, e
@@ -68,7 +63,6 @@ export default function Home() {
       <Passagem>
         <Capabilities />
       </Passagem>
-      <TechStack />
       <Contact />
     </>
   );

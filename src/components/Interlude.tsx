@@ -125,11 +125,35 @@ export default function Interlude({ peca }: { peca: Peca }) {
         /* 2 em tela grande, 1.5 no telefone. O canvas ocupa a viewport
            inteira, então cada 0.5 de razão são milhões de pixels a mais por
            quadro, e numa escultura em pedra cinza ninguém vê a diferença. */
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, window.innerWidth < 768 ? 1.5 : 2));
+        const estreito = window.innerWidth < 768;
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, estreito ? 1.5 : 2));
         renderer.setSize(larg(), alt());
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        /* exposição baixa: a peça tem de sair da penumbra, não estar acesa */
-        renderer.toneMappingExposure = 0.85;
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+        /* -------------------------------------------------------------
+           A EXPOSIÇÃO SUBIU, E NO TELEFONE SUBIU MAIS.
+
+           Era 0.85 fixo, escolhido olhando um monitor. No telefone a mesma
+           cena chegava perto do preto: a tela é menor, então a escultura
+           ocupa menos área e o olho tem menos superfície pra reconstruir a
+           forma; o brilho da tela costuma estar em automático num ambiente
+           que não é uma sala escura; e o ACES comprime justamente as
+           sombras, que é quase tudo que uma peça em pedra cinza tem.
+
+           O resultado é que a Daphne, que já era a mais fechada das duas,
+           virava uma silhueta preta sobre fundo preto no aparelho.
+
+           Não é caso de "clarear tudo": a peça tem de sair da penumbra, e
+           não estar acesa. 0.95 no monitor é meio ponto acima do que era e
+           não muda a leitura; 1.15 no telefone é o que devolve a forma sem
+           chegar no ponto em que o ACES lava a pedra e ela vira gesso.
+
+           Estes dois números e o `apoio` logo abaixo são os parafusos desta
+           cena: se um dia ela ficar clara demais num aparelho, é aqui que
+           se mexe, e em nenhum outro lugar.
+           ------------------------------------------------------------- */
+        renderer.toneMappingExposure = estreito ? 1.15 : 0.95;
         caixa.appendChild(renderer.domElement);
         renderer.domElement.style.width = '100%';
         renderer.domElement.style.height = '100%';
@@ -154,15 +178,29 @@ export default function Interlude({ peca }: { peca: Peca }) {
         const chave = new THREE.DirectionalLight(0xfff2e6, 3.1);
         chave.position.set(3.4, 5, 3.4);
         cena.add(chave);
+        /* -------------------------------------------------------------
+           AS LUZES DE APOIO SÃO MAIS FORTES NO TELEFONE.
+
+           Preenchimento e contraluz são o que impede a silhueta de colar no
+           fundo. Num monitor calibrado, num quarto, os valores originais
+           bastavam. Num telefone — tela menor, brilho automático, e muitas
+           vezes luz ambiente de verdade batendo nela — o que era "quase
+           imperceptível de propósito" virava "não existe", e a peça ficava
+           com um contorno só.
+
+           O fator é 1.5, e ele não vale pra chave: clarear a chave mataria
+           o claro-escuro que dá volume. O que se ilumina é a borda.
+           ------------------------------------------------------------- */
+        const apoio = estreito ? 1.5 : 1;
         /* preenchimento frio e fraco: separa a peça do fundo sem iluminá-la */
-        const preenche = new THREE.DirectionalLight(0xbfd4ff, 0.55);
+        const preenche = new THREE.DirectionalLight(0xbfd4ff, 0.55 * apoio);
         preenche.position.set(-4.2, 0.6, -2.6);
         cena.add(preenche);
         /* contraluz mínima, pra a silhueta não colar no preto */
-        const contra = new THREE.DirectionalLight(0xffffff, 0.4);
+        const contra = new THREE.DirectionalLight(0xffffff, 0.4 * apoio);
         contra.position.set(-0.6, 1.4, -5);
         cena.add(contra);
-        cena.add(new THREE.AmbientLight(0xffffff, 0.16));
+        cena.add(new THREE.AmbientLight(0xffffff, 0.16 * apoio));
 
         const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
         const gltf = await loader.loadAsync(`${basePath}${peca.file}`);
@@ -193,7 +231,28 @@ export default function Interlude({ peca }: { peca: Peca }) {
           if (!malha.isMesh) return;
           const mat = malha.material as import('three').MeshStandardMaterial;
           if (malha.geometry.getAttribute('color')) mat.vertexColors = true;
-          mat.envMapIntensity = 0.55;
+          /* -----------------------------------------------------------
+             O AMBIENTE PESA MAIS AGORA.
+
+             0.55 deixava a peça dependendo quase só das três direcionais,
+             e três direcionais fazem sombra dura: o lado que não recebe
+             chave fica em preto puro. É o que fazia a Daphne parecer
+             recortada em vez de esculpida, e no telefone o lado escuro
+             sumia inteiro dentro do fundo.
+
+             O ambiente PMREM é justamente a luz que não vem de lugar
+             nenhum, e é ela que desenha a curvatura do lado escuro. Em 0.9
+             a pedra ganha o reflexo difuso de um nicho de museu sem virar
+             o plástico brilhante de render de e-commerce, que é o que
+             acontece passando de 1.
+             ----------------------------------------------------------- */
+          mat.envMapIntensity = 0.9;
+          /* pedra é fosca. Deixar a rugosidade do arquivo, que vem de um
+             scan e costuma vir baixa, dava um brilho de cerâmica na chave */
+          if (mat.isMeshStandardMaterial) {
+            mat.roughness = Math.max(mat.roughness ?? 1, 0.72);
+            mat.metalness = Math.min(mat.metalness ?? 0, 0.05);
+          }
           malha.castShadow = false;
           malha.receiveShadow = false;
         });
@@ -208,14 +267,86 @@ export default function Interlude({ peca }: { peca: Peca }) {
            principal. Engorda uma pausa que já existe em vez de criar uma
            nova, e acontece 1000px antes de a peça entrar na tela.
 
-           A matemática toda está em lib/estilhaco.ts. */
+           A matemática toda está em lib/estilhaco.ts.
+
+           >>> UM QUADRO DE FOLGA ANTES <<<
+           O parse do .glb e a preparação do estilhaço são duas pausas
+           longas, e encostadas uma na outra elas viram **uma** pausa que
+           atravessa vários quadros — que é o tranco que se sentia ao rolar
+           em direção à escultura. Ceder um quadro entre as duas não torna
+           o trabalho mais barato; ele deixa o navegador pintar o que já
+           tem no meio do caminho, e duas pausas curtas se lêem como
+           carregamento, enquanto uma longa se lê como a página travando.
+
+           `requestAnimationFrame` e não `setTimeout(0)` de propósito: a
+           tarefa é de desenho, e o rAF é a fila que o navegador esvazia
+           logo depois de pintar.
+
+           O `setTimeout` ao lado não é redundância defensiva: **numa aba de
+           fundo o rAF simplesmente não dispara**, e sozinho ele deixaria a
+           montagem pendurada até a pessoa voltar pra aba. Quem chegar
+           primeiro solta — o rAF no caminho normal, o relógio quando não há
+           quadro nenhum pra esperar. */
+        await Promise.race([
+          new Promise<void>((r) => requestAnimationFrame(() => r())),
+          new Promise<void>((r) => window.setTimeout(r, 120)),
+        ]);
+        if (!vivo) {
+          renderer.dispose();
+          return;
+        }
         const estilhaco: Estilhaco = prepararEstilhaco(THREE, modelo);
 
-        const redimensionar = () => {
+        /* -------------------------------------------------------------
+           O RESIZE ERA UM DOS TRANCOS, E SÓ APARECIA NO TELEFONE.
+
+           O palco tem altura em `svh` dentro de um `sticky`. No celular, a
+           barra de endereço encolhe e cresce **enquanto a pessoa rola**, e
+           cada pixel disso é um disparo do ResizeObserver — que aqui
+           chamava `setSize()` na hora. `setSize` realoca o buffer de
+           desenho do WebGL: é das operações mais caras que existem, e ela
+           estava sendo pedida dezenas de vezes por segundo, no meio do
+           gesto de rolagem, com o estilhaço já ocupando a GPU.
+
+           Duas guardas resolvem:
+
+             coalescer   várias mudanças no mesmo quadro viram uma. O
+                         ResizeObserver dispara em rajada; sem isto, uma
+                         rajada de seis vira seis realocações.
+             histerese   mudança só de altura, e pequena, é a barra do
+                         navegador — não é a tela virando. Ignorar até 64px
+                         de variação vertical cobre a barra de qualquer
+                         telefone; a largura continua com tolerância de 1px,
+                         porque largura mudando é rotação de verdade.
+
+           O custo de ignorar é que o aspecto fica até 64px errado enquanto
+           a barra está a meio caminho, o que numa escultura centralizada é
+           literalmente invisível.
+           ------------------------------------------------------------- */
+        let larguraAnterior = larg();
+        let alturaAnterior = alt();
+        let rafResize = 0;
+
+        const aplicarTamanho = () => {
+          rafResize = 0;
           if (!palco.current) return;
-          renderer.setSize(larg(), alt());
-          camera.aspect = larg() / alt();
+          const l = larg();
+          const a = alt();
+          if (l === 0 || a === 0) return;
+          larguraAnterior = l;
+          alturaAnterior = a;
+          renderer.setSize(l, a);
+          camera.aspect = l / a;
           camera.updateProjectionMatrix();
+        };
+
+        const redimensionar = () => {
+          const l = larg();
+          const a = alt();
+          const mudouLargura = Math.abs(l - larguraAnterior) > 1;
+          const mudouAltura = Math.abs(a - alturaAnterior) > 64;
+          if (!mudouLargura && !mudouAltura) return;
+          if (!rafResize) rafResize = requestAnimationFrame(aplicarTamanho);
         };
         const ro = new ResizeObserver(redimensionar);
         ro.observe(caixa);
@@ -269,9 +400,30 @@ export default function Interlude({ peca }: { peca: Peca }) {
            A interpolação é a mesma nas três, então continuam parecendo do
            mesmo site. O que muda é o alvo, não o modo de chegar nele.
            ------------------------------------------------------------- */
+        /* -------------------------------------------------------------
+           A DAPHNE ERA A PEÇA ESCURA, E A CULPA ERA DESTA LINHA.
+
+           `luz: [3.1, 3.1]` — a única das duas com a chave **constante**.
+           A ideia era que a metamorfose fosse contada pela silhueta e não
+           pela luz, e a ideia continua valendo; o problema é que 3.1 é o
+           valor de chegada do Klio, que só o alcança no fim do percurso
+           depois de subir de 0.9. Ou seja: a Daphne passava a seção inteira
+           no ponto em que a outra peça está no clímax — e como ela orbita,
+           a chave passa a maior parte do tempo batendo de raspão, não de
+           frente. Somando com a exposição baixa, era uma peça em pedra
+           cinza em preto sobre preto.
+
+           Agora ela também respira, só que ao contrário do Klio: entra
+           acesa e **fecha** conforme se aproxima e se abre. Ele emerge do
+           escuro; ela mergulha nele. As duas ganham um arco de luz, as duas
+           contam coisas diferentes, e nenhuma passa a seção num valor só.
+
+           O piso de 3.4 é o que garante que, mesmo no fim, a forma continue
+           legível num telefone.
+           ------------------------------------------------------------- */
         const CARATER = {
           descoberta: { z: [8.6, 4.6], fov: [38, 44], orbita: 0, luz: [0.9, 3.6] },
-          metamorfose: { z: [7.2, 4.9], fov: [38, 46], orbita: 2.4, luz: [3.1, 3.1] },
+          metamorfose: { z: [7.2, 4.9], fov: [38, 46], orbita: 2.4, luz: [4.6, 3.4] },
         } as const;
         const c = CARATER[peca.carater];
 
@@ -376,14 +528,37 @@ export default function Interlude({ peca }: { peca: Peca }) {
         };
 
         /* o loop só existe enquanto a seção está na tela */
-        const obsVis = new IntersectionObserver(([e]) => (e.isIntersecting ? ligar() : desligar()), {
-          rootMargin: '100px 0px',
-        });
+        let naTela = false;
+        const obsVis = new IntersectionObserver(
+          ([e]) => {
+            naTela = e.isIntersecting;
+            if (naTela && !document.hidden) ligar();
+            else desligar();
+          },
+          { rootMargin: '100px 0px' },
+        );
         if (secao.current) obsVis.observe(secao.current);
 
-        /* aba escondida: o navegador já congela o rAF, mas isso evita o
-           salto de animação quando a pessoa volta */
-        const visibilidade = () => (document.hidden ? desligar() : ligar());
+        /* -------------------------------------------------------------
+           VOLTAR PRA ABA NÃO PODE LIGAR UMA CENA QUE ESTÁ FORA DA TELA.
+
+           Este handler era `document.hidden ? desligar() : ligar()`, e o
+           `ligar()` não perguntava nada. O efeito: quem tinha rolado além
+           das esculturas, trocava de aba e voltava, ligava **as duas** ao
+           mesmo tempo — dois loops de WebGL renderizando peças que ninguém
+           está vendo, em cima do que quer que estivesse na tela. É a
+           travada que aparece "do nada" no desktop, sem relação com o que
+           a pessoa está fazendo, porque a causa aconteceu numa troca de
+           aba minutos antes.
+
+           `naTela` é a resposta que faltava: quem manda continua sendo o
+           observador de visibilidade da seção, e a aba só tem direito de
+           **desligar**, ou de religar o que já estava visível.
+           ------------------------------------------------------------- */
+        const visibilidade = () => {
+          if (document.hidden) desligar();
+          else if (naTela) ligar();
+        };
         document.addEventListener('visibilitychange', visibilidade);
 
         renderer.render(cena, camera);
@@ -395,6 +570,7 @@ export default function Interlude({ peca }: { peca: Peca }) {
           },
           parar: () => {
             desligar();
+            if (rafResize) cancelAnimationFrame(rafResize);
             obsVis.disconnect();
             ro.disconnect();
             document.removeEventListener('visibilitychange', visibilidade);

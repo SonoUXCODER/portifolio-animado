@@ -77,12 +77,38 @@ export default function Hero() {
   const largo = useMedia('(min-width: 768px)');
   const hora = useHoraLocal();
   const ref = useRef<HTMLElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
 
-  /* O vídeo é textura, não conteúdo: entra a 12% de opacidade, já em cinza,
-     atrás da grade. Ele não é baixado em tela estreita nem com movimento
-     reduzido — e como `useMedia` só responde no cliente, ele nunca sai no
-     HTML do servidor, o que mantém o LCP sendo o título. */
-  const comVideo = largo && !reduzido;
+  /* -----------------------------------------------------------------------
+     O VÍDEO TAMBÉM TOCA NO TELEFONE.
+
+     Ele ficava atrás de `largo` — `min-width: 768px` — e o resultado é que
+     a primeira tela do site, no aparelho em que a maior parte das visitas
+     acontece, era um retângulo preto com texto. A primeira impressão do
+     portfólio inteiro ficava sem o único evento de fundo que ela tem.
+
+     O motivo original era peso, e o motivo não se sustenta: o arquivo tem
+     355 kB, menos que uma foto de capa dos projetos, e entra com
+     `preload="metadata"` — o navegador baixa o cabeçalho e só busca os
+     quadros quando vai tocar. Movimento reduzido continua desligando tudo.
+
+     Quem decide agora é `montado`, e não a largura: o vídeo é montado
+     depois da hidratação, então ele nunca sai no HTML do servidor e o LCP
+     continua sendo o título. É o mesmo efeito que `useMedia` dava de
+     brinde, escrito de propósito em vez de por acidente.
+
+     >>> A MÁSCARA MUDA DE FORMA <<<
+     A elipse era medida pra uma tela deitada. Em retrato, 80% x 70% do
+     quadro deixa o vídeo num tarja no meio, com faixa preta em cima e
+     embaixo — lê como imagem cortada errado, não como textura. Em tela
+     estreita ela abre e sobe, pra a luz cair atrás do título em vez de
+     atrás do vão embaixo dele. */
+  const [montado, setMontado] = useState(false);
+  useEffect(() => setMontado(true), []);
+  const comVideo = montado && !reduzido;
+  const mascara = largo
+    ? 'radial-gradient(ellipse 80% 70% at 55% 45%, #000 15%, transparent 78%)'
+    : 'radial-gradient(ellipse 130% 55% at 50% 38%, #000 10%, transparent 82%)';
 
   /* o cursor move o bloco de texto por motion values — nada de setState a
      60fps, então o React não re-renderiza durante o movimento */
@@ -103,8 +129,8 @@ export default function Hero() {
      tela plana consegue dar sem sombra e sem 3D.
 
        vídeo   18% pra baixo. É o fundo, e fundo quase não anda.
-       título  60px pra cima, com desfoque entrando no fim. O desfoque é o
-               que o olho lê como "saiu do plano de foco" em vez de "subiu".
+       título  190px pra cima e crescendo, apagando no fim. É a camada que
+               o olho segue, e ela sai por fora da tela em vez de por cima.
        lead    110px. Está na frente do título.
        régua   170px, o mais rápido de todos, porque é a camada mais
                próxima e a última a sair.
@@ -130,17 +156,26 @@ export default function Hero() {
      tudo junto na mesma direção lê como um bloco; sair desencontrado lê
      como uma composição se desfazendo, que é o efeito.
 
-     O desfoque entra só no último terço. Antes disso o título ainda está
-     sendo lido, e desfocar texto legível é hostilidade, não cinema.
+     >>> O DESFOQUE SAIU, E ELE ERA UM DOS TRANCOS DA PÁGINA <<<
+     Havia um `filter: blur()` interpolado de 0 a 11px no último terço da
+     saída. O gesto era bom e o custo era o pior que existe: `filter` não
+     composita, ele obriga o navegador a **rasterizar o título de novo a
+     cada quadro** — e este título tem 166px de corpo e ocupa quase a tela
+     inteira. É exatamente o que o próprio <Lines/> avisa em comentário
+     ("não use em nada que a rolagem dispare"), feito aqui mesmo assim.
+
+     O tranco aparecia no lugar mais caro possível: no primeiro gesto de
+     rolagem do site, que é onde a pessoa decide se a página é fluida.
+
+     O que ficou faz a mesma leitura por meios que a GPU resolve sozinha —
+     escala, deslocamento e opacidade, três transformações compostas sem
+     repintar um pixel de texto. A opacidade agora fecha um pouco mais
+     cedo, pra que o título saia de cena com a mesma suavidade que o
+     desfoque dava.
      ----------------------------------------------------------------------- */
   const tituloEscala = useTransform(scrollYProgress, [0, 1], [1, 1.34]);
   const tituloY = useTransform(scrollYProgress, [0, 1], [0, -190]);
-  const tituloDesfoque = useTransform(
-    scrollYProgress,
-    [0, 0.66, 1],
-    ['blur(0px)', 'blur(0px)', 'blur(11px)'],
-  );
-  const tituloOpacidade = useTransform(scrollYProgress, [0, 0.74, 1], [1, 1, 0]);
+  const tituloOpacidade = useTransform(scrollYProgress, [0, 0.52, 1], [1, 1, 0]);
 
   const leadY = useTransform(scrollYProgress, [0, 1], [0, -60]);
   const leadX = useTransform(scrollYProgress, [0, 1], [0, 130]);
@@ -150,6 +185,44 @@ export default function Hero() {
      composição estar sendo puxada por dois lados */
   const reguaY = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const reguaOpacidade = useTransform(scrollYProgress, [0, 0.45, 1], [1, 1, 0]);
+
+  /* -----------------------------------------------------------------------
+     O IPHONE EM ECONOMIA DE ENERGIA RECUSA O AUTOPLAY.
+
+     `autoplay muted playsInline` é o combo que o iOS aceita, e ele funciona
+     — até a pessoa ligar o modo de baixo consumo, que bloqueia o começo
+     automático de qualquer vídeo, sem erro no console e sem nada na tela
+     além do primeiro quadro parado. Alguns Android com economia de dados
+     fazem o mesmo.
+
+     Então o play é pedido na mão, e se a promessa for recusada o primeiro
+     toque na tela tenta de novo. Um listener, `once`, e ele se remove
+     sozinho no caminho feliz. Sem isso o telefone que recusa fica com um
+     fundo congelado, que é pior do que fundo nenhum: parece defeito.
+     ----------------------------------------------------------------------- */
+  useEffect(() => {
+    if (!comVideo) return;
+    const v = video.current;
+    if (!v) return;
+
+    let solto = false;
+    const soltar = () => {
+      if (solto) return;
+      solto = true;
+      window.removeEventListener('pointerdown', tentar);
+      window.removeEventListener('touchstart', tentar);
+    };
+    function tentar() {
+      const alvo = video.current;
+      if (!alvo) return;
+      alvo.play().then(soltar, () => {});
+    }
+
+    tentar();
+    window.addEventListener('pointerdown', tentar, { passive: true });
+    window.addEventListener('touchstart', tentar, { passive: true });
+    return soltar;
+  }, [comVideo]);
 
   useEffect(() => {
     if (!fino || reduzido) return;
@@ -176,9 +249,9 @@ export default function Hero() {
       className="relative flex min-h-[100svh] flex-col justify-between overflow-clip pb-[var(--space-7)] pt-[calc(var(--header-h)+var(--space-7))]"
     >
       {/* ---- fundo ----
-           Uma camada só: o vídeo, em cinza e a 14%. Nessa opacidade ninguém
-           lê "pessoa digitando num laptop", que seria a imagem de banco mais
-           batida que existe. O que fica é luz que se move.
+           Uma camada só: o vídeo, em cinza e quase apagado. Nessa opacidade
+           ninguém lê "pessoa digitando num laptop", que seria a imagem de
+           banco mais batida que existe. O que fica é luz que se move.
 
            Havia uma grade técnica de 1px por cima. Saiu: com o vídeo atrás,
            as duas texturas disputavam a mesma área e o hero ficava ocupado
@@ -194,18 +267,24 @@ export default function Hero() {
           style={reduzido ? undefined : { y: fundoY, opacity: fundoOpacidade }}
         >
           <video
+            ref={video}
             className="absolute inset-0 h-full w-full object-cover"
             style={{
-              opacity: 0.14,
-              maskImage: 'radial-gradient(ellipse 80% 70% at 55% 45%, #000 15%, transparent 78%)',
-              WebkitMaskImage:
-                'radial-gradient(ellipse 80% 70% at 55% 45%, #000 15%, transparent 78%)',
+              /* um ponto a mais no telefone: a tela é menor, o vídeo ocupa
+                 menos área depois da máscara, e a 14% ele quase não existe */
+              opacity: largo ? 0.14 : 0.18,
+              maskImage: mascara,
+              WebkitMaskImage: mascara,
             }}
             src={`${basePath}/video/hero.mp4`}
             autoPlay
             muted
             loop
             playsInline
+            /* `disableRemotePlayback` tira o botão de AirPlay que o Safari
+               do iPhone gruda em qualquer <video>, mesmo neste, que é
+               textura de fundo e não tem controle nenhum */
+            disableRemotePlayback
             preload="metadata"
             /* `data-pause` não serve pra <video>: quem congela o loop fora
                da tela é o próprio navegador, que pausa mídia invisível. */
@@ -222,7 +301,6 @@ export default function Hero() {
               : {
                   y: tituloY,
                   scale: tituloEscala,
-                  filter: tituloDesfoque,
                   opacity: tituloOpacidade,
                   /* cresce a partir da esquerda e de cima: escalar pelo
                      centro afastaria o título da margem e quebraria a grade

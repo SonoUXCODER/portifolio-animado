@@ -120,7 +120,8 @@ export default function Nav() {
               <span className="label hidden items-center gap-[var(--space-2)] md:inline-flex">
                 <span
                   aria-hidden="true"
-                  className="block h-[6px] w-[6px] rounded-full"
+                  data-pause
+                  className="pulso block h-[6px] w-[6px] rounded-full"
                   style={{ background: 'var(--accent)' }}
                 />
                 {t.ui.available}

@@ -101,9 +101,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             em `blur(16px)`. Sem essa linha o título da primeira tela ficava
             desfocado pra sempre em quem tem script bloqueado, e esse é o
             tipo de defeito que ninguém reporta porque quem vê acha que o
-            site é assim mesmo. */}
+            site é assim mesmo.
+
+            O segundo seletor existe pelo mesmo motivo e cobre um caso que o
+            primeiro não pega: os filetes de abertura de capítulo começam em
+            `scaleX(0)` **sem** opacidade zero, então sem JS eles não ficavam
+            invisíveis por transparência — ficavam com largura nenhuma, que
+            dá no mesmo na tela e não casava com a regra acima. */}
         <noscript>
-          <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important;filter:none!important}`}</style>
+          <style>{`[style*="opacity:0"]{opacity:1!important;transform:none!important;filter:none!important}
+[style*="scaleX(0)"]{transform:none!important}`}</style>
         </noscript>
       </head>
       <body>

@@ -130,7 +130,14 @@
     font-synthesis-weight: none;
     overflow-x: clip;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+    /* `text-rendering: optimizeLegibility` saiu daqui.
+
+       Ele liga kerning e ligaduras opcionais para **todo** texto do
+       documento, e o custo é pago no layout — numa página desta altura, com
+       display type em todas as seções, isso engorda cada recálculo que a
+       rolagem provoca. O ganho visual é zero: as duas fontes são variáveis e
+       modernas, e o kerning delas já vem ligado por `font-kerning: auto`,
+       que é o padrão. Era custo sem contrapartida. */
   }
 
   /* enquanto a tela de carregamento está em cima, a página não rola por
@@ -592,6 +599,19 @@
     z-index: 1;
     pointer-events: none;
     opacity: 0.028;
+    /* A camada é forçada com `translateZ(0)`.
+
+       Um elemento `fixed` cobrindo a viewport inteira, por cima de todo o
+       conteúdo, é o caso clássico de repaint em rolagem: sem camada
+       própria, cada quadro em que a página anda obriga o navegador a
+       recompor a textura contra o que passou por baixo dela. Com a camada
+       promovida, o grão vira um bitmap que a GPU só precisa sobrepor.
+
+       `contain: strict` completa: diz ao navegador que nada aqui dentro
+       pode influenciar o layout ou a pintura de fora, então ele nunca entra
+       na conta de um recálculo provocado por outra seção. */
+    transform: translateZ(0);
+    contain: strict;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
@@ -601,6 +621,36 @@
 
   .gira {
     animation: gira var(--dur, 22s) linear infinite;
+  }
+
+  /* =======================================================================
+     O PONTO DE DISPONIBILIDADE RESPIRA
+
+     Ele é a única informação da navegação que não é navegação: diz se dá
+     pra contratar agora. Parado, era um marcador; pulsando, é um sinal —
+     e é a diferença entre "isto está escrito aqui" e "isto está valendo
+     agora". É o mesmo vocabulário de um LED de gravação, e é a razão de o
+     ciclo ser longo (2.6s) e a amplitude pequena: um pisca-pisca rápido
+     na barra fixa vira tique nervoso em dez segundos de leitura.
+
+     Quem pulsa é o halo, um pseudo-elemento por trás — não o ponto. Animar
+     `scale` e `opacity` de um elemento próprio composita na GPU; animar o
+     ponto faria a caixa dele mudar e empurraria o texto ao lado.
+
+     Marcado com `data-pause`, então para quando sai da tela ou a aba
+     esconde, como todo loop deste site.
+     ======================================================================= */
+
+  .pulso {
+    position: relative;
+  }
+  .pulso::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: var(--accent);
+    animation: pulso 2.6s var(--ease-standard) infinite;
   }
 
   .tipo-elastico span {
@@ -617,6 +667,24 @@
 @keyframes gira {
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* o halo do ponto de disponibilidade: abre, apaga, e fica um bom tempo em
+   nada antes de recomeçar. A pausa no fim é o que impede o pulso de virar
+   tique — ver a explicação em `.pulso`. */
+@keyframes pulso {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  55% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
   }
 }
 

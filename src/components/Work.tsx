@@ -94,8 +94,9 @@ function Painel({
   janela,
   largura,
   reduzido,
+  leve,
 }: {
-  children: React.ReactNode | ((zoom: MotionValue<number>) => React.ReactNode);
+  children: React.ReactNode | ((zoom: MotionValue<number> | undefined) => React.ReactNode);
   progresso: MotionValue<number>;
   /** em que ponto do progresso (0..1) este painel está no meio da tela */
   centro: number;
@@ -103,6 +104,8 @@ function Painel({
   janela: number;
   largura: number;
   reduzido: boolean;
+  /** sem 3D: no telefone a profundidade vira escala e cortina */
+  leve: boolean;
 }) {
   const faixa = [centro - janela, centro, centro + janela];
 
@@ -117,8 +120,28 @@ function Painel({
   const giro = useTransform(progresso, faixa, [9, 0, -9]);
   const veu = useTransform(progresso, faixa, [0.78, 0, 0.78]);
 
+  /* -----------------------------------------------------------------------
+     NO TELEFONE A PROFUNDIDADE É PLANA, E ISSO NÃO É CONCESSÃO.
+
+     O 3D acima custa caro em três frentes ao mesmo tempo: `perspective` +
+     `preserve-3d` tiram o painel do caminho rápido de composição, `rotateY`
+     obriga o navegador a rasterizar o cartão inteiro — foto grande e
+     display type — num plano virado, e isso vale pros sete painéis, dos
+     quais três estão sempre montados. Num desktop passa. Num telefone de
+     meio termo é a seção que faz a página engasgar.
+
+     A saída não é desligar o efeito: é trocar o meio. `scale` faz a mesma
+     leitura de "isto está mais longe" com uma transformação que a GPU
+     resolve sem repintar nada. O que se perde é o giro, e o giro é
+     justamente a parte que numa tela de 6 polegadas ninguém vê.
+
+     A cortina de opacidade continua nas duas, porque ela já era barata.
+     ----------------------------------------------------------------------- */
+  const escala = useTransform(progresso, faixa, [0.86, 1, 0.86]);
+
   /* o título anda de 0.7 a 1: mais fundo que o cartão, então ele "chega"
-     depois e a diferença aparece */
+     depois e a diferença aparece. No modo leve ele não anda: escalar
+     display type é o mesmo repaint de texto por quadro que saiu do hero. */
   const zoomTitulo = useTransform(progresso, faixa, [0.7, 1, 0.7]);
 
   return (
@@ -127,13 +150,23 @@ function Painel({
        distorceria as pontas */
     <div
       className="relative h-full shrink-0"
-      style={{ width: `${largura}vw`, perspective: 1100 }}
+      style={{ width: `${largura}vw`, ...(leve ? null : { perspective: 1100 }) }}
     >
       <motion.div
         className="flex h-full items-center"
-        style={reduzido ? undefined : { z, rotateY: giro, transformStyle: 'preserve-3d' }}
+        style={
+          reduzido
+            ? undefined
+            : leve
+              ? { scale: escala }
+              : { z, rotateY: giro, transformStyle: 'preserve-3d' }
+        }
       >
-        {typeof children === 'function' ? (children as (z: MotionValue<number>) => React.ReactNode)(zoomTitulo) : children}
+        {typeof children === 'function'
+          ? (children as (z: MotionValue<number> | undefined) => React.ReactNode)(
+              leve ? undefined : zoomTitulo,
+            )
+          : children}
       </motion.div>
 
       {!reduzido && (
@@ -298,11 +331,13 @@ function Faixa({
   aoVer,
   t,
   medidas,
+  leve,
 }: {
   itens: Item[];
   aoVer: (p: Project) => void;
   t: Content;
   medidas: (typeof MEDIDAS)[keyof typeof MEDIDAS];
+  leve: boolean;
 }) {
   const trilho = useRef<HTMLDivElement>(null);
   const palco = useRef<HTMLDivElement>(null);
@@ -358,6 +393,7 @@ function Faixa({
               janela={janela}
               largura={larguraDe(it)}
               reduzido={Boolean(reduzido)}
+              leve={leve}
             >
               {it.tipo === 'projeto'
                 ? (zoom) => (
@@ -439,6 +475,7 @@ export default function Work() {
           aoVer={setAoVivo}
           t={t}
           medidas={desktop ? MEDIDAS.desktop : MEDIDAS.toque}
+          leve={!desktop}
         />
 
         <div className="shell mt-[var(--space-9)]">

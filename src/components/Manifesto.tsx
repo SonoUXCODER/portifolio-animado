@@ -8,7 +8,7 @@ import TiltCard from './TiltCard';
 import Metodo from './Metodo';
 import { motion } from 'framer-motion';
 import { easeStandard } from '@/lib/motion';
-import { Acende, Counter, Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Reveal';
+import { Acende, Lines, Parallax, Reveal, RevealGroup } from './Reveal';
 
 /* -------------------------------------------------------------------------
    MANIFESTO.
@@ -16,12 +16,19 @@ import { Acende, Counter, Lines, Parallax, Reveal, RevealGroup, RevealItem } fro
    A seção "sobre" de um portfólio quase sempre falha do mesmo jeito: vira
    uma lista de adjetivos sobre a pessoa. Aqui ela é uma afirmação sobre o
    *material* — "code is my material" — e o resto da seção é a prova de que
-   a frase tem lastro: o método em quatro tempos, e quatro números que se
-   contam sozinhos a partir dos arquivos de dados.
+   a frase tem lastro: o método em quatro tempos, escrito como documento.
 
-   Nenhum número é digitado à mão. Acrescentar um projeto em data/projects
-   muda a estatística aqui, no rodapé e no sitemap, e nada mais precisa ser
-   lembrado. É a diferença entre um número que envelhece e um que não.
+   >>> A RÉGUA DE NÚMEROS SAIU <<<
+   Havia quatro estatísticas grandes no pé da seção — produtos entregues,
+   anos construindo, ferramentas em produção e idiomas. As três primeiras
+   saíram porque número redondo em portfólio é a coisa mais fácil de
+   inventar que existe, e quem lê sabe disso: elas pediam confiança sem dar
+   nada em troca. A quarta saiu junto porque um número sozinho numa faixa
+   feita pra quatro não é composição, é sobra — e os idiomas já estão na
+   régua técnica do hero, onde são verificáveis pelo próprio site.
+
+   O que prova o lastro continua aqui e é mais difícil de falsificar: o
+   método, o retrato, e cinco estudos de caso a uma rolagem daqui.
 
    A cadeia DESIGN → SYSTEM → BUILD → SHIP fica embaixo do texto e não é
    decoração: é a resposta curta pra única pergunta que um cliente faz antes
@@ -36,16 +43,8 @@ const cadeiaLegado = [
 ];
 
 export default function Manifesto() {
-  const { t, tools } = useConteudo();
+  const { t } = useConteudo();
   const cadeia = t.manifesto.chain;
-  const anos = new Date().getFullYear() - identity.startYear;
-
-  const estatisticas: Array<{ valor: number; sufixo?: string; rotulo: string }> = [
-    { valor: identity.shipped, sufixo: '+', rotulo: t.manifesto.stats.shipped },
-    { valor: anos, sufixo: '+', rotulo: t.manifesto.stats.years },
-    { valor: tools.length, rotulo: t.manifesto.stats.tools },
-    { valor: 3, rotulo: t.manifesto.stats.languages },
-  ];
 
   return (
     <section
@@ -172,29 +171,6 @@ export default function Manifesto() {
         </div>
       </div>
 
-      {/* ================= os números ================= */}
-      <RevealGroup
-        as="dl"
-        className="mt-[var(--space-10)] grid grid-cols-2 gap-x-[var(--space-5)] gap-y-[var(--space-8)] border-t pt-[var(--space-6)] lg:grid-cols-4"
-        style={{ borderColor: 'var(--line)' }}
-      >
-        {estatisticas.map((e, i) => (
-          /* `flex-col-reverse` põe o número em cima sem inverter o HTML: em
-             <dl> o <dt> tem de vir antes do <dd>, e um leitor de tela que
-             recebesse "05" antes de "products shipped" leria um número solto.
-
-             O atraso crescente faz os quatro baterem um depois do outro em
-             vez de juntos. Quatro números aparecendo ao mesmo tempo é um
-             evento; quatro em sequência são quatro eventos, e é isso que
-             segura a atenção pelo tempo que a seção dura. */
-          <RevealItem key={e.rotulo} className="flex flex-col-reverse" style={{ transitionDelay: `${i * 90}ms` }}>
-            <dt className="label mt-[var(--space-4)]">{e.rotulo}</dt>
-            <dd className="numeral text-[clamp(3.5rem,8vw,7rem)]">
-              <Counter to={e.valor} suffix={e.sufixo} pad={2} />
-            </dd>
-          </RevealItem>
-        ))}
-      </RevealGroup>
     </section>
   );
 }

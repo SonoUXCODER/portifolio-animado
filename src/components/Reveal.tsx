@@ -169,6 +169,54 @@ export function Parallax({
   );
 }
 
+/* -------------------------------------------------------------------------
+   FILETE QUE SE DESENHA
+
+   O traço horizontal que atravessa a linha de abertura de cada capítulo
+   deixa de estar lá e passa a ser **traçado**, da esquerda pra direita,
+   quando o capítulo entra na tela.
+
+   Por que aqui e não em qualquer régua da página: o filete de abertura é o
+   único elemento que se repete idêntico em cinco lugares, e é ele que faz
+   as cinco aberturas parecerem partes do mesmo documento. Fazendo ele ser
+   desenhado, o capítulo passa a **começar** — a leitura ganha um gesto de
+   régua encostada no papel em vez de um cabeçalho que já estava pronto.
+
+   >>> POR QUE UM ELEMENTO POR DENTRO, E NÃO scaleX NO PRÓPRIO FILETE <<<
+   O filete de fora é `flex: 1` e é ele que empurra o texto da nota até a
+   margem. Escalar esse elemento faria a largura dele mudar durante a
+   animação, e a nota andaria junto — o capítulo abriria com o texto
+   escorregando. O de fora continua ocupando o espaço todo desde o primeiro
+   quadro; quem se move é o traço pintado por dentro dele.
+
+   `scaleX` numa origem à esquerda é transformação pura: sem layout, sem
+   pintura, uma linha só de trabalho pra GPU. Roda uma vez, `once: true`.
+   ------------------------------------------------------------------------- */
+
+export function Filete({ className }: { className?: string }) {
+  const reduced = useReducedMotion();
+
+  return (
+    /* o container perde a própria cor: ele só reserva o espaço, e quem
+       pinta é o traço de dentro */
+    <span aria-hidden="true" className={cn('index-line__rule', className)} style={{ background: 'none' }}>
+      <motion.span
+        className="block h-full w-full origin-left"
+        style={{ background: 'var(--line)' }}
+        initial={reduced ? { opacity: 0 } : { scaleX: 0 }}
+        whileInView={reduced ? { opacity: 1 } : { scaleX: 1 }}
+        /* `amount: 0` e não a fração de sempre: o alvo tem 1px de altura, e
+           pedir "60% dele visível" a um observador é pedir 0.6px — uma conta
+           que depende de arredondamento de subpixel pra disparar. Qualquer
+           pixel serve, e a abertura do capítulo já está em cena quando isso
+           acontece. */
+        viewport={{ once: true, amount: 0 }}
+        transition={{ duration: reduced ? duration.fast : 1.15, ease: easeStandard }}
+      />
+    </span>
+  );
+}
+
 /* ---------- traço que se desenha com a rolagem ----------
    Usado na linha do tempo. `scaleY` num elemento de 1px é barato e
    composita na GPU. */
@@ -474,7 +522,14 @@ export function Counter({
    Interpolar `color` obriga o navegador a repintar o texto a cada quadro, e
    repintar texto é das coisas mais caras que existem. Então a cor é
    escrita uma vez em `--text-primary` e quem varia é a opacidade, que
-   composita. Detalhes de amplitude e do halo estão em <Palavra/>.
+   composita. A mesma regra derrubou o halo que existia aqui; a conta está
+   em <Palavra/>.
+
+   >>> UM SÓ POR PARÁGRAFO, E SÓ ENQUANTO ELE PASSA <<<
+   `useScroll` com alvo é barato, mas não de graça: são seis parágrafos, e
+   cada palavra é um MotionValue derivado. A janela de meia tela mantém o
+   trabalho concentrado no parágrafo que está sendo lido — fora dela o
+   valor não muda, e MotionValue que não muda não escreve no DOM.
    ------------------------------------------------------------------------- */
 
 function Palavra({
@@ -486,42 +541,40 @@ function Palavra({
   progresso: MotionValue<number>;
   faixa: [number, number];
 }) {
-  const meio = (faixa[0] + faixa[1]) / 2;
-
   /* -----------------------------------------------------------------------
-     O BRILHO ERA FRACO POR DOIS MOTIVOS, E SÓ UM ERA A OPACIDADE.
+     O HALO SAIU. ERA ELE QUE FAZIA A PÁGINA TREMER.
 
-     O outro é que a palavra "acesa" terminava em `--text-secondary`, o cinza
-     de corpo de texto, porque é o que a classe `.body` define. Ou seja: o
-     trabalho todo de acender levava de um cinza apagado até um cinza. A cor
-     agora é fixada em `--text-primary` e quem varia é só a opacidade, então
-     a mesma animação passa a percorrer de quase invisível até o bone cheio.
-     Continua sendo uma propriedade animada por palavra, e a amplitude
-     triplicou.
+     A palavra acesa tinha, além da opacidade, um clarão em acento feito com
+     `text-shadow` interpolado dentro da janela de cada palavra. Na tela era
+     bonito. No profiler era o item mais caro do site inteiro, por três
+     motivos que se multiplicam:
 
-     Em cima disso entra o clarão: um halo em acento que sobe e desce dentro
-     da janela de cada palavra, com o pico no meio da passagem. É ele que dá
-     a sensação de a palavra estar sendo acesa em vez de revelada.
+       1. `text-shadow` não composita. Cada quadro em que o valor muda é um
+          **repaint do texto**, e repintar texto é das operações mais caras
+          que um navegador faz.
+       2. Não era uma palavra: cada <Acende/> tem 30 a 50 delas, e a página
+          tem seis <Acende/>. A "janela" garantia que só um punhado estava
+          em transição por vez, mas um punhado de repaints por quadro já
+          basta pra estourar o orçamento de 16ms.
+       3. Isso acontecia **durante a rolagem**, empilhado com a mola do
+          Lenis, o recorte da <Passagem/> e o WebGL do intervalo. Era o
+          quadro perdido que aparecia como tremedeira, e como o efeito mora
+          nos parágrafos que ficam ao lado de cada título, ele tremia
+          justamente onde a pessoa estava lendo.
 
-     O halo é a única coisa cara aqui — `text-shadow` repinta o texto — e por
-     isso ele começa e termina em zero: fora da janela de transição a
-     propriedade é `none` e não custa nada. A qualquer momento só um punhado
-     de palavras está no meio da faixa.
+     Ficou a opacidade, que é o efeito de verdade: 0.08 a 1 é um percurso de
+     quase invisível até o bone cheio, e opacidade a GPU resolve numa camada
+     sem tocar no texto. A cor continua fixa em `--text-primary` pelo mesmo
+     motivo de sempre — interpolar `color` repinta igual ao halo.
+
+     Se um dia o clarão voltar, ele tem de ser um elemento por trás do
+     texto, não uma propriedade do texto.
      ----------------------------------------------------------------------- */
   const opacity = useTransform(progresso, faixa, [0.08, 1]);
-  const halo = useTransform(
-    progresso,
-    [faixa[0], meio, faixa[1]],
-    [
-      '0 0 0px rgba(226,103,63,0)',
-      '0 0 24px rgba(226,103,63,0.85)',
-      '0 0 0px rgba(226,103,63,0)',
-    ],
-  );
 
   return (
     <motion.span
-      style={{ opacity, textShadow: halo, color: 'var(--text-primary)' }}
+      style={{ opacity, color: 'var(--text-primary)' }}
       className="inline-block whitespace-pre"
     >
       {children}

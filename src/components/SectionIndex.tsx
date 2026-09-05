@@ -2,6 +2,7 @@
 
 import type { SectionId } from '@/content';
 import { useConteudo } from './ContentProvider';
+import { Filete } from './Reveal';
 
 /* -------------------------------------------------------------------------
    A linha que abre cada capítulo: `ABOUT ———— one person, two disciplines`.
@@ -18,7 +19,10 @@ import { useConteudo } from './ContentProvider';
    forma mude.
 
    O filete que atravessa até a margem é o que ancora a linha na grade e faz
-   cinco aberturas idênticas parecerem parte do mesmo documento.
+   cinco aberturas idênticas parecerem parte do mesmo documento. Ele é
+   traçado quando o capítulo entra na tela, e não desenhado de uma vez: o
+   capítulo passa a começar em vez de já estar lá. A mecânica está em
+   <Filete/>, em Reveal.tsx.
    ------------------------------------------------------------------------- */
 
 export default function SectionIndex({ id, note }: { id: SectionId; note?: string }) {
@@ -28,7 +32,7 @@ export default function SectionIndex({ id, note }: { id: SectionId; note?: strin
   return (
     <p className="index-line">
       <span style={{ color: 'var(--text-primary)' }}>{section?.name ?? id}</span>
-      <span className="index-line__rule" aria-hidden="true" />
+      <Filete />
       <span className="hidden sm:inline">{note ?? section?.note}</span>
     </p>
   );

@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { Acende, Lines } from './Reveal';
+import { Acende, Filete, Lines } from './Reveal';
 import { useT } from './ContentProvider';
 
 /* -------------------------------------------------------------------------
@@ -52,7 +52,7 @@ export default function Philosophy() {
       <motion.div className="shell" style={reduzido ? undefined : { y }}>
         <p className="index-line">
           <span style={{ color: 'var(--text-primary)' }}>{t.philosophy.label}</span>
-          <span className="index-line__rule" aria-hidden="true" />
+          <Filete />
         </p>
 
         <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-7)]">

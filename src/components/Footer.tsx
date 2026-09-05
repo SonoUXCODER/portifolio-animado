@@ -2,7 +2,7 @@
 
 import { identity } from '@/content';
 import { useT } from './ContentProvider';
-import { Reveal } from './Reveal';
+import { Parallax, Reveal } from './Reveal';
 
 /* -------------------------------------------------------------------------
    RODAPÉ.
@@ -24,21 +24,31 @@ export default function Footer() {
   const canais = identity.social.filter((s) => s.href.startsWith('http'));
 
   return (
-    <footer className="shell pb-[var(--space-7)] pt-[var(--space-9)]">
-      {/* ---- a assinatura ---- */}
-      <Reveal direction="none">
-        <p
-          aria-hidden="true"
-          className="numeral select-none"
-          style={{
-            fontSize: 'clamp(4.5rem, 27vw, 24rem)',
-            lineHeight: 0.78,
-            color: 'var(--text-primary)',
-          }}
-        >
-          {identity.name}
-        </p>
-      </Reveal>
+    <footer className="shell overflow-clip pb-[var(--space-7)] pt-[var(--space-9)]">
+      {/* ---- a assinatura ----
+           Ela sobe mais devagar que o resto do rodapé enquanto a página
+           chega ao fim. É pouco — 26px de curso — e é o suficiente pra o
+           ponto final da página ser **alcançado** em vez de já estar
+           parado esperando: as letras ainda estão assentando quando a
+           rolagem acaba, e é o último movimento do site.
+
+           `overflow-clip` no rodapé porque a assinatura sangra na largura
+           inteira e o deslocamento a empurra por baixo da margem. */}
+      <Parallax strength={26}>
+        <Reveal direction="none">
+          <p
+            aria-hidden="true"
+            className="numeral select-none"
+            style={{
+              fontSize: 'clamp(4.5rem, 27vw, 24rem)',
+              lineHeight: 0.78,
+              color: 'var(--text-primary)',
+            }}
+          >
+            {identity.name}
+          </p>
+        </Reveal>
+      </Parallax>
 
       {/* ---- a régua ---- */}
       <div
