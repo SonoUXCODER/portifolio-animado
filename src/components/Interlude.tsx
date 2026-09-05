@@ -308,24 +308,33 @@ export default function Interlude({ peca }: { peca: Peca }) {
            estava sendo pedida dezenas de vezes por segundo, no meio do
            gesto de rolagem, com o estilhaço já ocupando a GPU.
 
-           Duas guardas resolvem:
+           >>> ADIAR NÃO É IGNORAR <<<
+           A primeira tentativa de conserto foi uma histerese: mudança só de
+           altura, e menor que 64px, era descartada. Resolvia o tranco e
+           criava um defeito pior — se o palco montasse com uma altura e
+           assentasse 50px adiante, aquela diferença **nunca** era aplicada,
+           o aspecto ficava errado pra sempre e a escultura aparecia
+           esticada. Um efeito que some é melhor que um que fica torto.
 
-             coalescer   várias mudanças no mesmo quadro viram uma. O
-                         ResizeObserver dispara em rajada; sem isto, uma
-                         rajada de seis vira seis realocações.
-             histerese   mudança só de altura, e pequena, é a barra do
-                         navegador — não é a tela virando. Ignorar até 64px
-                         de variação vertical cobre a barra de qualquer
-                         telefone; a largura continua com tolerância de 1px,
-                         porque largura mudando é rotação de verdade.
+           O que vale é adiar, não descartar:
 
-           O custo de ignorar é que o aspecto fica até 64px errado enquanto
-           a barra está a meio caminho, o que numa escultura centralizada é
-           literalmente invisível.
+             largura   aplica no quadro seguinte. Largura mudando é rotação
+                       de tela ou janela sendo arrastada — coisa rara, e que
+                       precisa de resposta imediata.
+             altura    aplica 220ms depois de **parar** de mudar. Enquanto a
+                       barra do navegador está em movimento o timer é
+                       reiniciado e nada é realocado; quando ela assenta, o
+                       tamanho correto entra. O canvas passa a rolagem com
+                       o aspecto de antes e converge sempre.
+
+           A coalescência por quadro continua no caminho da largura: o
+           ResizeObserver dispara em rajada, e sem ela uma rajada de seis
+           vira seis realocações.
            ------------------------------------------------------------- */
-        let larguraAnterior = larg();
         let alturaAnterior = alt();
+        let larguraAnterior = larg();
         let rafResize = 0;
+        let timerAltura = 0;
 
         const aplicarTamanho = () => {
           rafResize = 0;
@@ -339,14 +348,20 @@ export default function Interlude({ peca }: { peca: Peca }) {
           camera.aspect = l / a;
           camera.updateProjectionMatrix();
         };
+        const agendar = () => {
+          if (!rafResize) rafResize = requestAnimationFrame(aplicarTamanho);
+        };
 
         const redimensionar = () => {
-          const l = larg();
-          const a = alt();
-          const mudouLargura = Math.abs(l - larguraAnterior) > 1;
-          const mudouAltura = Math.abs(a - alturaAnterior) > 64;
-          if (!mudouLargura && !mudouAltura) return;
-          if (!rafResize) rafResize = requestAnimationFrame(aplicarTamanho);
+          if (Math.abs(larg() - larguraAnterior) > 1) {
+            window.clearTimeout(timerAltura);
+            timerAltura = 0;
+            agendar();
+            return;
+          }
+          if (Math.abs(alt() - alturaAnterior) <= 1) return;
+          window.clearTimeout(timerAltura);
+          timerAltura = window.setTimeout(agendar, 220);
         };
         const ro = new ResizeObserver(redimensionar);
         ro.observe(caixa);
@@ -571,6 +586,7 @@ export default function Interlude({ peca }: { peca: Peca }) {
           parar: () => {
             desligar();
             if (rafResize) cancelAnimationFrame(rafResize);
+            window.clearTimeout(timerAltura);
             obsVis.disconnect();
             ro.disconnect();
             document.removeEventListener('visibilitychange', visibilidade);

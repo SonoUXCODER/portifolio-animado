@@ -113,19 +113,19 @@ export default function Nav() {
             <div className="flex items-center gap-[var(--space-4)]">
               <LanguageSwitcher className="hidden sm:flex" />
 
-              {/* ---- estado ao vivo ----
-                   O único elemento da faixa que não é navegação. Ele está
-                   aqui porque é a informação que decide se a pessoa vai até
-                   o fim da página: se dá pra contratar agora. */}
-              <span className="label hidden items-center gap-[var(--space-2)] md:inline-flex">
-                <span
-                  aria-hidden="true"
-                  data-pause
-                  className="pulso block h-[6px] w-[6px] rounded-full"
-                  style={{ background: 'var(--accent)' }}
-                />
-                {t.ui.available}
-              </span>
+              {/* ---- o "disponível" saiu daqui ----
+                   Era um ponto em acento e a palavra, fixos na faixa. A
+                   justificativa era boa no papel — é a informação que decide
+                   se a pessoa escreve — e o efeito na tela era o oposto:
+                   ponto colorido pulsando ao lado de "DISPONÍVEL PARA
+                   PROJETOS", grudado no topo de todas as telas, é o
+                   maneirismo mais copiado de landing page gerada que existe.
+                   Ele fazia a faixa inteira parecer template.
+
+                   A informação não se perdeu: o contato diz o tempo de
+                   resposta e a forma de trabalho, com a régua de quatro
+                   dados no pé da seção, e lá ela chega para quem já viu o
+                   trabalho — que é quando ela vale alguma coisa. */}
 
               <button
                 type="button"

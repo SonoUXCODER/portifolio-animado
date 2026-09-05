@@ -69,10 +69,6 @@ export const ptProjects: Record<string, ProjectCopy> = {
         alt: 'Página inteira da PHOBIACORI, da capa até o rodapé, loja e arquivo juntos',
         caption: 'Loja e arquivo na mesma página',
       },
-      {
-        alt: 'Detalhe do topo da loja, com o menu e o contador do carrinho',
-        caption: 'Nanquim, xerox e teimosia',
-      },
     ],
   },
 
@@ -144,7 +140,6 @@ export const ptProjects: Record<string, ProjectCopy> = {
         alt: 'Tela do editor do knifes.me, com a prévia ao vivo ao lado dos controles',
         caption: 'Muda aqui, vê na hora',
       },
-      { alt: 'Perfil completo gerado pelo knifes.me', caption: 'knifes.me/seunome' },
     ],
   },
 
@@ -209,10 +204,6 @@ export const ptProjects: Record<string, ProjectCopy> = {
         alt: 'Página inteira do salão, com a tabela de serviços e o bloco de agendamento',
         caption: 'Preço em CHF, sem letra miúda',
       },
-      {
-        alt: 'Detalhe do topo do site do salão, com o seletor de idioma',
-        caption: 'DE / EN / PT atrás de um controle só',
-      },
     ],
   },
 
@@ -274,7 +265,7 @@ export const ptProjects: Record<string, ProjectCopy> = {
     coverAlt: 'Home do site da Dra. Thayse Marques, com retrato e o menu das áreas do direito',
     gallery: [
       { alt: 'Página inteira do escritório, do topo ao rodapé', caption: 'A página inteira, de cima a baixo' },
-      { alt: 'Detalhe do topo do site do escritório', caption: 'Onde o primeiro minuto é decidido' },
+
     ],
   },
 
@@ -335,7 +326,7 @@ export const ptProjects: Record<string, ProjectCopy> = {
     ],
     coverAlt: 'Home da Truffle N.B. Tricolore',
     gallery: [
-      { alt: 'Topo do site da Truffle N.B.', caption: 'Ferrugem, terra e um respiro' },
+
       { alt: 'Página inteira da Truffle N.B. Tricolore', caption: 'Só o que a safra tem de verdade' },
     ],
   },

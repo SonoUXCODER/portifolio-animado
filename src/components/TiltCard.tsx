@@ -36,8 +36,22 @@ export default function TiltCard({
   children,
   /** inclinação máxima em graus */
   strength = 9,
+  /* -----------------------------------------------------------------------
+     ROTAÇÃO DE REPOUSO: ZERO, E ESSE É O PADRÃO.
+
+     Era -3°. A intenção era o cartão torto do knifes.me, "objeto largado na
+     mesa" em vez de figura alinhada. Numa foto de rosto isso não lê como
+     objeto: lê como foto **de lado**, ou como enquadramento errado — e o
+     retrato é a única imagem do site em que a pessoa procura o olhar, não a
+     composição. Um retrato torto num portfólio é lido como defeito antes de
+     ser lido como estilo.
+
+     O gesto que importa continua inteiro: o cartão inclina em direção ao
+     ponteiro, se eleva e acende o brilho. O que sai é só a torção que
+     existia mesmo com ninguém olhando.
+     ----------------------------------------------------------------------- */
   /** rotação de repouso, em graus */
-  rest = -3,
+  rest = 0,
   className,
 }: {
   children: ReactNode;

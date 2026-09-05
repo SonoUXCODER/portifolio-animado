@@ -623,36 +623,6 @@
     animation: gira var(--dur, 22s) linear infinite;
   }
 
-  /* =======================================================================
-     O PONTO DE DISPONIBILIDADE RESPIRA
-
-     Ele é a única informação da navegação que não é navegação: diz se dá
-     pra contratar agora. Parado, era um marcador; pulsando, é um sinal —
-     e é a diferença entre "isto está escrito aqui" e "isto está valendo
-     agora". É o mesmo vocabulário de um LED de gravação, e é a razão de o
-     ciclo ser longo (2.6s) e a amplitude pequena: um pisca-pisca rápido
-     na barra fixa vira tique nervoso em dez segundos de leitura.
-
-     Quem pulsa é o halo, um pseudo-elemento por trás — não o ponto. Animar
-     `scale` e `opacity` de um elemento próprio composita na GPU; animar o
-     ponto faria a caixa dele mudar e empurraria o texto ao lado.
-
-     Marcado com `data-pause`, então para quando sai da tela ou a aba
-     esconde, como todo loop deste site.
-     ======================================================================= */
-
-  .pulso {
-    position: relative;
-  }
-  .pulso::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 9999px;
-    background: var(--accent);
-    animation: pulso 2.6s var(--ease-standard) infinite;
-  }
-
   .tipo-elastico span {
     font-variation-settings: 'wdth' 62;
     transition: font-variation-settings var(--duration-slow) var(--ease-standard),
@@ -667,24 +637,6 @@
 @keyframes gira {
   to {
     transform: rotate(360deg);
-  }
-}
-
-/* o halo do ponto de disponibilidade: abre, apaga, e fica um bom tempo em
-   nada antes de recomeçar. A pausa no fim é o que impede o pulso de virar
-   tique — ver a explicação em `.pulso`. */
-@keyframes pulso {
-  0% {
-    transform: scale(1);
-    opacity: 0.55;
-  }
-  55% {
-    transform: scale(3.2);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(3.2);
-    opacity: 0;
   }
 }
 

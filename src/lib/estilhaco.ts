@@ -64,38 +64,40 @@ export function prepararEstilhaco(THREE: typeof THREE_NS, raiz: THREE_NS.Object3
        Os dois são escritos igual nos três vértices do triângulo, e é essa
        igualdade que faz os três andarem juntos como um caco só.
 
-       >>> O LAÇO LÊ O ARRAY CRU, E ISSO NÃO É MICRO-OTIMIZAÇÃO <<<
-       A versão anterior usava `pos.getX(i)` e companhia. São nove chamadas
-       de método por triângulo, e no Klio são 135 mil triângulos: **1,2
-       milhão de chamadas**, cada uma com o cálculo de deslocamento do
-       `itemSize` dentro. Rodando na linha principal, colado no parse do
-       .glb, era a pausa longa que aparecia como a página travando por um
-       instante quando a escultura chegava perto — o "às vezes ela trava"
-       do desktop, que acontecia sempre no mesmo lugar da rolagem e por
-       isso parecia aleatório.
+       >>> LEIA COM getX(), NUNCA COM pos.array <<<
+       Já tentei trocar as chamadas por acesso direto ao array, atrás do
+       argumento de que são 1,2 milhão de chamadas de método no Klio e que
+       o laço ficaria várias vezes mais rápido. O laço ficou. A escultura
+       quebrou inteira, e a razão está nos próprios arquivos:
 
-       Ler `pos.array` direto é a mesma conta sem a indireção: o motor
-       consegue manter tudo em registrador, e o laço fica várias vezes mais
-       rápido. Continua sendo trabalho síncrono e continua custando — mas
-       passa a caber numa pausa que ninguém percebe, em vez de uma que
-       atravessa vários quadros.
+         extensionsUsed: EXT_meshopt_compression, KHR_mesh_quantization
+         POSITION: componentType=SHORT, normalized=true, byteStride=8
 
-       `pos.array` é sempre Float32Array aqui: `toNonIndexed()` devolve
-       BufferAttribute comum, e o GLTFLoader não entrega posição
-       quantizada sem passar pelo decodificador, que já expandiu. */
+       Ou seja, a posição **não é Float32**. É um inteiro de 16 bits com
+       `normalized: true`, e quem desfaz a quantização é justamente o
+       `getX()`, que divide por 32767. Lendo o array cru vinham valores na
+       casa dos milhares no lugar de frações de unidade: todo centroide
+       saía cerca de 32 mil vezes maior que a peça, e como o shader começa
+       em `uExplodir = 1`, a escultura nascia estourada em geometria
+       astronômica e nunca se montava.
+
+       `toNonIndexed()` não salva disso — ele copia os atributos
+       preservando tipo e normalização — e o `byteStride` de 8 ainda
+       abre a possibilidade de o atributo chegar interleaved, em que
+       `array` é o buffer inteiro e o passo nem sequer é 3.
+
+       O custo das chamadas é real e continua aqui. Ele é pago com o quadro
+       de folga que <Interlude/> cede antes de chamar esta função, e não
+       com uma leitura que assume um formato que os arquivos não têm. */
     const pos = geo.getAttribute('position');
     const total = pos.count;
-    const p = pos.array as ArrayLike<number>;
     const centroides = new Float32Array(total * 3);
     const sementes = new Float32Array(total);
 
     for (let i = 0; i < total; i += 3) {
-      const a = i * 3;
-      const b = a + 3;
-      const c = a + 6;
-      const cx = (p[a] + p[b] + p[c]) / 3;
-      const cy = (p[a + 1] + p[b + 1] + p[c + 1]) / 3;
-      const cz = (p[a + 2] + p[b + 2] + p[c + 2]) / 3;
+      const cx = (pos.getX(i) + pos.getX(i + 1) + pos.getX(i + 2)) / 3;
+      const cy = (pos.getY(i) + pos.getY(i + 1) + pos.getY(i + 2)) / 3;
+      const cz = (pos.getZ(i) + pos.getZ(i + 1) + pos.getZ(i + 2)) / 3;
 
       /* Semente determinística, tirada da própria posição do triângulo.
          Com Math.random() a peça se desmontaria diferente a cada visita, e

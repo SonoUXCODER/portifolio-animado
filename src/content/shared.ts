@@ -83,7 +83,6 @@ export const projectShapes: ProjectShape[] = [
     cover: { src: '/assets/projetos/phobia-cover.webp', width: 3150, height: 1969 },
     gallery: [
       { src: '/assets/projetos/phobia-long.webp', width: 1400, height: 4400 },
-      { src: '/assets/projetos/phobia-cover.webp', width: 3150, height: 1969 },
     ],
     paletteHex: ['#0B0A09', '#F4F0E6', '#E6E0D2', '#B8352A', '#D9A520'],
     typeFamilies: ['Archivo Black', 'Space Mono', 'Inter'],
@@ -100,7 +99,6 @@ export const projectShapes: ProjectShape[] = [
     cover: { src: '/assets/projetos/knifes-long.webp', width: 1400, height: 4400 },
     gallery: [
       { src: '/assets/projetos/knifes-cover.webp', width: 3150, height: 1969 },
-      { src: '/assets/projetos/knifes-long.webp', width: 1400, height: 4400 },
     ],
     paletteHex: ['#050507', '#1B0A33', '#A94DFF', '#7300FF', '#FFFFFF'],
     typeFamilies: ['Inter Tight', 'Inter', 'System mono'],
@@ -116,7 +114,6 @@ export const projectShapes: ProjectShape[] = [
     cover: { src: '/assets/projetos/sandra-cover.webp', width: 3150, height: 1969 },
     gallery: [
       { src: '/assets/projetos/sandra-long.webp', width: 1400, height: 4400 },
-      { src: '/assets/projetos/sandra-cover.webp', width: 3150, height: 1969 },
     ],
     paletteHex: ['#120C09', '#C9A15B', '#B4883E', '#E8CE96', '#FFF7E4'],
     typeFamilies: ['Serif display', 'Humanist sans', 'Tabular sans'],
@@ -132,7 +129,6 @@ export const projectShapes: ProjectShape[] = [
     cover: { src: '/assets/projetos/thayse-cover.webp', width: 3150, height: 1969 },
     gallery: [
       { src: '/assets/projetos/thayse-long.webp', width: 1400, height: 4400 },
-      { src: '/assets/projetos/thayse-cover.webp', width: 3150, height: 1969 },
     ],
     paletteHex: ['#120E0D', '#F3EFE7', '#E9E1D3', '#E88A96', '#FCFAF6'],
     typeFamilies: ['Transitional serif', 'Neutral sans', 'Tabular sans'],
@@ -147,7 +143,6 @@ export const projectShapes: ProjectShape[] = [
     stack: ['React', 'Vite', 'TypeScript', 'CSS Modules'],
     cover: { src: '/assets/projetos/fg-cover.webp', width: 3150, height: 1969 },
     gallery: [
-      { src: '/assets/projetos/fg-cover.webp', width: 3150, height: 1969 },
       { src: '/assets/projetos/fg-long.webp', width: 1400, height: 4400 },
     ],
     paletteHex: ['#8C3227', '#C89B4B', '#E8C87E', '#F7F1E3', '#FFFDF7'],

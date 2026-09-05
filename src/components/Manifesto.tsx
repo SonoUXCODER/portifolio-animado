@@ -76,10 +76,14 @@ export default function Manifesto() {
       <div className="grid-12 mt-[var(--space-10)] gap-y-[var(--space-8)]">
         <div className="col-span-12 sm:col-span-6 lg:col-span-4">
           {/* O retrato é a única peça da página que reage ao cursor como um
-              objeto: o mesmo gesto do knifes.me, cartão torto que inclina
-              em direção ao ponteiro. Aqui ele ganha função além do charme —
-              é o que impede a foto de virar mais um retângulo numa página
-              cheia deles. */}
+              objeto: o cartão inclina em direção ao ponteiro, se eleva e
+              acende. Aqui isso ganha função além do charme — é o que impede
+              a foto de virar mais um retângulo numa página cheia deles.
+
+              Em repouso ele fica **reto**. A versão anterior deixava o
+              cartão com 3° de torção parado, e num retrato isso lê como
+              foto de lado, não como objeto largado na mesa. A explicação
+              está no `rest` de <TiltCard/>. */}
           <Parallax strength={30}>
             {/* centralizada na coluna: com `max-w` sozinho ela encostava na
                 margem esquerda e sobrava um vão à direita que não era

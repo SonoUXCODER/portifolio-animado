@@ -271,7 +271,23 @@ function Cartao({
           ))}
         </p>
 
-        <p className="body mt-[var(--space-5)] max-w-[42ch]">{project.summary}</p>
+        {/* A descrição do projeto sai do cinza de corpo de texto.
+
+            `.body` pinta em `--text-secondary`, que é #8c8c8c — o cinza que
+            serve pra parágrafo longo ao lado de um título de display, onde
+            o texto tem de recuar. Aqui é o contrário: esta é a única frase
+            que diz **o que o projeto é**, ela está no cartão que decide se
+            a pessoa clica, e estava mais apagada que a lista de disciplinas
+            logo acima dela. Hierarquia invertida.
+
+            Agora ela vem em `--text-primary`, o mesmo bone do nome do
+            projeto — que é o branco desta paleta. */}
+        <p
+          className="body mt-[var(--space-5)] max-w-[42ch]"
+          style={{ color: 'var(--text-primary)' }}
+        >
+          {project.summary}
+        </p>
 
         {/* A nota é a primeira coisa a sair quando a tela é baixa: ela é
             voz, não informação de decisão, e existe inteira no estudo de

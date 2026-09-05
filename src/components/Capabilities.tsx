@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useConteudo } from './ContentProvider';
 import SectionIndex from './SectionIndex';
-import Visual from './Visual';
 import { Acende, Lines } from './Reveal';
 import InlineCta from './InlineCta';
 import { duration, easeStandard } from '@/lib/motion';
@@ -13,24 +12,19 @@ import { duration, easeStandard } from '@/lib/motion';
    WHAT I DO.
 
    Seis linhas em tipografia de display. A que está aberta mostra o que sai
-   da minha mão e um estudo rodando ao vivo, num quadro do tamanho de uma
-   figura.
+   da minha mão, escrito: o resumo, o parágrafo, e a lista de entregáveis.
 
-   >>> O QUE FOI DESFEITO AQUI <<<
-   A primeira versão punha o estudo como **fundo da seção inteira**, em
-   opacidade baixa, trocando a cada hover. Parecia boa ideia no papel e era
-   ruim na tela por três motivos, todos visíveis:
+   >>> OS ESTUDOS ANIMADOS SAÍRAM, E NÃO VOLTAM <<<
+   Esta seção já teve seis padrões geométricos rodando ao vivo, um por
+   capacidade — grade, listras, órbita, moiré, grafo, ASCII. Primeiro como
+   fundo da seção inteira, depois reduzidos a uma faixa dentro do item
+   aberto. As duas versões foram removidas, e a segunda pelo motivo mais
+   forte: abstração geométrica animada não diz nada sobre o trabalho ao
+   lado dela, e virou o vocabulário visual que todo site gerado usa. A
+   figura estava ali dando a impressão de prova sem provar nada.
 
-     1. moiré e listra diagonal em tela cheia atrás de texto pequeno é
-        ruído, não atmosfera: a lista ficava difícil de ler;
-     2. a troca acontecia a cada movimento do cursor, então havia algo se
-        transformando o tempo todo — e uma coisa acontecendo por vez é a
-        regra que sustenta o resto do site;
-     3. a grade que seguia o ponteiro escutava a janela inteira, então ela
-        se mexia com o cursor longe da seção, e isso lia como defeito.
-
-   Agora o estudo é uma figura: tem moldura, tem tamanho, e existe só no
-   item aberto. Mesmo conteúdo, um décimo do barulho.
+   O que ficou é mais difícil de falsificar do que qualquer animação: o que
+   eu entrego em cada disciplina, em texto específico.
 
    >>> AS DUAS INTERAÇÕES <<<
      passar o mouse   acende o título. Não abre nada, não mexe no layout,
@@ -166,58 +160,29 @@ export default function Capabilities() {
                     {/* ---------------------------------------------------
                         O PAINEL ABERTO
 
-                        Era duas colunas de texto com uma figurinha de 16:9
-                        espremida embaixo da lista, e parecia exatamente o
-                        que era: um acordeão. O estudo ao vivo, que é a única
-                        coisa nesta seção que ninguém mais tem, estava do
-                        tamanho de um selo.
+                        >>> A FAIXA DE ESTUDO SAIU <<<
+                        Havia aqui uma faixa de 21:9 com um estudo animado
+                        rodando — grade, listras, órbita, moiré, grafo,
+                        ASCII, um por capacidade. A ideia era mostrar
+                        "creative development" acontecendo em vez de
+                        escrever a palavra. O que ela mostrava de verdade
+                        era outra coisa: seis padrões geométricos abstratos
+                        que não têm relação com o trabalho listado logo
+                        abaixo deles, que é o vocabulário visual mais
+                        gasto que existe hoje e o que faz um portfólio
+                        parecer gerado.
 
-                        Agora ele é uma faixa de 21:9 atravessando a largura
-                        toda, e é a primeira coisa que abre. O texto vem
-                        depois, por baixo dela. A ordem importa: quem abre um
-                        item vê primeiro alguma coisa acontecendo, e só então
-                        lê o que aquilo é.
+                        O que prova capacidade nesta seção é o que sobrou:
+                        a frase do que sai da minha mão, o parágrafo que
+                        acende palavra a palavra, e a lista de entregáveis
+                        — coisas escritas, específicas, e que ninguém
+                        consegue produzir sem ter feito o trabalho.
 
-                        A faixa tem um degradê no pé pra o estudo dissolver
-                        no fundo em vez de terminar numa borda dura, e uma
-                        régua em acento no topo, que é a mesma que marca o
-                        item ativo na linha acima — a continuidade entre as
-                        duas é o que amarra painel e título.
+                        O texto passa a ser a primeira coisa que abre, e é
+                        a leitura certa: o item abre e já se lê.
                         --------------------------------------------------- */}
                     <div className="pb-[var(--space-8)] pl-0 sm:pl-[calc(var(--space-6)+var(--space-7))]">
-                      {!reduzido && (
-                        <motion.figure
-                          className="relative aspect-[21/9] w-full overflow-hidden"
-                          style={{ background: 'var(--surface)' }}
-                          initial={{ opacity: 0, scaleY: 0.72 }}
-                          animate={{ opacity: 1, scaleY: 1 }}
-                          transition={{ duration: 0.55, ease: easeStandard }}
-                        >
-                          <div className="absolute inset-0 opacity-60">
-                            <Visual kind={c.visual} />
-                          </div>
-
-                          {/* o estudo dissolve no fundo em vez de bater numa
-                              borda: sem isto a faixa vira uma caixa, e caixa
-                              é o vocabulário que esta seção estava tentando
-                              deixar pra trás */}
-                          <span
-                            aria-hidden="true"
-                            className="pointer-events-none absolute inset-0"
-                            style={{
-                              background:
-                                'linear-gradient(to bottom, transparent 35%, var(--background) 100%)',
-                            }}
-                          />
-                          <span
-                            aria-hidden="true"
-                            className="absolute inset-x-0 top-0 h-px"
-                            style={{ background: 'var(--accent)' }}
-                          />
-                        </motion.figure>
-                      )}
-
-                      <div className="grid-12 mt-[var(--space-6)] gap-y-[var(--space-6)]">
+                      <div className="grid-12 gap-y-[var(--space-6)]">
                         <div className="col-span-12 md:col-span-6">
                           {/* o resumo entra de baixo, e o parágrafo longo
                               acende palavra por palavra logo atrás: duas

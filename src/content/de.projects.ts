@@ -70,10 +70,6 @@ export const deProjects: Record<string, ProjectCopy> = {
         alt: 'Die ganze PHOBIACORI-Seite, vom Titel bis zum Fuss, Shop und Archiv zusammen',
         caption: 'Shop und Archiv auf derselben Seite',
       },
-      {
-        alt: 'Detail des Shop-Kopfs, mit Menü und Warenkorbzähler',
-        caption: 'Tusche, Fotokopie und Sturheit',
-      },
     ],
   },
 
@@ -145,7 +141,6 @@ export const deProjects: Record<string, ProjectCopy> = {
         alt: 'Editor-Ansicht von knifes.me, mit Live-Vorschau neben den Reglern',
         caption: 'Hier ändern, sofort sehen',
       },
-      { alt: 'Ein vollständiges Profil, erzeugt von knifes.me', caption: 'knifes.me/deinname' },
     ],
   },
 
@@ -210,10 +205,6 @@ export const deProjects: Record<string, ProjectCopy> = {
         alt: 'Die ganze Salonseite, mit Leistungstabelle und Terminblock',
         caption: 'Preise in CHF, ohne Kleingedrucktes',
       },
-      {
-        alt: 'Detail des Seitenkopfs mit dem Sprachumschalter',
-        caption: 'DE / EN / PT hinter einem Regler',
-      },
     ],
   },
 
@@ -275,7 +266,7 @@ export const deProjects: Record<string, ProjectCopy> = {
     coverAlt: 'Startseite von Dra. Thayse Marques, mit Porträt und Menü der Rechtsgebiete',
     gallery: [
       { alt: 'Die ganze Kanzleiseite, von oben bis unten', caption: 'Die ganze Seite, von oben bis unten' },
-      { alt: 'Detail des Seitenkopfs der Kanzlei', caption: 'Wo die erste Minute entschieden wird' },
+
     ],
   },
 
@@ -336,7 +327,7 @@ export const deProjects: Record<string, ProjectCopy> = {
     ],
     coverAlt: 'Startseite von Truffle N.B. Tricolore',
     gallery: [
-      { alt: 'Oberer Teil der Truffle-N.B.-Seite', caption: 'Rost, Erde und ein Atemzug Platz' },
+
       { alt: 'Die ganze Seite von Truffle N.B. Tricolore', caption: 'Nur was die Saison wirklich hat' },
     ],
   },

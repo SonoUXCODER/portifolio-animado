@@ -2,10 +2,11 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { fill, type Project } from '@/content';
+import { fill, type Media, type Project } from '@/content';
 import { useHref, useT } from './ContentProvider';
 import { TransitionLink } from './PageTransition';
 import LivePreview from './LivePreview';
+import Lightbox from './Lightbox';
 import Magnetic from './Magnetic';
 import InlineCta from './InlineCta';
 import { Lines, Parallax, Reveal, RevealGroup, RevealItem } from './Reveal';
@@ -49,6 +50,7 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
   const t = useT();
   const href = useHref();
   const [aoVivo, setAoVivo] = useState(false);
+  const [ampliada, setAmpliada] = useState<Media | null>(null);
 
   return (
     <article>
@@ -347,52 +349,64 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
           FINAL EXPERIENCE — galeria em rolagem horizontal
           ================================================================ */}
       <section className="mt-[var(--space-10)]">
+        {/* -------------------------------------------------------------
+            A GALERIA VIROU UMA CHAPA SÓ, E ELA ABRE.
+
+            Duas coisas estavam erradas aqui ao mesmo tempo.
+
+            A primeira: eram duas capturas lado a lado, e uma delas era
+            **literalmente a mesma imagem** que abre o estudo de caso alguns
+            metros de rolagem acima. A pessoa via o mesmo print duas vezes na
+            mesma página, com uma faixa de rolagem horizontal montada em
+            volta pra acomodar a repetição. Ficou a que não se repete: a
+            captura da página inteira do site no ar.
+
+            A segunda: a figura era marcada com `data-cursor="look"`, então o
+            cursor virava uma bolha escrita LOOK por cima dela — e não havia
+            clique nenhum. O único botão que funcionava era o "ver no ar".
+            Agora o clique abre a chapa em tela cheia, onde ela aparece
+            **inteira e rolável**: são 1400 x 4400, e no fluxo ela é cortada
+            em 72svh, então o visitante via o topo do site do cliente e mais
+            nada.
+
+            Com uma imagem só, some junto o contêiner de rolagem horizontal
+            (não há o que rolar) e a dica de "arraste ou use as setas", que
+            passaria a instruir um gesto que não existe mais.
+            ------------------------------------------------------------- */}
         <div className="shell">
           <Reveal>
             <Rotulo>{t.project.experienceLabel}</Rotulo>
             <Lines lines={t.project.experienceLines} as="h2" className="display-lg" />
-            <p className="body-sm mt-[var(--space-5)]">
-              {t.project.galleryHint}
-            </p>
           </Reveal>
-        </div>
 
-        {/* A faixa sangra pra fora do `shell` de propósito: é o único
-            elemento da página que atravessa a margem, e é isso que a marca
-            como "outra coisa" antes de qualquer instrução.
-
-            `tabIndex` e `role="region"` porque um contêiner de rolagem que
-            só responde ao mouse é inalcançável pelo teclado — o próprio
-            padrão WCAG 2.1.1 trata a rolagem como funcionalidade. */}
-        <div
-          role="region"
-          aria-label={fill(t.livePreview.screenshots, p.title)}
-          tabIndex={0}
-          className="mt-[var(--space-8)] flex snap-x snap-mandatory gap-[var(--space-5)] overflow-x-auto pb-[var(--space-5)] pl-[var(--gutter)] pr-[var(--gutter)]"
-          style={{ scrollbarWidth: 'thin' }}
-        >
-          {p.gallery.map((g, i) => (
-            <figure
-              key={g.src + i}
-              className="w-[min(86vw,1080px)] shrink-0 snap-start"
-              data-cursor="look"
-            >
-              <div className="media w-full">
-                <Image
-                  src={g.src}
-                  alt={g.alt}
-                  width={g.width}
-                  height={g.height}
-                  sizes="(max-width: 768px) 86vw, 1080px"
-                  loading="lazy"
-                  className="w-full"
-                  style={{ maxHeight: '72vh', objectFit: 'cover', objectPosition: 'top' }}
-                />
-              </div>
-              {g.caption && (
-                <figcaption className="label label--dim mt-[var(--space-3)]">{g.caption}</figcaption>
-              )}
-            </figure>
+          {p.gallery.slice(0, 1).map((g) => (
+            <Reveal key={g.src} delay={0.1}>
+              <figure className="mt-[var(--space-8)]">
+                <button
+                  type="button"
+                  onClick={() => setAmpliada(g)}
+                  data-cursor="look"
+                  aria-label={fill(t.livePreview.screenshots, p.title)}
+                  className="media block w-full"
+                >
+                  <Image
+                    src={g.src}
+                    alt={g.alt}
+                    width={g.width}
+                    height={g.height}
+                    sizes="(max-width: 1160px) 92vw, 1080px"
+                    loading="lazy"
+                    className="w-full"
+                    style={{ maxHeight: '72svh', objectFit: 'cover', objectPosition: 'top' }}
+                  />
+                </button>
+                {g.caption && (
+                  <figcaption className="label label--dim mt-[var(--space-3)]">
+                    {g.caption}
+                  </figcaption>
+                )}
+              </figure>
+            </Reveal>
           ))}
         </div>
 
@@ -470,6 +484,17 @@ export default function ProjectPage({ p, proximo }: { p: Project; proximo: Proje
           title={p.title}
           embeddable={p.embeddable}
           aoFechar={() => setAoVivo(false)}
+        />
+      )}
+
+      {ampliada && (
+        <Lightbox
+          src={ampliada.src}
+          alt={ampliada.alt}
+          width={ampliada.width}
+          height={ampliada.height}
+          legenda={ampliada.caption}
+          aoFechar={() => setAmpliada(null)}
         />
       )}
     </article>
