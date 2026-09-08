@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "estatico",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["servidor-estatico.mjs"],
+      "port": 4321,
+      "url": "http://localhost:4321"
+    }
+  ]
+}
