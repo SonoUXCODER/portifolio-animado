@@ -27,9 +27,11 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     <>
       <ProgressoDaPagina />
       <main id="content">
+        {/* hero → "Código é meu material", pela mesma passagem circular */}
         <Hero t={t.hero} country={t.meta.country} />
-
-        <Sobre t={t.manifesto} nomeSecao={t.sections.about.name} country={t.meta.country} />
+        <Passagem>
+          <Sobre t={t.manifesto} nomeSecao={t.sections.about.name} country={t.meta.country} />
+        </Passagem>
 
         {/* escultura → filosofia */}
         <Intervalo peca={intervalos[0]} label={t.interludes.label} />

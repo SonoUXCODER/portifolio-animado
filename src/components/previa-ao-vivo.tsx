@@ -178,7 +178,10 @@ export default function PreviaAoVivo({
                 />
               </motion.div>
               {carregando && (
-                <p className="label absolute inset-0 flex items-center justify-center" role="status">
+                <p
+                  className="label absolute inset-0 flex items-center justify-center"
+                  role="status"
+                >
                   {livePreview.loading}
                 </p>
               )}

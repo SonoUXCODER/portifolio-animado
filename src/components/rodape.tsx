@@ -15,7 +15,11 @@ export default function Rodape() {
           <p
             aria-hidden
             className="numeral select-none"
-            style={{ fontSize: "clamp(4.5rem, 27vw, 24rem)", lineHeight: 0.78, color: "var(--text-primary)" }}
+            style={{
+              fontSize: "clamp(4.5rem, 27vw, 24rem)",
+              lineHeight: 0.78,
+              color: "var(--text-primary)",
+            }}
           >
             {SITE.name}
           </p>

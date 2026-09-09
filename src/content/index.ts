@@ -5,14 +5,7 @@ import { pt } from "./dictionaries/pt";
 import { INTERLUDES } from "./interludes";
 import { PROJECTS } from "./projects";
 import { SITE } from "./site";
-import type {
-  Capability,
-  Dictionary,
-  Interlude,
-  Lang,
-  Project,
-  Section,
-} from "./types";
+import type { Capability, Dictionary, Interlude, Lang, Project, Section } from "./types";
 
 export { SITE } from "./site";
 export * from "./types";
@@ -36,8 +29,7 @@ export function isLang(v: string): v is Lang {
 }
 
 /** Substitui o `{title}` dos rótulos de acessibilidade. */
-export const fill = (template: string, title: string) =>
-  template.replace("{title}", title);
+export const fill = (template: string, title: string) => template.replace("{title}", title);
 
 /* ------------------------------------------------------------------ *
  * resolvedores — rodam no servidor (build), nunca no navegador

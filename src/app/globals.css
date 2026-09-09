@@ -557,30 +557,36 @@
 }
 
 /* ------------------------------------------------------------------ *
- * Intervalo 3D + passagem circular para a seção seguinte.
+ * Painel preso + passagem circular para a seção seguinte.
+ *
+ * Usado três vezes: o hero abrindo para "Código é meu material", e cada
+ * escultura abrindo para a seção depois dela.
  *
  * Geometria (tudo em svh, para casar com a barra do navegador no celular):
  *
- *   .intervalo         300svh   painel de 100svh preso no topo
+ *   .pinado            300svh   painel de 100svh preso no topo
  *   .passagem          margin-top: -200svh
  *     __corredor       100svh   trilho de rolagem que define o progresso
  *     __conteudo       pinado durante o corredor, revelado por clip-path
  *
- * O painel do intervalo fica preso (sticky) enquanto o container tem folga,
- * ou seja, dos 0 aos 200svh. O corredor ocupa exatamente [100svh, 200svh],
- * então a revelação inteira acontece com a escultura PARADA.
+ * O painel fica preso (sticky) enquanto o container tem folga, ou seja, dos
+ * 0 aos 200svh. O corredor ocupa exatamente [100svh, 200svh], então a
+ * revelação inteira acontece com o painel PARADO.
  *
  * Era daí que vinha o bug: com `-100svh` o corredor caía em cima dos 100svh
  * em que o painel se solta e sobe. O nome da obra ("Klio", "Daphne") vinha
  * junto, atravessando o meio da tela por cima da seção que estava nascendo.
  * Agora ele não se move — e ainda some antes, por opacidade.
+ *
+ * A altura da página não muda: os 200svh a mais do painel são exatamente os
+ * 200svh que a passagem seguinte puxa de volta.
  * ------------------------------------------------------------------ */
-.intervalo {
+.pinado {
   position: relative;
   height: 300svh;
 }
 
-.intervalo__painel {
+.pinado__painel {
   position: sticky;
   top: 0;
   z-index: 10;
@@ -592,13 +598,20 @@
 
 .passagem {
   position: relative;
-  /* acima do painel do intervalo (z-10): o que é revelado cobre a escultura
-     em vez de disputar espaço com ela */
+  /* acima do painel preso (z-10): o que é revelado cobre o que está atrás
+     em vez de disputar espaço com ele */
   z-index: 20;
 }
 
 .passagem__corredor {
   height: 0;
+}
+
+/* O que é revelado precisa ser opaco: dentro do círculo se vê a seção nova,
+   não o painel que continua ali atrás. Seções com tema próprio (a filosofia e
+   as capacidades, em creme) pintam por cima disto. */
+.passagem__conteudo {
+  background: var(--background);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -617,11 +630,11 @@
 
 /* Sem movimento: nada é preso nem sobreposto, vira uma pilha simples. */
 @media (prefers-reduced-motion: reduce) {
-  .intervalo {
+  .pinado {
     height: auto;
   }
 
-  .intervalo__painel {
+  .pinado__painel {
     position: static;
     height: 100svh;
   }

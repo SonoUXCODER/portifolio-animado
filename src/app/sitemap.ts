@@ -8,10 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const agora = new Date();
   const caminhos = [
     "",
-    ...LANGS.flatMap((lang) => [
-      `/${lang}`,
-      ...PROJECTS.map((p) => `/${lang}/work/${p.slug}`),
-    ]),
+    ...LANGS.flatMap((lang) => [`/${lang}`, ...PROJECTS.map((p) => `/${lang}/work/${p.slug}`)]),
   ];
 
   return caminhos.map((caminho) => ({

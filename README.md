@@ -49,6 +49,7 @@ src/
     rolagem-suave.tsx       Lenis
     cursor.tsx              cursor desenhado
     secoes/                 hero, sobre, trabalho, filosofia, capacidades, contato
+                            (o hero também é um painel preso: abre para "sobre")
   content/
     dictionaries/{en,pt,de}.ts   toda a copy
     site.ts projects.ts capabilities.ts interludes.ts
@@ -69,24 +70,24 @@ quebra com o nome do que falta em vez de publicar `undefined`.
 
 ## O que foi corrigido
 
-| Sintoma | Causa | Correção |
-| --- | --- | --- |
-| Rolagem travando com a roda do mouse | Lenis em modo `duration: 1.05`: cada evento de roda reiniciava a animação do zero | `lerp: 0.12` (suavização exponencial, não reinicia) — `src/lib/motion.ts` |
-| Animações "atrasadas" em relação à rolagem | Lenis e framer-motion em loops de quadro separados | Lenis roda dentro do `frame.update` do framer, antes dele |
-| Mouse lento | Mola do cursor superamortecida (razão ≈ 1.5) e um `closest()` no DOM por evento de ponteiro | Mola em ≈ 0.85 e consulta ao DOM no máximo uma vez por quadro |
-| O nome da obra ("Klio", "Daphne") subindo pelo meio da tela | O corredor da passagem caía exatamente nos 100svh em que o painel da escultura se soltava e subia | `.intervalo` com 300svh e `.passagem` com `-200svh`: a revelação inteira acontece com o painel preso. Mais: passagem acima do painel no `z-index` e HUD com opacidade presa ao mesmo progresso |
-| Menu "Capacidades" parando uma tela depois da seção | A âncora somava `window.innerHeight` para alvos dentro da passagem | Com a geometria nova o fim do corredor coincide com o topo da seção; a correção some |
-| Links da página de escolha de idioma dando 404 | `<a href="/en">` sem o basePath do GitHub Pages | `<Link>`, que aplica o basePath |
-| 404 de prefetch no console | Bug do export estático do Next 16 (grava pasta, pede nome com ponto) | `scripts/achatar-prefetch.mjs`, rodado no `build` |
+| Sintoma                                                     | Causa                                                                                             | Correção                                                                                                                                                                                    |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Rolagem travando com a roda do mouse                        | Lenis em modo `duration: 1.05`: cada evento de roda reiniciava a animação do zero                 | `lerp: 0.12` (suavização exponencial, não reinicia) — `src/lib/motion.ts`                                                                                                                   |
+| Animações "atrasadas" em relação à rolagem                  | Lenis e framer-motion em loops de quadro separados                                                | Lenis roda dentro do `frame.update` do framer, antes dele                                                                                                                                   |
+| Mouse lento                                                 | Mola do cursor superamortecida (razão ≈ 1.5) e um `closest()` no DOM por evento de ponteiro       | Mola em ≈ 0.85 e consulta ao DOM no máximo uma vez por quadro                                                                                                                               |
+| O nome da obra ("Klio", "Daphne") subindo pelo meio da tela | O corredor da passagem caía exatamente nos 100svh em que o painel da escultura se soltava e subia | `.pinado` com 300svh e `.passagem` com `-200svh`: a revelação inteira acontece com o painel preso. Mais: passagem acima do painel no `z-index` e HUD com opacidade presa ao mesmo progresso |
+| Menu "Capacidades" parando uma tela depois da seção         | A âncora somava `window.innerHeight` para alvos dentro da passagem                                | Com a geometria nova o fim do corredor coincide com o topo da seção; a correção some                                                                                                        |
+| Links da página de escolha de idioma dando 404              | `<a href="/en">` sem o basePath do GitHub Pages                                                   | `<Link>`, que aplica o basePath                                                                                                                                                             |
+| 404 de prefetch no console                                  | Bug do export estático do Next 16 (grava pasta, pede nome com ponto)                              | `scripts/achatar-prefetch.mjs`, rodado no `build`                                                                                                                                           |
 
 ## O que ficou mais leve
 
 Primeira visita, gzip, sem os polyfills legados (que navegador moderno pula):
 
-| | antes | depois |
-| --- | ---: | ---: |
+|            |    antes |   depois |
+| ---------- | -------: | -------: |
 | home `/pt` | 252,0 KB | 227,2 KB |
-| case | 233,9 KB | 210,7 KB |
+| case       | 233,9 KB | 210,7 KB |
 
 - Copy por idioma e por página, resolvida no servidor (antes os três idiomas
   inteiros iam no bundle de toda visita).
@@ -99,6 +100,20 @@ Primeira visita, gzip, sem os polyfills legados (que navegador moderno pula):
   em vez de uma por palavra (um parágrafo de 60 palavras tinha 60).
 - Abertura com piso de 420 ms em vez de 1,1 s travado.
 - three.js continua carregando sob demanda, só quando um intervalo se aproxima.
+
+## Desempenho de rolagem
+
+O que roda a cada quadro foi cortado onde dava:
+
+- Canvas 3D com metade dos pixels (pixel ratio no máximo 1.5, 1.25 no celular)
+  e sem redesenhar quadro idêntico — parado no intervalo, o canvas não desenha.
+- O véu do vídeo do hero é um degradê pintado por cima, não um `mask-image` no
+  vídeo: mascarar vídeo em tela cheia recorta cada quadro decodificado, e o
+  hero agora fica preso por 300svh.
+- O vídeo pausa quando sai de vista.
+- `backdrop-filter` do cabeçalho de 24px para 12px, com o fundo mais opaco.
+- `--p` registrado com `@property`, então o navegador guarda um número em vez
+  de reinterpretar o token a cada `calc()`.
 
 ## Publicação
 

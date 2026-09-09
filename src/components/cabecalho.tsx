@@ -45,7 +45,9 @@ function Marca({ texto, className }: { texto: string; className?: string }) {
       setVisto(
         texto
           .split("")
-          .map((c, i) => (i < reveladas || c === " " ? c : RUIDO[Math.floor(Math.random() * RUIDO.length)]))
+          .map((c, i) =>
+            i < reveladas || c === " " ? c : RUIDO[Math.floor(Math.random() * RUIDO.length)],
+          )
           .join(""),
       );
       quadro = requestAnimationFrame(passo);
@@ -77,7 +79,10 @@ function Idiomas({ className }: { className?: string }) {
   };
 
   return (
-    <nav aria-label={ui.language} className={cn("flex items-center gap-[var(--space-1)]", className)}>
+    <nav
+      aria-label={ui.language}
+      className={cn("flex items-center gap-[var(--space-1)]", className)}
+    >
       {LANGS.map((l, i) => {
         const atual = l === lang;
         return (
@@ -193,7 +198,11 @@ function MenuMobile({
                           style={{ color: atual ? "var(--accent)" : undefined }}
                           initial={{ y: "106%" }}
                           animate={{ y: "0%" }}
-                          transition={{ delay: 0.18 + 0.055 * i, duration: 0.7, ease: EASE_STANDARD }}
+                          transition={{
+                            delay: 0.18 + 0.055 * i,
+                            duration: 0.7,
+                            ease: EASE_STANDARD,
+                          }}
                         >
                           {secao.name}
                         </motion.span>
@@ -221,7 +230,12 @@ function MenuMobile({
                 .filter((s) => s.href.startsWith("http"))
                 .map((s) => (
                   <li key={s.label}>
-                    <a href={s.href} target="_blank" rel="noopener noreferrer" className="hit label link">
+                    <a
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hit label link"
+                    >
                       {s.label} <span aria-hidden>↗</span>
                     </a>
                   </li>
@@ -289,7 +303,11 @@ export default function Cabecalho() {
         <div
           className={cn(
             "border-b transition-[background-color,border-color,backdrop-filter] duration-[var(--duration-normal)]",
-            rolado && !menu ? "bg-[var(--background)]/72 backdrop-blur-xl" : "backdrop-blur-none",
+            /* blur de 24px numa barra da largura da tela é recalculado a cada
+               quadro de rolagem — caro, ainda mais por cima do vídeo do hero e
+               do canvas 3D. 12px com o fundo mais opaco lê igual e custa bem
+               menos. */
+            rolado && !menu ? "bg-[var(--background)]/85 backdrop-blur-md" : "backdrop-blur-none",
           )}
           style={{ borderColor: rolado && !menu ? "var(--line)" : "transparent" }}
         >
@@ -299,7 +317,10 @@ export default function Cabecalho() {
               className="hit group flex items-baseline gap-[var(--space-3)]"
               cursor="home"
             >
-              <Marca texto={SITE.wordmark} className="text-[1rem] font-semibold tracking-[-0.02em]" />
+              <Marca
+                texto={SITE.wordmark}
+                className="text-[1rem] font-semibold tracking-[-0.02em]"
+              />
               <span className="label label--dim hidden sm:inline">
                 {naHome ? ui.roleLabel : ui.caseStudyLabel}
               </span>

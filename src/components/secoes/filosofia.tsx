@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { LinhasQueSobem, ReguaAnimada, TextoQueAcende } from "@/components/animacoes";
 import type { Dictionary } from "@/content/types";
 import { useMovimentoReduzido } from "@/lib/hooks";
+import { TEMA_CLARO } from "@/lib/tema";
 
 /** A seção clara que nasce de dentro do círculo, depois da primeira escultura. */
 export default function Filosofia({ t }: { t: Dictionary["philosophy"] }) {
@@ -18,17 +19,7 @@ export default function Filosofia({ t }: { t: Dictionary["philosophy"] }) {
       ref={secao}
       aria-labelledby="philosophy-title"
       className="w-full overflow-clip py-[var(--space-10)]"
-      style={
-        {
-          background: "#f2f0eb",
-          "--text-primary": "#0a0a0a",
-          "--text-secondary": "#575450",
-          "--text-tertiary": "#6f6b66",
-          "--line": "rgba(10, 10, 10, 0.14)",
-          "--line-strong": "rgba(10, 10, 10, 0.3)",
-          color: "#0a0a0a",
-        } as React.CSSProperties
-      }
+      style={TEMA_CLARO}
     >
       <motion.div className="shell" style={reduzido ? undefined : { y }}>
         <p className="index-line">

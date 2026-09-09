@@ -29,7 +29,11 @@ export function ChamadaFinal({
   assunto: string;
 }) {
   return (
-    <aside className="border-t pt-[var(--space-7)]" style={{ borderColor: "var(--line)" }} aria-label={acao}>
+    <aside
+      className="border-t pt-[var(--space-7)]"
+      style={{ borderColor: "var(--line)" }}
+      aria-label={acao}
+    >
       <div className="flex flex-wrap items-end justify-between gap-x-[var(--space-8)] gap-y-[var(--space-6)]">
         <p className="display-md max-w-[22ch]">{pergunta}</p>
         <Magnetico>

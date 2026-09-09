@@ -73,8 +73,12 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
       try {
         const THREE = await import("three");
         const { GLTFLoader } = await import("three/examples/jsm/loaders/GLTFLoader.js");
-        const { MeshoptDecoder } = await import("three/examples/jsm/libs/meshopt_decoder.module.js");
-        const { RoomEnvironment } = await import("three/examples/jsm/environments/RoomEnvironment.js");
+        const { MeshoptDecoder } = await import(
+          "three/examples/jsm/libs/meshopt_decoder.module.js"
+        );
+        const { RoomEnvironment } = await import(
+          "three/examples/jsm/environments/RoomEnvironment.js"
+        );
         if (!vivo || !palco.current) return;
 
         const caixa = palco.current;
@@ -84,7 +88,10 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
           powerPreference: "low-power",
         });
         const compacto = window.innerWidth < 768;
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, compacto ? 1.5 : 2));
+        /* metade dos pixels de antes. Numa escultura escura, sem textura e com
+           antialias ligado, a diferença não aparece — e o custo por quadro de um
+           canvas em tela cheia cai junto, que é onde a rolagem estava engasgando. */
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, compacto ? 1.25 : 1.5));
         renderer.setSize(caixa.clientWidth, caixa.clientHeight);
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -98,7 +105,12 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
         const pmrem = new THREE.PMREMGenerator(renderer);
         cena.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-        const camera = new THREE.PerspectiveCamera(38, caixa.clientWidth / caixa.clientHeight, 0.1, 100);
+        const camera = new THREE.PerspectiveCamera(
+          38,
+          caixa.clientWidth / caixa.clientHeight,
+          0.1,
+          100,
+        );
         camera.position.set(0, 0, { descoberta: 8.6, metamorfose: 7.2 }[peca.carater]);
 
         const chave = new THREE.DirectionalLight(0xfff2e6, 3.1);
@@ -203,6 +215,7 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
         let opacidade = 1;
         let quadro = 0;
         let rodando = false;
+        let ultimaAssinatura = Number.NaN;
 
         const desenhar = () => {
           const t = progressoRef.current;
@@ -214,8 +227,17 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
           const alvoExplosao = reduzido ? 0 : Math.max(juntando, saindo);
 
           const anguloAlvo = (peca.startAngle ?? 0) + t * (peca.totalAngle ?? Math.PI * 1.2);
-          /* a câmera termina de se acomodar quando a revelação começa */
-          const acomodar = Math.min(1, t / INICIO_REVELACAO);
+          /**
+           * O enquadramento percorre o curso inteiro do progresso, devagar.
+           *
+           * Antes eu comprimia isso em `t / 0.5`, para a câmera "chegar" antes
+           * de a revelação começar. Só que aí ela batia no ponto mais fechado
+           * (z 4.6 na Klio, contra 8.6 no início) já na metade e ficava lá: a
+           * escultura aparecia grande demais, cortada, a maior parte do tempo.
+           * Com o curso inteiro a peça entra longe e só fecha no fim, quando o
+           * canvas já está saindo.
+           */
+          const acomodar = t;
 
           if (reduzido) {
             grupo.rotation.y = anguloAlvo;
@@ -225,7 +247,7 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
             anguloSuave += (anguloAlvo - anguloSuave) * 0.09;
             grupo.rotation.y = anguloSuave;
             grupo.position.y = 0.12 * Math.sin(acomodar * Math.PI);
-            z += (entre(ALVO.z, acomodar) - 2.2 * saindo - z) * 0.07;
+            z += (entre(ALVO.z, acomodar) - 1.4 * saindo - z) * 0.07;
             fov += (entre(ALVO.fov, acomodar) - fov) * 0.07;
             orbita += (Math.sin(acomodar * Math.PI) * ALVO.orbita - orbita) * 0.07;
             desvioX += (0.5 * ponteiro.current.x - desvioX) * 0.05;
@@ -249,7 +271,18 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
             renderer.domElement.style.opacity = String(opacidade);
           }
 
-          renderer.render(cena, camera);
+          /**
+           * Só desenha se alguma coisa mudou.
+           *
+           * Parado no meio do intervalo (lendo a legenda, por exemplo) o
+           * quadro anterior continua valendo: nada de re-renderizar uma cena
+           * idêntica 60 vezes por segundo enquanto o resto da página quer CPU.
+           */
+          const assinatura = t + z + fov + orbita + desvioX + desvioY + anguloSuave + explosao;
+          if (Math.abs(assinatura - ultimaAssinatura) > 1e-4) {
+            ultimaAssinatura = assinatura;
+            renderer.render(cena, camera);
+          }
           quadro = requestAnimationFrame(desenhar);
         };
 
@@ -372,9 +405,9 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
       ref={secao}
       id={`interlude-${peca.slug}`}
       aria-labelledby={`interlude-${peca.slug}-title`}
-      className="intervalo"
+      className="pinado"
     >
-      <div className="intervalo__painel">
+      <div className="pinado__painel">
         <motion.div
           className="shell pointer-events-none pt-[calc(var(--header-h)+var(--space-5))]"
           style={reduzido ? undefined : { opacity: opacidadeHud, y: yTopo }}

@@ -101,7 +101,10 @@ export default function Abertura() {
             >
               {SITE.name}
             </motion.p>
-            <p className="figure text-[clamp(2rem,6vw,4rem)]" style={{ color: "var(--text-secondary)" }}>
+            <p
+              className="figure text-[clamp(2rem,6vw,4rem)]"
+              style={{ color: "var(--text-secondary)" }}
+            >
               {String(progresso).padStart(3, "0")}
             </p>
           </div>

@@ -113,7 +113,7 @@ function Cartao({
       >
         <figure className="media media--dim aspect-[16/10] max-h-[26svh] w-full sm:aspect-[4/3] sm:max-h-[52svh] lg:max-h-[62svh]">
           <Imagem
-            src={(project.cover.src)}
+            src={project.cover.src}
             alt={project.cover.alt}
             width={project.cover.width}
             height={project.cover.height}
@@ -128,7 +128,10 @@ function Cartao({
           {project.kind} <span className="index-line__sep">·</span> {project.year}
         </p>
 
-        <motion.h3 className="display-lg mt-[var(--space-4)] origin-left" style={zoom ? { scale: zoom } : undefined}>
+        <motion.h3
+          className="display-lg mt-[var(--space-4)] origin-left"
+          style={zoom ? { scale: zoom } : undefined}
+        >
           <LinkDeTransicao
             href={href(`/work/${project.slug}`)}
             className="hit inline-block transition-colors duration-[var(--duration-normal)] group-hover:text-[var(--accent)]"
@@ -152,7 +155,10 @@ function Cartao({
           ))}
         </p>
 
-        <p className="body mt-[var(--space-5)] max-w-[42ch]" style={{ color: "var(--text-primary)" }}>
+        <p
+          className="body mt-[var(--space-5)] max-w-[42ch]"
+          style={{ color: "var(--text-primary)" }}
+        >
           {project.summary}
         </p>
 
@@ -251,21 +257,23 @@ function Trilho({
               reduzido={reduzido}
               leve={leve}
             >
-              {item.tipo === "projeto"
-                ? (zoom) => (
-                    <Cartao
-                      project={item.project}
-                      aoVer={() => aoVer(item.project)}
-                      t={t}
-                      prioridade={i === 0}
-                      zoom={reduzido ? undefined : zoom}
-                    />
-                  )
-                : (
-                    <div className={`w-full px-[var(--space-5)] ${item.align === "right" ? "text-right" : ""}`}>
-                      <LinhasQueSobem lines={item.lines} as="p" className="display-xl" />
-                    </div>
-                  )}
+              {item.tipo === "projeto" ? (
+                (zoom) => (
+                  <Cartao
+                    project={item.project}
+                    aoVer={() => aoVer(item.project)}
+                    t={t}
+                    prioridade={i === 0}
+                    zoom={reduzido ? undefined : zoom}
+                  />
+                )
+              ) : (
+                <div
+                  className={`w-full px-[var(--space-5)] ${item.align === "right" ? "text-right" : ""}`}
+                >
+                  <LinhasQueSobem lines={item.lines} as="p" className="display-xl" />
+                </div>
+              )}
             </Painel>
           ))}
         </motion.div>
@@ -275,7 +283,10 @@ function Trilho({
           className="absolute inset-x-[var(--gutter)] bottom-[var(--space-6)] h-px"
           style={{ background: "var(--line)" }}
         >
-          <motion.div className="h-full origin-left" style={{ background: "var(--accent)", scaleX: suave }} />
+          <motion.div
+            className="h-full origin-left"
+            style={{ background: "var(--accent)", scaleX: suave }}
+          />
         </div>
       </div>
     </div>
@@ -308,7 +319,11 @@ export default function Trabalho({
 
   return (
     <>
-      <section id="work" aria-labelledby="work-title" className="scroll-mt-[var(--header-h)] pt-[var(--space-10)]">
+      <section
+        id="work"
+        aria-labelledby="work-title"
+        className="scroll-mt-[var(--header-h)] pt-[var(--space-10)]"
+      >
         <div className="shell">
           <IndiceDeSecao id="work" />
           <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-6)]">

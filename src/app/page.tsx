@@ -19,7 +19,9 @@ export default function EscolhaDeIdioma() {
   return (
     <section className="shell flex min-h-[100svh] flex-col justify-center py-[var(--space-9)]">
       <p className="label label--dim">{SITE.name}</p>
-      <h1 className="display-lg mt-[var(--space-6)] max-w-[16ch]">{getDictionary("en").meta.role}</h1>
+      <h1 className="display-lg mt-[var(--space-6)] max-w-[16ch]">
+        {getDictionary("en").meta.role}
+      </h1>
       <p className="body mt-[var(--space-5)]">
         Choose a language · Escolha um idioma · Sprache wählen
       </p>

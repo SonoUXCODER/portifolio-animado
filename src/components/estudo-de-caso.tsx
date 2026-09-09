@@ -101,7 +101,7 @@ function Ampliada({ imagem, aoFechar }: { imagem: Imagem; aoFechar: () => void }
         >
           <div className="mx-auto w-full max-w-[1080px]">
             <Imagem
-              src={(imagem.src)}
+              src={imagem.src}
               alt={imagem.alt}
               width={imagem.width}
               height={imagem.height}
@@ -170,7 +170,13 @@ export default function EstudoDeCaso({
         </div>
 
         <div className="py-[var(--space-8)]">
-          <LinhasQueSobem lines={[p.title]} as="h1" className="display-hero" immediate delay={0.15} />
+          <LinhasQueSobem
+            lines={[p.title]}
+            as="h1"
+            className="display-hero"
+            immediate
+            delay={0.15}
+          />
           <p className="label mt-[var(--space-6)]" style={{ color: "var(--text-primary)" }}>
             {p.kind} <span className="index-line__sep">/</span> {p.year}
           </p>
@@ -216,7 +222,7 @@ export default function EstudoDeCaso({
         <Surge direction="none">
           <figure className="media aspect-[16/9] w-full">
             <Imagem
-              src={(p.cover.src)}
+              src={p.cover.src}
               alt={p.cover.alt}
               width={p.cover.width}
               height={p.cover.height}
@@ -294,7 +300,10 @@ export default function EstudoDeCaso({
                   className="block aspect-[4/3] w-full"
                   style={{ background: cor.hex, border: "1px solid var(--line)" }}
                 />
-                <span className="label mt-[var(--space-3)] block" style={{ color: "var(--text-primary)" }}>
+                <span
+                  className="label mt-[var(--space-3)] block"
+                  style={{ color: "var(--text-primary)" }}
+                >
                   {cor.name}
                 </span>
                 <span className="label label--dim mt-[var(--space-1)] block">{cor.hex}</span>
@@ -317,7 +326,9 @@ export default function EstudoDeCaso({
               >
                 <span className="label col-span-12 md:col-span-2">{tipo.role}</span>
                 <span className="title-sm col-span-12 md:col-span-4">{tipo.family}</span>
-                <span className="body-sm col-span-12 md:col-span-5 md:col-start-8">{tipo.note}</span>
+                <span className="body-sm col-span-12 md:col-span-5 md:col-start-8">
+                  {tipo.note}
+                </span>
               </ItemCascata>
             ))}
           </Cascata>
@@ -431,7 +442,7 @@ export default function EstudoDeCaso({
                   className="media block w-full"
                 >
                   <Imagem
-                    src={(imagem.src)}
+                    src={imagem.src}
                     alt={imagem.alt}
                     width={imagem.width}
                     height={imagem.height}
@@ -441,7 +452,9 @@ export default function EstudoDeCaso({
                   />
                 </button>
                 {imagem.caption && (
-                  <figcaption className="label label--dim mt-[var(--space-3)]">{imagem.caption}</figcaption>
+                  <figcaption className="label label--dim mt-[var(--space-3)]">
+                    {imagem.caption}
+                  </figcaption>
                 )}
               </figure>
             </Surge>
@@ -453,7 +466,12 @@ export default function EstudoDeCaso({
             <div className="flex flex-wrap items-center gap-[var(--space-4)]">
               {p.live && (
                 <Magnetico>
-                  <button type="button" onClick={() => setAoVivo(true)} className="btn" data-cursor="open">
+                  <button
+                    type="button"
+                    onClick={() => setAoVivo(true)}
+                    className="btn"
+                    data-cursor="open"
+                  >
                     {t.visitLive}
                   </button>
                 </Magnetico>
@@ -482,7 +500,10 @@ export default function EstudoDeCaso({
         <ChamadaFinal pergunta={t.ctaEnd} acao={t.ctaEndLink} assunto={assunto} />
       </section>
 
-      <section className="mt-[var(--space-10)] border-t pt-[var(--space-8)]" style={{ borderColor: "var(--line)" }}>
+      <section
+        className="mt-[var(--space-10)] border-t pt-[var(--space-8)]"
+        style={{ borderColor: "var(--line)" }}
+      >
         <LinkDeTransicao href={href(`/work/${proximo.slug}`)} className="group block" cursor="case">
           <div className="shell">
             <p className="label label--dim mb-[var(--space-4)]">{t.nextProject}</p>

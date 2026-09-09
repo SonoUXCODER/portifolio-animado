@@ -202,7 +202,9 @@ export function LinhasQueSobem({
         id={id}
         className={className}
         initial={{ opacity: 0 }}
-        {...(immediate ? { animate: { opacity: 1 } } : { whileInView: { opacity: 1 }, viewport: VIEWPORT })}
+        {...(immediate
+          ? { animate: { opacity: 1 } }
+          : { whileInView: { opacity: 1 }, viewport: VIEWPORT })}
         transition={{ duration: DUR.fast, delay }}
       >
         {lines.map((linha, i) => (
@@ -257,7 +259,10 @@ export function LinhasQueSobem({
       transition={{ staggerChildren: 0.08, delayChildren: delay }}
     >
       {lines.map((linha, i) => (
-        <span key={`${linha}-${i}`} className="block overflow-hidden pt-[0.12em] [margin-top:-0.12em]">
+        <span
+          key={`${linha}-${i}`}
+          className="block overflow-hidden pt-[0.12em] [margin-top:-0.12em]"
+        >
           <motion.span
             className="block"
             variants={{ hidden: { y: "106%" }, shown: { y: "0%" } }}

@@ -3,13 +3,7 @@
 import { m as motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import type { ReactNode } from "react";
 import { useRef } from "react";
-import {
-  Cascata,
-  LinhasQueSobem,
-  Paralaxe,
-  Surge,
-  TextoQueAcende,
-} from "@/components/animacoes";
+import { Cascata, LinhasQueSobem, Paralaxe, Surge, TextoQueAcende } from "@/components/animacoes";
 import Imagem from "@/components/imagem";
 import { IndiceDeSecao } from "@/components/pecas";
 import { SITE } from "@/content/site";
@@ -76,7 +70,11 @@ function CartaoInclinado({
       >
         <div
           className="relative"
-          style={{ border: "1px solid var(--line-strong)", background: "var(--surface)", padding: 6 }}
+          style={{
+            border: "1px solid var(--line-strong)",
+            background: "var(--surface)",
+            padding: 6,
+          }}
         >
           <motion.div style={ativo ? { translateZ: 22, transformStyle: "preserve-3d" } : undefined}>
             {children}
@@ -216,7 +214,7 @@ export default function Sobre({
             <CartaoInclinado className="mx-auto w-full max-w-[420px]">
               <figure className="media media--dim relative aspect-[4/5] w-full">
                 <Imagem
-                  src={("/assets/foto-cracha.webp")}
+                  src={"/assets/foto-cracha.webp"}
                   alt={SITE.name}
                   width={620}
                   height={827}

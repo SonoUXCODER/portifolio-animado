@@ -28,7 +28,10 @@ export default function Imagem({
   className?: string;
   style?: CSSProperties;
   onClick?: React.MouseEventHandler<HTMLImageElement>;
-} & Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "width" | "height" | "style" | "onClick">) {
+} & Omit<
+  React.ImgHTMLAttributes<HTMLImageElement>,
+  "src" | "alt" | "width" | "height" | "style" | "onClick"
+>) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img

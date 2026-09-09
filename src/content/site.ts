@@ -10,29 +10,29 @@ import type { SiteConfig } from "./types";
  */
 export const SITE: SiteConfig = {
   ...{
-    "name": "SONO",
-    "wordmark": "sono®",
-    "handle": "sonouxcoder",
-    "email": "alissonvpt1@gmail.com",
-    "city": "Bern",
-    "coordinates": "46.9480° N / 7.4474° E",
-    "timezone": "Europe/Zurich",
-    "shipped": 21,
-    "startYear": 2021,
-    "social": [
+    name: "SONO",
+    wordmark: "sono®",
+    handle: "sonouxcoder",
+    email: "alissonvpt1@gmail.com",
+    city: "Bern",
+    coordinates: "46.9480° N / 7.4474° E",
+    timezone: "Europe/Zurich",
+    shipped: 21,
+    startYear: 2021,
+    social: [
       {
-        "label": "GitHub",
-        "href": "https://github.com/SonoUXCODER"
+        label: "GitHub",
+        href: "https://github.com/SonoUXCODER",
       },
       {
-        "label": "Instagram",
-        "href": "https://instagram.com/somnifobias"
+        label: "Instagram",
+        href: "https://instagram.com/somnifobias",
       },
       {
-        "label": "Email",
-        "href": "mailto:alissonvpt1@gmail.com"
-      }
-    ]
+        label: "Email",
+        href: "mailto:alissonvpt1@gmail.com",
+      },
+    ],
   },
   name: process.env.NEXT_PUBLIC_SITE_NAME ?? "SONO",
   wordmark: process.env.NEXT_PUBLIC_SITE_WORDMARK ?? "sono®",

@@ -66,7 +66,11 @@ export function ProvedorDeTransicao({ children }: { children: ReactNode }) {
             }}
             style={{ background: "var(--background)" }}
           >
-            <span aria-hidden className="absolute inset-x-0 top-0 h-px" style={{ background: "var(--accent)" }} />
+            <span
+              aria-hidden
+              className="absolute inset-x-0 top-0 h-px"
+              style={{ background: "var(--accent)" }}
+            />
             <motion.span
               className="label"
               style={{ color: "var(--text-primary)" }}
@@ -94,7 +98,14 @@ export function ProvedorDeTransicao({ children }: { children: ReactNode }) {
 type PropsLink = ComponentProps<typeof Link> & { cursor?: string };
 
 /** `<Link>` que passa pela cortina e marca o rótulo do cursor. */
-export function LinkDeTransicao({ href, children, className, cursor, onClick, ...resto }: PropsLink) {
+export function LinkDeTransicao({
+  href,
+  children,
+  className,
+  cursor,
+  onClick,
+  ...resto
+}: PropsLink) {
   const { irPara } = useContext(Ctx);
   return (
     <Link
