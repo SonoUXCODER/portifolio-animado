@@ -1,9 +1,10 @@
 "use client";
 
-import { m as motion, useMotionValue, useTransform } from "framer-motion";
+import { m as motion, useMotionValueEvent, useTransform } from "framer-motion";
 import type * as TRES from "three";
 import { useEffect, useRef, useState } from "react";
 import { useConteudo } from "@/components/conteudo";
+import { useProgressoDoCorredor } from "@/lib/corredor";
 import type { Interlude } from "@/content/types";
 import { asset } from "@/lib/base-path";
 import { useMovimentoReduzido } from "@/lib/hooks";
@@ -36,15 +37,16 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
   const [perto, setPerto] = useState(false);
 
   /**
-   * Um progresso só, escrito num lugar só, lido por todo mundo: pelo 3D (via
-   * ref, sem re-render) e pelo HUD (via MotionValue).
+   * Um progresso só, da mesma fonte que a passagem usa: a posição que o Lenis
+   * acabou de aplicar neste quadro. Lido pelo 3D (via ref, sem re-render) e
+   * pelo HUD (via MotionValue).
    *
    * Antes eram três medições de rolagem independentes — uma no 3D, uma no HUD
    * e uma na passagem. Quando uma delas media a página em outro momento (fonte
    * trocando, imagem carregando, canvas entrando), as três discordavam e o
    * nome da obra ainda estava visível quando a próxima seção já vinha subindo.
    */
-  const progresso = useMotionValue(0);
+  const progresso = useProgressoDoCorredor(secao, "folga");
 
   /* HUD some antes de o círculo chegar ao meio da tela; e o pouco que ele se
      mexe é para LONGE do centro, nunca atravessando-o. */
@@ -373,32 +375,11 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
     return () => window.removeEventListener("pointermove", aoMover);
   }, [reduzido]);
 
-  /* --- progresso: um ouvinte de rolagem, limitado a um quadro --- */
-  useEffect(() => {
-    const alvo = secao.current;
-    if (!alvo) return;
-    let agendado = 0;
-    const medir = () => {
-      agendado = 0;
-      const caixa = alvo.getBoundingClientRect();
-      const curso = caixa.height - window.innerHeight;
-      const v = curso <= 0 ? 0.5 : Math.min(1, Math.max(0, -caixa.top / curso));
-      progressoRef.current = v;
-      progresso.set(v);
-      controle.current?.setProgresso(v);
-    };
-    const agendar = () => {
-      if (!agendado) agendado = requestAnimationFrame(medir);
-    };
-    medir();
-    window.addEventListener("scroll", agendar, { passive: true });
-    window.addEventListener("resize", agendar);
-    return () => {
-      if (agendado) cancelAnimationFrame(agendado);
-      window.removeEventListener("scroll", agendar);
-      window.removeEventListener("resize", agendar);
-    };
-  }, [progresso, perto]);
+  /* --- o 3D lê o mesmo progresso da passagem, no mesmo quadro --- */
+  useMotionValueEvent(progresso, "change", (v) => {
+    progressoRef.current = v;
+    controle.current?.setProgresso(v);
+  });
 
   return (
     <section

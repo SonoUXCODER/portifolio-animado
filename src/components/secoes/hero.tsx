@@ -4,7 +4,6 @@ import {
   m as motion,
   useMotionValue,
   useMotionValueEvent,
-  useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
@@ -13,6 +12,7 @@ import { LinhasQueSobem } from "@/components/animacoes";
 import { SITE } from "@/content/site";
 import type { Dictionary } from "@/content/types";
 import { asset } from "@/lib/base-path";
+import { useProgressoDoCorredor } from "@/lib/corredor";
 import { useMediaQuery, useMontado, usePointerFino, useMovimentoReduzido } from "@/lib/hooks";
 import { DUR, EASE_STANDARD, TRANSITION } from "@/lib/motion";
 
@@ -73,8 +73,8 @@ export default function Hero({ t, country }: { t: Dictionary["hero"]; country: s
    * termina antes de a revelação fechar a tela, em vez de se arrastar por
    * um curso duas vezes maior.
    */
-  const { scrollYProgress } = useScroll({ target: secao, offset: ["start start", "end end"] });
-  const p = useTransform(scrollYProgress, [0, 0.85], [0, 1]);
+  const bruto = useProgressoDoCorredor(secao, "folga");
+  const p = useTransform(bruto, [0, 0.85], [0, 1]);
 
   const yVideo = useTransform(p, [0, 1], ["0%", "18%"]);
   const opacidadeVideo = useTransform(p, [0, 0.9], [1, 0]);

@@ -1,12 +1,26 @@
 "use client";
 
 import Lenis from "lenis";
-import { cancelFrame, frame } from "framer-motion";
+import { cancelFrame, frame, motionValue } from "framer-motion";
 import { useEffect } from "react";
 import { useMovimentoReduzido } from "@/lib/hooks";
 import { SCROLL } from "@/lib/motion";
 
 let instancia: Lenis | null = null;
+
+/**
+ * A posição de rolagem exatamente como ela foi aplicada NESTE quadro.
+ *
+ * Quem precisa cancelar a rolagem (as passagens, que seguram o conteúdo
+ * parado enquanto o círculo abre) não pode ler a posição de um ouvinte de
+ * `scroll`: o evento chega depois, então o contra-movimento fica um quadro
+ * atrasado e o conteúdo preso balança para frente e para trás a cada quadro.
+ * Era isso o "agarramento" nas transições.
+ *
+ * Aqui o valor é escrito logo depois de o Lenis mexer no scroll, dentro do
+ * mesmo quadro em que o framer-motion vai desenhar. Fica exato.
+ */
+export const posicaoDaRolagem = motionValue(0);
 
 /** Para modais e menus, que precisam travar a página enquanto estão abertos. */
 export const travarRolagem = () => instancia?.stop();
@@ -22,7 +36,13 @@ export default function RolagemSuave() {
   const reduzido = useMovimentoReduzido();
 
   useEffect(() => {
-    if (reduzido) return;
+    /* sem suavização o scroll nativo já é a verdade; só espelhamos ele */
+    if (reduzido) {
+      const aoRolar = () => posicaoDaRolagem.set(window.scrollY);
+      aoRolar();
+      window.addEventListener("scroll", aoRolar, { passive: true });
+      return () => window.removeEventListener("scroll", aoRolar);
+    }
 
     /**
      * `lerp` em vez de `duration`.
@@ -54,8 +74,18 @@ export default function RolagemSuave() {
      * animações presas à rolagem chegavam um quadro atrasadas — aquele
      * arrasto de "gelatina" entre o conteúdo e os elementos animados.
      */
-    const passo = ({ timestamp }: { timestamp: number }) => lenis.raf(timestamp);
+    const passo = ({ timestamp }: { timestamp: number }) => {
+      lenis.raf(timestamp);
+      posicaoDaRolagem.set(window.scrollY);
+    };
     frame.update(passo, true);
+
+    /* Rede de segurança: se o loop de quadro parar por qualquer motivo, o
+       evento nativo mantém a posição atualizada. Escreve o mesmo número, então
+       não briga com o loop — só garante que nada fique preso fora da tela. */
+    const espelhar = () => posicaoDaRolagem.set(window.scrollY);
+    espelhar();
+    window.addEventListener("scroll", espelhar, { passive: true });
 
     /* Âncoras (#about, #work…) sem o pulo de uma tela que existia antes. */
     const aoClicar = (evento: MouseEvent) => {
@@ -91,6 +121,7 @@ export default function RolagemSuave() {
     document.addEventListener("click", aoClicar);
     return () => {
       document.removeEventListener("click", aoClicar);
+      window.removeEventListener("scroll", espelhar);
       cancelFrame(passo);
       lenis.destroy();
       instancia = null;

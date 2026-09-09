@@ -101,6 +101,25 @@ Primeira visita, gzip, sem os polyfills legados (que navegador moderno pula):
 - Abertura com piso de 420 ms em vez de 1,1 s travado.
 - three.js continua carregando sob demanda, só quando um intervalo se aproxima.
 
+## Rolagem "agarrando" nas transições
+
+Dois mecanismos empurravam a posição de rolagem para trás, os dois justamente
+onde uma transição encosta na outra:
+
+1. **Ancoragem de rolagem.** O navegador corrige `scrollTop` sozinho quando
+   algo acima da tela muda de tamanho (imagem preguiçosa, canvas 3D montando,
+   fonte trocando). Com rolagem suave isso vira cabo de guerra: o navegador
+   puxa para trás, o Lenis anima de volta. `overflow-anchor: none` no `html`.
+
+2. **Um quadro de atraso no contra-movimento.** A passagem segura o conteúdo
+   revelado parado cancelando a rolagem com um `translateY`. Esse cancelamento
+   vinha do `useScroll`, que se atualiza a partir do evento `scroll` — que
+   chega _depois_ do quadro em que o Lenis mexeu na página. Um quadro de erro
+   num contra-movimento é o conteúdo andando e voltando, toda vez.
+   `src/components/rolagem-suave.tsx` agora publica a posição exata aplicada
+   no quadro, e `src/lib/corredor.ts` deriva o progresso dela — a passagem, o
+   intervalo 3D e o hero leem todos a mesma fonte, no mesmo quadro.
+
 ## Desempenho de rolagem
 
 O que roda a cada quadro foi cortado onde dava:

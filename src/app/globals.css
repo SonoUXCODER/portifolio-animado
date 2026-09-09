@@ -54,6 +54,21 @@
     scroll-behavior: auto;
     scroll-padding-top: calc(var(--header-h) + var(--space-5));
     -webkit-text-size-adjust: 100%;
+
+    /**
+     * Ancoragem de rolagem desligada.
+     *
+     * Por padrão o navegador CORRIGE a posição de rolagem sozinho quando algo
+     * acima da tela muda de tamanho — imagem preguiçosa que chega, canvas 3D
+     * que monta, fonte que troca. Numa página com rolagem suave isso vira
+     * cabo de guerra: o navegador puxa o scroll para trás, o Lenis anima de
+     * volta para o alvo dele, e a rolagem "ameaça subir" e engasga. É
+     * exatamente nas transições que mais coisa muda de tamanho.
+     */
+    overflow-anchor: none;
+
+    /* a barra de rolagem sumindo (modal aberto) não empurra o layout */
+    scrollbar-gutter: stable;
   }
 
   html,
