@@ -217,7 +217,7 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
         let opacidade = 1;
         let quadro = 0;
         let rodando = false;
-        let ultimaAssinatura = Number.NaN;
+        let anterior: number[] | null = null;
 
         const desenhar = () => {
           const t = progressoRef.current;
@@ -279,10 +279,27 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
            * Parado no meio do intervalo (lendo a legenda, por exemplo) o
            * quadro anterior continua valendo: nada de re-renderizar uma cena
            * idêntica 60 vezes por segundo enquanto o resto da página quer CPU.
+           *
+           * Comparação valor a valor, de propósito. A primeira versão disto
+           * somava tudo num número só e comparava com `Number.NaN` no começo —
+           * e `Math.abs(NaN - x) > 1e-4` é `false`. O primeiro quadro nunca
+           * passava, a comparação nunca saía do NaN, e a escultura ficava
+           * congelada no único quadro desenhado antes do loop começar. Uma
+           * soma também deixa duas mudanças se cancelarem: se `z` cai o
+           * tanto que `t` sobe, o total não muda e o quadro é pulado.
            */
-          const assinatura = t + z + fov + orbita + desvioX + desvioY + anguloSuave + explosao;
-          if (Math.abs(assinatura - ultimaAssinatura) > 1e-4) {
-            ultimaAssinatura = assinatura;
+          const atual = [t, anguloSuave, z, fov, orbita, desvioX, desvioY, explosao];
+          let mudou = anterior === null;
+          if (anterior) {
+            for (let i = 0; i < atual.length; i++) {
+              if (Math.abs(atual[i] - anterior[i]) > 1e-4) {
+                mudou = true;
+                break;
+              }
+            }
+          }
+          if (mudou) {
+            anterior = atual;
             renderer.render(cena, camera);
           }
           quadro = requestAnimationFrame(desenhar);
@@ -291,6 +308,7 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
         const ligar = () => {
           if (rodando) return;
           rodando = true;
+          anterior = null; /* voltou à tela: desenha pelo menos uma vez */
           quadro = requestAnimationFrame(desenhar);
         };
         const desligar = () => {

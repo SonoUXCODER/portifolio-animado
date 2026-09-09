@@ -286,10 +286,13 @@ export function TextoQueAcende({
   texto,
   className,
   as = "p",
+  acender = true,
 }: {
   texto: string;
   className?: string;
   as?: ElementType;
+  /** `false` entrega o texto pronto e opaco, sem o degradê por palavra. */
+  acender?: boolean;
 }) {
   const ref = useRef<HTMLElement>(null);
   const reduzido = useMovimentoReduzido();
@@ -298,7 +301,21 @@ export function TextoQueAcende({
   const Tag = comoMotion(as);
   const Simples = as as ElementType;
 
-  if (reduzido) return <Simples className={className}>{texto}</Simples>;
+  /**
+   * A cor fica sendo a de destaque nos dois caminhos.
+   *
+   * O degradê termina em `--text-primary`, então entregar o texto pronto em
+   * `--text-secondary` deixaria ele mais claro do que ficaria depois de
+   * animar — que é justamente o que dava cara de "ainda carregando" nas
+   * seções em creme.
+   */
+  if (reduzido || !acender) {
+    return (
+      <Simples className={className} style={{ color: "var(--text-primary)" }}>
+        {texto}
+      </Simples>
+    );
+  }
 
   return (
     <Tag

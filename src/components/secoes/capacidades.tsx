@@ -44,7 +44,8 @@ export default function Capacidades({
             </span>
           </div>
           <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
-            <TextoQueAcende texto={t.intro} className="body" />
+            {/* creme: texto entra preto e pronto, sem o degradê por palavra */}
+            <TextoQueAcende texto={t.intro} className="body" acender={false} />
           </div>
         </div>
 
@@ -140,6 +141,7 @@ export default function Capacidades({
                             <TextoQueAcende
                               texto={item.text}
                               className="body mt-[var(--space-4)]"
+                              acender={false}
                             />
                           </div>
 

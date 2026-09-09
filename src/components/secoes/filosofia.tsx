@@ -35,7 +35,8 @@ export default function Filosofia({ t }: { t: Dictionary["philosophy"] }) {
             </span>
           </div>
           <div className="col-span-12 md:col-span-8 lg:col-span-3 lg:col-start-10 lg:self-end">
-            <TextoQueAcende texto={t.text} className="body" />
+            {/* creme: texto entra preto e pronto, sem o degradê por palavra */}
+            <TextoQueAcende texto={t.text} className="body" acender={false} />
           </div>
         </div>
       </motion.div>
