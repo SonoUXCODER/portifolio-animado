@@ -54,11 +54,7 @@ export default function Capacidades({
             const expandida = aberta === item.id;
             const destacada = expandida || sobre === item.id;
             return (
-              <li
-                key={item.id}
-                className="relative border-t"
-                style={{ borderColor: "var(--line)" }}
-              >
+              <li key={item.id} className="linha-hover relative">
                 <motion.span
                   aria-hidden
                   className="absolute left-0 top-0 h-px w-full origin-left"
@@ -158,7 +154,7 @@ export default function Capacidades({
                                     duration: DUR.normal,
                                     ease: EASE_STANDARD,
                                   }}
-                                  className="body-sm flex items-baseline gap-[var(--space-4)] border-b py-[var(--space-3)]"
+                                  className="body-sm flex items-baseline gap-[var(--space-4)] py-[var(--space-2)]"
                                   style={{
                                     borderColor: "var(--line)",
                                     color: "var(--text-primary)",
@@ -183,8 +179,6 @@ export default function Capacidades({
             );
           })}
         </ul>
-
-        <div className="border-t" style={{ borderColor: "var(--line)" }} />
 
         <div className="mt-[var(--space-9)]">
           <ChamadaFinal pergunta={t.ctaAfter} acao={t.ctaAfterLink} assunto={assunto} />

@@ -101,6 +101,49 @@ Primeira visita, gzip, sem os polyfills legados (que navegador moderno pula):
 - Abertura com piso de 420 ms em vez de 1,1 s travado.
 - three.js continua carregando sob demanda, só quando um intervalo se aproxima.
 
+## Separação por tom, não por traço
+
+A home tinha **38 fios de 1px**, todos com a mesma cor e a mesma espessura —
+16 só nas capacidades. Todas as seções escuras eram transparentes, então
+literalmente toda separação da página era feita por linha. É o que dá cara de
+template.
+
+Agora a separação vem de uma escala de pretos (`--tom-0/1/2` em globals.css),
+com passos curtos, e o ritmo é:
+
+|                    |           |
+| ------------------ | --------- |
+| hero               | `#070707` |
+| sobre              | `#111111` |
+| intervalo (Klio)   | `#070707` |
+| filosofia          | creme     |
+| trabalho           | `#0b0b0b` |
+| intervalo (Daphne) | `#070707` |
+| capacidades        | creme     |
+| contato            | `#111111` |
+| rodapé             | `#0b0b0b` |
+
+O grão fixo que já cobria a página serve de dither e evita o banding que
+passos tão curtos costumam causar em tela de 8 bits.
+
+No lugar dos fios:
+
+- **`.faixa-dados`** — os blocos de números (anos, base, idiomas, hora local)
+  viraram uma faixa com tinta e respiro.
+- **`.linha-hover`** — listas longas (as oito capacidades, as etapas do método,
+  as linhas dos estudos de caso) não têm separador em repouso: quem separa é o
+  espaçamento, e a tinta aparece sob o ponteiro, quando importa.
+- As duas tintas são `color-mix` de uma porcentagem de `--text-primary`, então
+  a mesma regra funciona no escuro e no creme. Elas ficam escritas direto em
+  quem usa, não num token: `var()` dentro da declaração de uma custom property
+  resolve na raiz, e um `--tinta` no `:root` carregaria o creme do tema escuro
+  para dentro das seções claras.
+
+Sobrou linha só onde ela tem função: a borda do cabeçalho quando a página
+rolou, o cabeçalho dos modais, as duas réguas que enquadram cada escultura
+(o visor), as réguas animadas dos rótulos de seção e as molduras de botão,
+chip e amostra de cor. Zero separadores de linha na home e nos cases.
+
 ## Rolagem "agarrando" nas transições
 
 Dois mecanismos empurravam a posição de rolagem para trás, os dois justamente

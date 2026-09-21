@@ -197,10 +197,7 @@ export default function EstudoDeCaso({
         </div>
 
         <Surge direction="none">
-          <dl
-            className="grid grid-cols-2 gap-x-[var(--space-5)] gap-y-[var(--space-5)] border-t pt-[var(--space-4)] lg:grid-cols-4"
-            style={{ borderColor: "var(--line)" }}
-          >
+          <dl className="faixa-dados grid grid-cols-2 gap-x-[var(--space-5)] gap-y-[var(--space-5)] lg:grid-cols-4">
             {(
               [
                 [t.year, p.year],
@@ -261,8 +258,7 @@ export default function EstudoDeCaso({
             <ItemCascata
               key={etapa.step}
               as="li"
-              className="grid-12 gap-y-[var(--space-3)] border-t py-[var(--space-6)]"
-              style={{ borderColor: "var(--line)" }}
+              className="linha-hover grid-12 gap-y-[var(--space-3)] py-[var(--space-6)]"
             >
               <div className="col-span-12 md:col-span-3">
                 <p className="label" style={{ color: "var(--accent)" }}>
@@ -321,8 +317,7 @@ export default function EstudoDeCaso({
               <ItemCascata
                 key={tipo.role}
                 as="li"
-                className="grid-12 gap-y-[var(--space-2)] border-t py-[var(--space-4)]"
-                style={{ borderColor: "var(--line)" }}
+                className="linha-hover grid-12 gap-y-[var(--space-2)] py-[var(--space-3)]"
               >
                 <span className="label col-span-12 md:col-span-2">{tipo.role}</span>
                 <span className="title-sm col-span-12 md:col-span-4">{tipo.family}</span>
@@ -353,13 +348,13 @@ export default function EstudoDeCaso({
           </div>
           <div className="col-span-12 md:col-span-6 md:col-start-7">
             <Surge delay={0.08}>
-              <div className="border-t py-[var(--space-4)]" style={{ borderColor: "var(--line)" }}>
+              <div className="faixa-dados">
                 <p className="label label--dim">{t.grid}</p>
                 <p className="body mt-[var(--space-2)]" style={{ color: "var(--text-primary)" }}>
                   {p.system.grid}
                 </p>
               </div>
-              <div className="border-t py-[var(--space-4)]" style={{ borderColor: "var(--line)" }}>
+              <div className="faixa-dados mt-[var(--space-3)]">
                 <p className="label label--dim">{t.spacing}</p>
                 <p className="body mt-[var(--space-2)]" style={{ color: "var(--text-primary)" }}>
                   {p.system.spacing}
@@ -382,12 +377,7 @@ export default function EstudoDeCaso({
           <div className="col-span-12 lg:col-span-6 lg:col-start-7">
             <Cascata as="ul" className="flex flex-col">
               {p.stack.map((item) => (
-                <ItemCascata
-                  key={item}
-                  as="li"
-                  className="border-t py-[var(--space-4)]"
-                  style={{ borderColor: "var(--line)" }}
-                >
+                <ItemCascata key={item} as="li" className="linha-hover py-[var(--space-3)]">
                   <span className="display-md">{item}</span>
                 </ItemCascata>
               ))}
@@ -406,8 +396,7 @@ export default function EstudoDeCaso({
               <ItemCascata
                 key={linha}
                 as="li"
-                className="flex items-baseline gap-[var(--space-4)] border-t py-[var(--space-4)]"
-                style={{ borderColor: "var(--line)" }}
+                className="linha-hover flex items-baseline gap-[var(--space-4)] py-[var(--space-4)]"
               >
                 <span
                   aria-hidden
@@ -501,8 +490,8 @@ export default function EstudoDeCaso({
       </section>
 
       <section
-        className="mt-[var(--space-10)] border-t pt-[var(--space-8)]"
-        style={{ borderColor: "var(--line)" }}
+        className="mt-[var(--space-10)] py-[var(--space-9)]"
+        style={{ background: "var(--tom-2)" }}
       >
         <LinkDeTransicao href={href(`/work/${proximo.slug}`)} className="group block" cursor="case">
           <div className="shell">

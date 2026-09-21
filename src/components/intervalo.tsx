@@ -405,6 +405,7 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
       id={`interlude-${peca.slug}`}
       aria-labelledby={`interlude-${peca.slug}-title`}
       className="pinado"
+      style={{ background: "var(--tom-0)" }}
     >
       <div className="pinado__painel">
         <motion.div

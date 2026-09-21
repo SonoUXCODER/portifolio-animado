@@ -154,8 +154,7 @@ function Metodo({ rotulo, etapas }: { rotulo: string; etapas: { step: string; no
             return (
               <motion.li
                 key={etapa.step}
-                className="border-t py-[var(--space-5)]"
-                style={{ borderColor: "var(--line)" }}
+                className="py-[var(--space-6)]"
                 initial={reduzido ? { opacity: 0 } : entrada.hidden}
                 whileInView={reduzido ? { opacity: 1 } : entrada.shown}
                 viewport={{ once: true, amount: 0.5 }}
@@ -188,77 +187,80 @@ export default function Sobre({
     <section
       id="about"
       aria-labelledby="about-title"
-      className="shell scroll-mt-[var(--header-h)] py-[var(--space-10)]"
+      className="w-full scroll-mt-[var(--header-h)] overflow-clip py-[var(--space-10)]"
+      style={{ background: "var(--tom-2)" }}
     >
-      <IndiceDeSecao id="about" />
+      <div className="shell">
+        <IndiceDeSecao id="about" />
 
-      <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-8)]">
-        <div className="col-span-12 lg:col-span-7">
-          <LinhasQueSobem lines={t.lines} as="h2" className="display-xl" />
-          <span id="about-title" className="sr-only">
-            {nomeSecao}
-          </span>
-        </div>
-        <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
-          <Cascata className="flex flex-col gap-[var(--space-4)]" delay={0.1}>
-            {t.paragraphs.map((paragrafo) => (
-              <TextoQueAcende key={paragrafo} texto={paragrafo} className="body" />
-            ))}
-          </Cascata>
-        </div>
-      </div>
-
-      <div className="grid-12 mt-[var(--space-10)] gap-y-[var(--space-8)]">
-        <div className="col-span-12 sm:col-span-6 lg:col-span-4">
-          <Paralaxe strength={30}>
-            <CartaoInclinado className="mx-auto w-full max-w-[420px]">
-              <figure className="media media--dim relative aspect-[4/5] w-full">
-                <Imagem
-                  src={"/assets/foto-cracha.webp"}
-                  alt={SITE.name}
-                  width={620}
-                  height={827}
-                  className="h-full w-full"
-                />
-                <motion.span
-                  aria-hidden
-                  className="absolute inset-0 origin-bottom"
-                  style={{ background: "var(--background)" }}
-                  initial={{ scaleY: 1 }}
-                  whileInView={{ scaleY: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 1, ease: EASE_STANDARD }}
-                />
-              </figure>
-            </CartaoInclinado>
-          </Paralaxe>
-
-          <Surge delay={0.1}>
-            <p className="label label--dim mt-[var(--space-4)]">
-              {SITE.handle} <span className="index-line__sep">/</span> {SITE.city}, {country}
-            </p>
-          </Surge>
-        </div>
-
-        <div className="col-span-12 lg:col-span-7 lg:col-start-6">
-          <Metodo rotulo={t.methodLabel} etapas={t.chain} />
-          <Surge delay={0.1}>
-            <p
-              className="label mt-[var(--space-6)] flex flex-wrap items-center gap-[var(--space-3)]"
-              style={{ color: "var(--text-primary)" }}
-            >
-              {t.chain.map((etapa, i) => (
-                <span key={etapa.step} className="flex items-center gap-[var(--space-3)]">
-                  {etapa.step}
-                  {i < t.chain.length - 1 && (
-                    <span aria-hidden style={{ color: "var(--accent)" }}>
-                      →
-                    </span>
-                  )}
-                </span>
+        <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-8)]">
+          <div className="col-span-12 lg:col-span-7">
+            <LinhasQueSobem lines={t.lines} as="h2" className="display-xl" />
+            <span id="about-title" className="sr-only">
+              {nomeSecao}
+            </span>
+          </div>
+          <div className="col-span-12 md:col-span-8 lg:col-span-4 lg:col-start-9 lg:self-end">
+            <Cascata className="flex flex-col gap-[var(--space-4)]" delay={0.1}>
+              {t.paragraphs.map((paragrafo) => (
+                <TextoQueAcende key={paragrafo} texto={paragrafo} className="body" />
               ))}
-            </p>
-          </Surge>
+            </Cascata>
+          </div>
+        </div>
+
+        <div className="grid-12 mt-[var(--space-10)] gap-y-[var(--space-8)]">
+          <div className="col-span-12 sm:col-span-6 lg:col-span-4">
+            <Paralaxe strength={30}>
+              <CartaoInclinado className="mx-auto w-full max-w-[420px]">
+                <figure className="media media--dim relative aspect-[4/5] w-full">
+                  <Imagem
+                    src={"/assets/foto-cracha.webp"}
+                    alt={SITE.name}
+                    width={620}
+                    height={827}
+                    className="h-full w-full"
+                  />
+                  <motion.span
+                    aria-hidden
+                    className="absolute inset-0 origin-bottom"
+                    style={{ background: "var(--background)" }}
+                    initial={{ scaleY: 1 }}
+                    whileInView={{ scaleY: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ duration: 1, ease: EASE_STANDARD }}
+                  />
+                </figure>
+              </CartaoInclinado>
+            </Paralaxe>
+
+            <Surge delay={0.1}>
+              <p className="label label--dim mt-[var(--space-4)]">
+                {SITE.handle} <span className="index-line__sep">/</span> {SITE.city}, {country}
+              </p>
+            </Surge>
+          </div>
+
+          <div className="col-span-12 lg:col-span-7 lg:col-start-6">
+            <Metodo rotulo={t.methodLabel} etapas={t.chain} />
+            <Surge delay={0.1}>
+              <p
+                className="label mt-[var(--space-6)] flex flex-wrap items-center gap-[var(--space-3)]"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {t.chain.map((etapa, i) => (
+                  <span key={etapa.step} className="flex items-center gap-[var(--space-3)]">
+                    {etapa.step}
+                    {i < t.chain.length - 1 && (
+                      <span aria-hidden style={{ color: "var(--accent)" }}>
+                        →
+                      </span>
+                    )}
+                  </span>
+                ))}
+              </p>
+            </Surge>
+          </div>
         </div>
       </div>
     </section>

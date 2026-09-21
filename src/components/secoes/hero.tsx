@@ -136,9 +136,15 @@ export default function Hero({ t, country }: { t: Dictionary["hero"]; country: s
   ];
 
   return (
-    <section ref={secao} id="hero" aria-labelledby="hero-title" className="pinado">
+    <section
+      ref={secao}
+      id="hero"
+      aria-labelledby="hero-title"
+      className="pinado"
+      style={{ background: "var(--tom-0)" }}
+    >
       <div className="pinado__painel">
-        <div className="relative flex h-full flex-col justify-between overflow-clip pb-[var(--space-7)] pt-[calc(var(--header-h)+var(--space-7))]">
+        <div className="hero-painel relative flex h-full flex-col justify-between overflow-clip pb-[var(--space-6)] pt-[calc(var(--header-h)+var(--space-5))]">
           {comVideo && (
             <motion.div
               aria-hidden
@@ -161,7 +167,7 @@ export default function Hero({ t, country }: { t: Dictionary["hero"]; country: s
             </motion.div>
           )}
 
-          <div className="shell relative w-full py-[var(--space-8)]">
+          <div className="shell relative w-full py-[var(--space-6)]">
             <motion.div
               style={
                 reduzido
@@ -186,7 +192,7 @@ export default function Hero({ t, country }: { t: Dictionary["hero"]; country: s
               />
             </motion.div>
 
-            <div className="grid-12 mt-[var(--space-8)] gap-y-[var(--space-6)]">
+            <div className="grid-12 mt-[var(--space-6)] gap-y-[var(--space-6)]">
               <motion.div
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -212,10 +218,7 @@ export default function Hero({ t, country }: { t: Dictionary["hero"]; country: s
             className="shell relative w-full"
             {...(reduzido ? {} : { style: { y: yBase, opacity: opacidadeBase } })}
           >
-            <dl
-              className="grid grid-cols-2 gap-x-[var(--space-5)] gap-y-[var(--space-5)] border-t pt-[var(--space-4)] sm:grid-cols-4"
-              style={{ borderColor: "var(--line)" }}
-            >
+            <dl className="faixa-dados grid grid-cols-2 gap-x-[var(--space-5)] gap-y-[var(--space-5)] sm:grid-cols-4">
               {linhas.map(([rotulo, valor]) => (
                 <div key={rotulo}>
                   <dt className="label label--dim">{rotulo}</dt>
@@ -226,7 +229,7 @@ export default function Hero({ t, country }: { t: Dictionary["hero"]; country: s
               ))}
             </dl>
 
-            <div className="mt-[var(--space-5)] flex items-baseline justify-between gap-[var(--space-4)]">
+            <div className="hero-dica mt-[var(--space-5)] flex items-baseline justify-between gap-[var(--space-4)]">
               <span className="label label--dim">{t.scroll}</span>
               <motion.span
                 aria-hidden

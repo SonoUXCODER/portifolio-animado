@@ -9,7 +9,22 @@
   color-scheme: dark;
 
   --accent: #e2673f;
-  --background: #0a0a0a;
+
+  /**
+   * Escala de pretos.
+   *
+   * A separação entre as partes da página é feita por PROFUNDIDADE, não por
+   * um fio de 1px repetido em todo lugar. Os passos são curtos de propósito
+   * (dois a três pontos de luminância): o que se percebe é que uma seção está
+   * um degrau à frente da outra, não um bloco colado em cima do outro. O grão
+   * fixo que cobre a página serve de dither e mata o banding que passos
+   * curtos assim costumam causar em tela de 8 bits.
+   */
+  --tom-0: #070707; /* mais fundo: hero e os intervalos 3D */
+  --tom-1: #0b0b0b; /* base */
+  --tom-2: #111111; /* um degrau à frente: sobre, contato */
+
+  --background: var(--tom-1);
   --surface: #141414;
   --surface-raised: #1a1a1a;
   --text-primary: #f2f0eb;
@@ -17,8 +32,21 @@
   --text-tertiary: #6f6f6f;
   --accent-soft: #e2673f1f;
   --accent-contrast: #0a0a0a;
-  --line: #f2f0eb1c;
-  --line-strong: #f2f0eb42;
+
+  /**
+   * As tintas (faixas e linhas) são uma porcentagem da COR DO TEXTO, não uma
+   * cor fixa — assim a mesma regra funciona no escuro e nas seções em creme.
+   *
+   * Elas não viram token aqui de propósito: um `var()` dentro da declaração
+   * de uma custom property é resolvido na raiz, então um `--tinta` definido
+   * neste bloco carregaria para sempre o creme do tema escuro, mesmo dentro
+   * de uma seção clara. O `color-mix` fica escrito direto em quem usa, onde
+   * `--text-primary` já é o da seção. Ver `.faixa-dados` e `.linha-hover`.
+   */
+
+  /* sobrou pouca linha, e a que sobrou é mais discreta que antes */
+  --line: #f2f0eb14;
+  --line-strong: #f2f0eb33;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -168,7 +196,16 @@
     font-variation-settings: "wdth" 84;
     letter-spacing: -0.035em;
     text-transform: uppercase;
-    font-size: clamp(3.2rem, 13vw, 13rem);
+    /**
+     * Limitado pela largura E pela altura da tela.
+     *
+     * Só `13vw` num monitor largo e baixo (1440x900 é o caso comum) dava três
+     * linhas de 187px, e o hero — que agora é um painel preso de 100svh com
+     * overflow cortado — perdia o rodapé inteiro: os números e o "role para
+     * começar" ficavam abaixo do corte, invisíveis. `16svh` segura isso sem
+     * encolher nada em tela alta, onde o limite de largura continua vencendo.
+     */
+    font-size: clamp(3.2rem, min(13vw, 16svh), 13rem);
     font-weight: 600;
     line-height: 0.84;
   }
@@ -473,6 +510,38 @@
     transform: scale(1.04);
   }
 
+  /**
+   * Faixa de dados.
+   *
+   * Substitui o `border-t` que separava os blocos de números (anos, base,
+   * idiomas, hora local) do conteúdo acima. Uma tinta e um respiro separam
+   * igual, e sem mais um fio na tela.
+   */
+  .faixa-dados {
+    background: color-mix(in srgb, var(--text-primary) 4%, transparent);
+    padding: var(--space-5);
+  }
+
+  /**
+   * Linha de lista sem fio.
+   *
+   * Uma lista de oito itens com `border-t` em cada um são oito fios idênticos
+   * empilhados — o visual de template que a gente está tirando daqui. Em
+   * repouso quem separa é o espaçamento; a tinta só aparece sob o ponteiro ou
+   * quando o item está aberto, que é quando a separação de fato importa.
+   */
+  .linha-hover {
+    position: relative;
+    margin-inline: calc(var(--space-4) * -1);
+    padding-inline: var(--space-4);
+    transition: background-color var(--duration-normal) var(--ease-micro);
+  }
+
+  .linha-hover:hover,
+  .linha-hover:focus-within {
+    background: color-mix(in srgb, var(--text-primary) 5%, transparent);
+  }
+
   .grain {
     position: fixed;
     inset: 0;
@@ -640,6 +709,50 @@
 
   .passagem__conteudo {
     min-height: 100svh;
+  }
+}
+
+/**
+ * Telas baixas: o respiro cede antes do conteúdo.
+ *
+ * O hero é um painel de altura travada em 100svh com overflow cortado, então
+ * o que não couber simplesmente some — foi assim que os números e o "role
+ * para começar" sumiram em 1366x768. Aqui o espaçamento vertical encolhe
+ * primeiro, e a tipografia grande fica de pé enquanto der.
+ *
+ * Fora de `@layer` de propósito: precisa ganhar das utilidades do Tailwind,
+ * e camada vence especificidade.
+ */
+@media (max-height: 820px) {
+  .hero-painel {
+    padding-top: calc(var(--header-h) + var(--space-3));
+    padding-bottom: var(--space-4);
+  }
+
+  .hero-painel .shell {
+    padding-block: var(--space-4);
+  }
+
+  .faixa-dados {
+    padding-block: var(--space-4);
+  }
+}
+
+/* mais baixo ainda (1280x720 e companhia): aí a tipografia também cede */
+@media (max-height: 740px) {
+  .display-hero {
+    font-size: clamp(2.6rem, min(13vw, 14svh), 13rem);
+  }
+}
+
+/* janela bem baixa: a dica de rolagem é decorativa e sai antes dos números */
+@media (max-height: 660px) {
+  .display-hero {
+    font-size: clamp(2.2rem, min(13vw, 12svh), 13rem);
+  }
+
+  .hero-dica {
+    display: none;
   }
 }
 

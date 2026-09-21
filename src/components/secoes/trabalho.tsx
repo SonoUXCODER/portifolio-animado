@@ -323,6 +323,7 @@ export default function Trabalho({
         id="work"
         aria-labelledby="work-title"
         className="scroll-mt-[var(--header-h)] pt-[var(--space-10)]"
+        style={{ background: "var(--tom-1)" }}
       >
         <div className="shell">
           <IndiceDeSecao id="work" />
