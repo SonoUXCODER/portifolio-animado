@@ -54,15 +54,68 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
   const yTopo = useTransform(progresso, [INICIO_REVELACAO, 0.75], [0, -24]);
   const yBase = useTransform(progresso, [INICIO_REVELACAO, 0.75], [0, 24]);
 
-  /* --- só monta o WebGL quando o intervalo está chegando --- */
+  /**
+   * Monta a cena antes de ela aparecer — e monta UMA vez só.
+   *
+   * Montar custa caro, e tudo na thread principal: 1,6 MB de GLB na Klio, o
+   * decode meshopt, o `toNonIndexed()` que triplica 135 mil triângulos para
+   * ~406 mil vértices, o laço que calcula centroide e semente de cada caco, e
+   * a compilação do shader.
+   *
+   * Duas correções aqui:
+   *
+   * 1. A margem era de 1000px, então essa conta caía em cima de quem já
+   *    estava rolando na direção da escultura. Agora são 1800px — duas telas
+   *    de antecedência — e só depois de a página terminar de carregar e ficar
+   *    ociosa, para o 3D não disputar banda com o hero.
+   *
+   * 2. Antes isto era `setPerto(entrada.isIntersecting)`: ao se afastar, a
+   *    cena era DESTRUÍDA e remontada do zero na volta. Rolar da Klio até a
+   *    Daphne e voltar refazia os 406 mil vértices e recompilava o shader.
+   *    Agora trava em `true` na primeira vez e o observador se desliga; quem
+   *    controla o custo por quadro é o outro observador, de 100px, que só
+   *    liga e desliga o loop de desenho.
+   */
   useEffect(() => {
     const alvo = secao.current;
     if (!alvo) return;
-    const observador = new IntersectionObserver(([entrada]) => setPerto(entrada.isIntersecting), {
-      rootMargin: "1000px 0px",
-    });
+    let cancelado = false;
+
+    const rede = (
+      navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }
+    ).connection;
+    /* em conexão econômica ou lenta, espera-se até mais perto: não se gasta o
+       plano de dados de quem talvez nem chegue na escultura */
+    const econômica = rede?.saveData || /^(slow-)?2g$/.test(rede?.effectiveType ?? "");
+
+    const agendarOcioso: (cb: () => void) => void =
+      typeof window.requestIdleCallback === "function"
+        ? (cb) => window.requestIdleCallback(cb, { timeout: 2500 })
+        : (cb) => void window.setTimeout(cb, 300);
+
+    const montar = () => {
+      if (cancelado) return;
+      agendarOcioso(() => {
+        if (!cancelado) setPerto(true);
+      });
+    };
+
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada.isIntersecting) return;
+        observador.disconnect();
+        if (document.readyState === "complete") montar();
+        else window.addEventListener("load", montar, { once: true });
+      },
+      { rootMargin: econômica ? "600px 0px" : "1800px 0px" },
+    );
     observador.observe(alvo);
-    return () => observador.disconnect();
+
+    return () => {
+      cancelado = true;
+      observador.disconnect();
+      window.removeEventListener("load", montar);
+    };
   }, []);
 
   /* --- cena --- */
@@ -364,6 +417,9 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
         const aoTrocarAba = () => (document.hidden ? desligar() : naTela && ligar());
         document.addEventListener("visibilitychange", aoTrocarAba);
 
+        /* compila o shader dos cacos agora, e não no primeiro quadro visível:
+           é a última coisa cara que sobrava para acontecer em cima da hora */
+        renderer.compile(cena, camera);
         renderer.render(cena, camera);
         setEstado("pronto");
 

@@ -11,8 +11,8 @@ export const PROJECTS: ProjectMeta[] = [
     stack: ["Next.js", "TypeScript", "Tailwind CSS", "Static Export"],
     cover: {
       src: "/assets/projetos/phobia-cover.webp",
-      width: 3150,
-      height: 1969,
+      width: 1800,
+      height: 1125,
     },
     gallery: [
       {
@@ -40,8 +40,8 @@ export const PROJECTS: ProjectMeta[] = [
     gallery: [
       {
         src: "/assets/projetos/knifes-cover.webp",
-        width: 3150,
-        height: 1969,
+        width: 1800,
+        height: 1125,
       },
     ],
     paletteHex: ["#050507", "#1B0A33", "#A94DFF", "#7300FF", "#FFFFFF"],
@@ -57,8 +57,8 @@ export const PROJECTS: ProjectMeta[] = [
     stack: ["HTML", "CSS", "JavaScript", "i18n", "WhatsApp API"],
     cover: {
       src: "/assets/projetos/sandra-cover.webp",
-      width: 3150,
-      height: 1969,
+      width: 1800,
+      height: 1125,
     },
     gallery: [
       {
@@ -80,8 +80,8 @@ export const PROJECTS: ProjectMeta[] = [
     stack: ["HTML", "CSS", "JavaScript", "Structured data", "WhatsApp API"],
     cover: {
       src: "/assets/projetos/thayse-cover.webp",
-      width: 3150,
-      height: 1969,
+      width: 1800,
+      height: 1125,
     },
     gallery: [
       {
@@ -103,8 +103,8 @@ export const PROJECTS: ProjectMeta[] = [
     stack: ["React", "Vite", "TypeScript", "CSS Modules"],
     cover: {
       src: "/assets/projetos/fg-cover.webp",
-      width: 3150,
-      height: 1969,
+      width: 1800,
+      height: 1125,
     },
     gallery: [
       {
