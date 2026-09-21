@@ -218,9 +218,40 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
         let quadro = 0;
         let rodando = false;
         let anterior: number[] | null = null;
+        let ultimoInstante = 0;
+        let tAnterior = progressoRef.current;
+        let encaixar = true;
 
-        const desenhar = () => {
+        /**
+         * Suavização por meia-vida, em segundos, e não por fração de quadro.
+         *
+         * `x += (alvo - x) * 0.07` depende da taxa de quadros: a 30 fps a
+         * câmera chega na metade da velocidade. E, o que importa mais aqui:
+         * z, fov, órbita e ângulo são acumuladores, então carregam histórico.
+         * Depois de um trecho sem desenhar (fora da tela, aba escondida) ou de
+         * uma rolagem rápida, eles ficam para trás do progresso e a escultura
+         * aparece fora do lugar antes de escorregar de volta.
+         */
+        const suavizar = (atual: number, alvo: number, meiaVida: number, dt: number) =>
+          alvo + (atual - alvo) * Math.pow(2, -dt / meiaVida);
+
+        const desenhar = (instante: number) => {
+          const dt = ultimoInstante ? Math.min(0.05, (instante - ultimoInstante) / 1000) : 1 / 60;
+          ultimoInstante = instante;
+
           const t = progressoRef.current;
+
+          /**
+           * Salto: primeiro quadro, loop voltando à tela, ou o progresso
+           * pulando muito de uma vez (rolagem rápida, âncora, F5 no meio do
+           * intervalo). Nesses casos não há nada para suavizar — a escultura
+           * assume a pose do progresso atual em vez de perseguir ela.
+           */
+          const salto = encaixar || Math.abs(t - tAnterior) > 0.06;
+          tAnterior = t;
+          encaixar = false;
+          const mover = (atual: number, alvo: number, meiaVida: number) =>
+            salto ? alvo : suavizar(atual, alvo, meiaVida, dt);
 
           /* a peça se junta na entrada e se despedaça durante a revelação —
              agora as duas coisas acontecem com ela parada na tela */
@@ -246,14 +277,14 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
             camera.position.set(0, 0, 6);
             camera.lookAt(0, 0, 0);
           } else {
-            anguloSuave += (anguloAlvo - anguloSuave) * 0.09;
+            anguloSuave = mover(anguloSuave, anguloAlvo, 0.12);
             grupo.rotation.y = anguloSuave;
             grupo.position.y = 0.12 * Math.sin(acomodar * Math.PI);
-            z += (entre(ALVO.z, acomodar) - 1.4 * saindo - z) * 0.07;
-            fov += (entre(ALVO.fov, acomodar) - fov) * 0.07;
-            orbita += (Math.sin(acomodar * Math.PI) * ALVO.orbita - orbita) * 0.07;
-            desvioX += (0.5 * ponteiro.current.x - desvioX) * 0.05;
-            desvioY += (-0.35 * ponteiro.current.y - desvioY) * 0.05;
+            z = mover(z, entre(ALVO.z, acomodar) - 1.4 * saindo, 0.16);
+            fov = mover(fov, entre(ALVO.fov, acomodar), 0.16);
+            orbita = mover(orbita, Math.sin(acomodar * Math.PI) * ALVO.orbita, 0.16);
+            desvioX = mover(desvioX, 0.5 * ponteiro.current.x, 0.22);
+            desvioY = mover(desvioY, -0.35 * ponteiro.current.y, 0.22);
             camera.position.z = z;
             camera.position.x = orbita + desvioX;
             camera.position.y = 0.75 * Math.sin(acomodar * Math.PI) + desvioY;
@@ -263,7 +294,7 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
             chave.intensity = entre(ALVO.luz, acomodar);
           }
 
-          explosao += (alvoExplosao - explosao) * 0.14;
+          explosao = mover(explosao, alvoExplosao, 0.08);
           estilhaco.explodir(explosao);
 
           /* o canvas some depois do HUD e antes de o círculo fechar a tela */
@@ -309,6 +340,8 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
           if (rodando) return;
           rodando = true;
           anterior = null; /* voltou à tela: desenha pelo menos uma vez */
+          ultimoInstante = 0; /* o intervalo parado não conta como tempo */
+          encaixar = true; /* ...e a pose é assumida, não perseguida */
           quadro = requestAnimationFrame(desenhar);
         };
         const desligar = () => {
@@ -412,10 +445,10 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
           className="shell pointer-events-none pt-[calc(var(--header-h)+var(--space-5))]"
           style={reduzido ? undefined : { opacity: opacidadeHud, y: yTopo }}
         >
-          <div
-            className="flex items-start justify-between gap-[var(--space-5)] border-b pb-[var(--space-3)]"
-            style={{ borderColor: "var(--line)" }}
-          >
+          {/* sem o fio do visor: o rótulo e a ficha técnica já se separam da
+              escultura pelo espaço, e eram dois dos traços mais visíveis da
+              página inteira, atravessando a tela de ponta a ponta */}
+          <div className="flex items-start justify-between gap-[var(--space-5)] pb-[var(--space-3)]">
             <p className="label" style={{ color: "var(--accent)" }}>
               {label}
             </p>
@@ -436,10 +469,7 @@ export default function Intervalo({ peca, label }: { peca: Interlude; label: str
           className="shell pb-[var(--space-7)]"
           style={reduzido ? undefined : { opacity: opacidadeHud, y: yBase }}
         >
-          <div
-            className="flex flex-wrap items-end justify-between gap-x-[var(--space-7)] gap-y-[var(--space-3)] border-t pt-[var(--space-4)]"
-            style={{ borderColor: "var(--line)" }}
-          >
+          <div className="flex flex-wrap items-end justify-between gap-x-[var(--space-7)] gap-y-[var(--space-3)] pt-[var(--space-4)]">
             <div>
               <h2 id={`interlude-${peca.slug}-title`} className="display-md">
                 {peca.title}
